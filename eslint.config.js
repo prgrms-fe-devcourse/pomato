@@ -10,7 +10,6 @@ import configPrettier from "eslint-config-prettier";
 
 export default defineConfig([
   globalIgnores(["dist", "build", "coverage", "node_modules"]),
-
   {
     files: ["src/**/*.{ts,tsx}"],
     extends: [
@@ -34,7 +33,15 @@ export default defineConfig([
     },
     settings: {
       "import/resolver": {
-        typescript: { project: true, alwaysTryTypes: true },
+        typescript: {
+          project: ["./tsconfig.app.json", "./tsconfig.json", "./tsconfig.node.json"],
+          alwaysTryTypes: true,
+        },
+        node: { extensions: [".js", ".jsx", ".ts", ".tsx"] },
+        alias: {
+          map: [["/", "./public"]],
+          extensions: [".js", ".jsx", ".ts", ".tsx", ".svg"],
+        },
       },
     },
     plugins: {
@@ -48,7 +55,7 @@ export default defineConfig([
       "@typescript-eslint/consistent-type-imports": ["warn", { prefer: "type-imports" }],
       "no-undef": "off",
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
-      "import/no-unresolved": "error",
+      "import/no-unresolved": ["error", { ignore: ["^/"] }],
       "import/newline-after-import": "warn",
       "import/order": [
         "warn",
@@ -63,11 +70,23 @@ export default defineConfig([
       ],
       "unicorn/prefer-node-protocol": "off",
       "unicorn/no-null": "off",
-      "unicorn/filename-case": ["error", { cases: { pascalCase: true, camelCase: true } }],
+      "unicorn/filename-case": [
+        "error",
+        { cases: { pascalCase: true, camelCase: true, kebabCase: true } },
+      ],
       "unicorn/prevent-abbreviations": "off",
+      "unicorn/no-array-reduce": "off",
+      "unicorn/no-array-for-each": "off",
+      "unicorn/prefer-at": "warn",
+      "unicorn/explicit-length-check": "warn",
     },
   },
-
+  {
+    files: ["src/main.tsx"],
+    rules: {
+      "unicorn/prefer-query-selector": "off",
+    },
+  },
   {
     files: [
       "vite.config.{ts,js,mts,cts}",
@@ -91,6 +110,5 @@ export default defineConfig([
       "unicorn/prefer-node-protocol": "off",
     },
   },
-
   configPrettier,
 ]);
