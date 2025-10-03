@@ -7,21 +7,21 @@ export default function text() {
       <p className="paragraph-text-s">paragraph(Small)</p>
       <br />
       {/* Label 사용 예시 */}
-      <p className="lable-text-l">Large Label (Bold)</p>
-      <p className="lable-text-l-semibold ">Large Label (SemiBold)</p>
-      <p className="lable-text-l-bold">Large Label (Medium)</p>
+      <p className="label-text-l">Large Label (Bold)</p>
+      <p className="label-text-l-semibold ">Large Label (SemiBold)</p>
+      <p className="label-text-l-bold">Large Label (Medium)</p>
       <br />
-      <p className="lable-text-m">Large Label (Bold)</p>
-      <p className="lable-text-m-semibold ">Large Label (SemiBold)</p>
-      <p className="lable-text-m-bold">Large Label (Medium)</p>
+      <p className="label-text-m">Large Label (Bold)</p>
+      <p className="label-text-m-semibold ">Large Label (SemiBold)</p>
+      <p className="label-text-m-bold">Large Label (Medium)</p>
       <br />
-      <p className="lable-text-s">Large Label (Bold)</p>
-      <p className="lable-text-s-semibold ">Large Label (SemiBold)</p>
-      <p className="lable-text-s-bold">Large Label (Medium)</p>
+      <p className="label-text-s">Large Label (Bold)</p>
+      <p className="label-text-s-semibold ">Large Label (SemiBold)</p>
+      <p className="label-text-s-bold">Large Label (Medium)</p>
       <br />
-      <p className="lable-text-xs">Large Label (Bold)</p>
-      <p className="lable-text-xs-semibold ">Large Label (SemiBold)</p>
-      <p className="lable-text-xs-bold">Large Label (Medium)</p>
+      <p className="label-text-xs">Large Label (Bold)</p>
+      <p className="label-text-xs-semibold ">Large Label (SemiBold)</p>
+      <p className="label-text-xs-bold">Large Label (Medium)</p>
       <br />
       {/* Heading 사용 예시 */}
       <h1 className="heading-text-l">Large Heading</h1>

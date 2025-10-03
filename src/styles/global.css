@@ -46,84 +46,84 @@
 }
 
 /* 커스텀 Label 글자 영역 */
-.lable-text-l {
+.label-text-l {
   font-size: 18px;
   line-height: 24px;
   font-weight: 500; /* 기본 Medium */
   letter-spacing: -0.02em;
 }
 
-.lable-text-l-semibold {
+.label-text-l-semibold {
   font-size: 18px;
   line-height: 24px;
   font-weight: 600; /* SemiBold */
   letter-spacing: -0.02em;
 }
 
-.lable-text-l-bold {
+.label-text-l-bold {
   font-size: 18px;
   line-height: 24px;
   font-weight: 700; /* Bold */
   letter-spacing: -0.02em;
 }
 
-.lable-text-m {
+.label-text-m {
   font-size: 16px;
   line-height: 20px;
   font-weight: 500; /* 기본 Medium */
   letter-spacing: -0.02em;
 }
 
-.lable-text-m-semibold {
+.label-text-m-semibold {
   font-size: 16px;
   line-height: 20px;
   font-weight: 600; /* SemiBold */
   letter-spacing: -0.02em;
 }
 
-.lable-text-m-bold {
+.label-text-m-bold {
   font-size: 16px;
   line-height: 20px;
   font-weight: 700; /* Bold */
   letter-spacing: -0.02em;
 }
 
-.lable-text-s {
+.label-text-s {
   font-size: 14px;
   line-height: 16px;
   font-weight: 500; /* 기본 Medium */
   letter-spacing: -0.02em;
 }
 
-.lable-text-s-semibold {
+.label-text-s-semibold {
   font-size: 14px;
   line-height: 16px;
   font-weight: 600; /* SemiBold */
   letter-spacing: -0.02em;
 }
 
-.lable-text-s-bold {
+.label-text-s-bold {
   font-size: 14px;
   line-height: 16px;
   font-weight: 700; /* Bold */
   letter-spacing: -0.02em;
 }
 
-.lable-text-xs {
+.label-text-xs {
   font-size: 12px;
   line-height: 16px;
   font-weight: 500; /* 기본 Medium */
   letter-spacing: -0.02em;
 }
 
-.lable-text-xs-semibold {
+.label-text-xs-semibold {
   font-size: 12px;
   line-height: 16px;
   font-weight: 600; /* SemiBold */
   letter-spacing: -0.02em;
 }
 
-.lable-text-xs-bold {
+.label-text-xs-bold {
   font-size: 12px;
   line-height: 16px;
   font-weight: 700; /* Bold */
