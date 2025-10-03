@@ -46,21 +46,21 @@
 }
 
 /* 커스텀 Label 글자 영역 */
-.lable-text-l {
+.label-text-l {
   font-size: 18px;
   line-height: 24px;
   font-weight: 500; /* 기본 Medium */
   letter-spacing: -0.02em;
 }
 
-.lable-text-l-semibold {
+.label-text-l-semibold {
   font-size: 18px;
   line-height: 24px;
   font-weight: 600; /* SemiBold */
   letter-spacing: -0.02em;
 }
 
-.lable-text-l-bold {
+.label-text-l-bold {
   font-size: 18px;
   line-height: 24px;
   font-weight: 700; /* Bold */
