@@ -55,36 +55,32 @@ export default function Input({
   containerStyle,
   innerStyle,
   iconStyle,
+  value,
   ...rest
 }: InputProps) {
   const inputId = useId();
-
+  const isEmpty = !value || String(value).trim().length === 0;
   return (
     <label
       htmlFor={id || inputId}
       className={twMerge(
         "flex h-[40px] items-center gap-[14px] rounded-[8px] border px-[16px]",
-        "text-wh bg-wh/2 dark:bg-bl/30 placeholder-wh/50 hover:bg-wh/25 hover:dark:bg-bl/40 hover:drop-shadow-wh/20",
-        "focus-within:bg-wh/30 focus-within:dark:bg-bl/40 disabled:bg-wh/10 disabled:dark:bg-bl/20 disabled:border-wh/10 disabled:dark:border-wh/8 label-text-s",
+        "text-wh focus-within:bg-wh/25 focus-within:dark:bg-bl/40 focus-within:shadow-[0_0_0_2px_rgba(250,250,250,0.12)]",
+        "focus-within:dark:bg-bl/40 disabled:bg-wh/10 disabled:dark:bg-bl/20 disabled:border-wh/10 disabled:dark:border-wh/8",
+        isEmpty ? "bg-wh/20 dark:bg-bl/30" : "bg-wh/30 dark:bg-bl/50",
         error
-          ? "border-red-500/60 focus-within:border-red-500/60 hover:border-red-500/60"
-          : "border-wh/15 dark:border-wh/12 hover:border-wh/30 dark:hover:border-wh/25 focus-within:border-wh/25 dark:focus-within:border-wh/18",
+          ? "border-red-500/60 shadow-[0_0_0_2px_rgba(239,68,68,0.2)] focus-within:border-red-500/60"
+          : "border-wh/15 dark:border-wh/12 focus-within:border-wh/30 dark:focus-within:border-wh/25",
         containerStyle,
       )}
     >
-      {Icon && (
-        <Icon
-          width={16}
-          height={16}
-          className={twMerge("text-wh/60 focus-within:text-wh", iconStyle)}
-        />
-      )}
+      {Icon && <Icon width={16} height={16} className={twMerge("text-wh/70", iconStyle)} />}
       <input
         type={type}
         id={id || inputId}
         {...rest}
         className={twMerge(
-          "text-wh placeholder-wh/50 flex-1 bg-transparent outline-none",
+          "text-wh placeholder:text-wh/50 color-wh label-text-s flex-1 bg-transparent outline-none",
           innerStyle,
         )}
       />
