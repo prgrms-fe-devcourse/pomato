@@ -1,6 +1,7 @@
-import type { InputProps } from "@components/Input/type";
 import { useId } from "react";
 import { twMerge } from "tailwind-merge";
+
+import type { InputProps } from "@components/Input/type";
 
 export default function Input({
   type = "text",
