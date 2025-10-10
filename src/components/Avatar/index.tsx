@@ -1,9 +1,10 @@
-import type { AvatarProps } from "@components/Avatar/type";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Camera } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
-const DEFAULT_SIZE = "m";
+import type { AvatarProps } from "@components/Avatar/type";
+
+const DEFAULT_SIZE = "xl";
 
 const avatarVariants = cva(
   "border-2 border-wh/15 bg-wh relative [&_span]:absolute [&_span]:border-wh [&_span]:rounded-full",
@@ -29,11 +30,11 @@ const editVariants = cva(
   {
     variants: {
       size: {
-        xxs: "!w-[12px] !h-[12px] bottom-[0px] right-[0px] [&>svg]:w-[2px] [&>svg]:h-[2px]",
-        xs: "!w-[16px] !h-[16px] bottom-[1px] right-[1px] [&>svg]:w-[6px] [&>svg]:h-[6px]",
-        s: "!w-[20px] !h-[20px] bottom-[2px] right-[2px] [&>svg]:w-[10px] [&>svg]:h-[10px]",
-        m: "!w-[24px] !h-[24px] bottom-[3px] right-[3px] [&>svg]:w-[14px] [&>svg]:h-[14px]",
-        l: "!w-[32px] !h-[32px] bottom-[4px] right-[4px] [&>svg]:w-[18px] [&>svg]:h-[18px]",
+        xxs: "!w-[12px] !h-[12px] bottom-[0px] right-[0px] border-1 [&>svg]:w-[2px] [&>svg]:h-[2px]",
+        xs: "!w-[16px] !h-[16px] bottom-[1px] right-[1px] border-2 [&>svg]:w-[6px] [&>svg]:h-[6px]",
+        s: "!w-[20px] !h-[20px] bottom-[2px] right-[2px] border-2 [&>svg]:w-[10px] [&>svg]:h-[10px]",
+        m: "!w-[24px] !h-[24px] bottom-[3px] right-[3px] border-2 [&>svg]:w-[14px] [&>svg]:h-[14px]",
+        l: "!w-[32px] !h-[32px] bottom-[4px] right-[4px] border-2 [&>svg]:w-[18px] [&>svg]:h-[18px]",
         xl: "!w-[36px] !h-[36px] bottom-[8px] right-[8px] border-3 [&>svg]:w-[22px] [&>svg]:h-[22px]",
       },
     },
