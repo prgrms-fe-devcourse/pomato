@@ -8,5 +8,4 @@ export interface InputProps extends ComponentPropsWithoutRef<"input"> {
   Icon?: LucideIcon;
   containerStyle?: string;
   innerStyle?: string;
-  iconStyle?: string;
 }
