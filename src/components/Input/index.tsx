@@ -1,4 +1,5 @@
-import { useId } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { useId, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import type { InputProps } from "@components/Input/type";
@@ -56,35 +57,56 @@ export default function Input({
   innerStyle,
   iconStyle,
   value,
+  disabled,
+  className,
   ...rest
 }: InputProps) {
   const inputId = useId();
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isPassword = type === "password";
   const isEmpty = !value || String(value).trim().length === 0;
   return (
     <label
       htmlFor={id || inputId}
       className={twMerge(
-        "flex h-[40px] items-center gap-[14px] rounded-[8px] border px-[16px]",
+        "flex h-[40px] min-w-[260px] items-center gap-[14px] overflow-hidden rounded-[8px] border px-[16px]",
         "text-wh focus-within:bg-wh/25 focus-within:dark:bg-bl/40 focus-within:shadow-[0_0_0_2px_rgba(250,250,250,0.12)]",
-        "focus-within:dark:bg-bl/40 disabled:bg-wh/10 disabled:dark:bg-bl/20 disabled:border-wh/10 disabled:dark:border-wh/8",
+        "focus-within:dark:bg-bl/40",
         isEmpty ? "bg-wh/20 dark:bg-bl/30" : "bg-wh/30 dark:bg-bl/50",
         error
           ? "border-red-500/60 shadow-[0_0_0_2px_rgba(239,68,68,0.2)] focus-within:border-red-500/60"
           : "border-wh/15 dark:border-wh/12 focus-within:border-wh/30 dark:focus-within:border-wh/25",
+        disabled && "bg-wh/10 dark:bg-bl/20 border-wh/10 dark:border-wh/8",
+        className,
         containerStyle,
       )}
     >
       {Icon && <Icon width={16} height={16} className={twMerge("text-wh/70", iconStyle)} />}
       <input
-        type={type}
+        type={isPassword ? (showPassword ? "text" : "password") : type}
         id={id || inputId}
         value={value}
         {...rest}
+        disabled={disabled}
         className={twMerge(
-          "text-wh placeholder:text-wh/50 color-wh label-text-s flex-1 bg-transparent outline-none",
+          "text-wh placeholder:text-wh/50 label-text-s disabled:text-wh/30 color-wh flex-1 bg-transparent outline-none",
           innerStyle,
         )}
       />
+      {isPassword && (
+        <button
+          type="button"
+          onClick={() => setShowPassword((prev) => !prev)}
+          className="flex items-center justify-center focus:outline-none"
+        >
+          {showPassword ? (
+            <EyeOff width={16} height={16} className="text-wh/70" />
+          ) : (
+            <Eye width={16} height={16} className="text-wh/70" />
+          )}
+        </button>
+      )}
     </label>
   );
 }
