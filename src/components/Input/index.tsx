@@ -41,7 +41,7 @@ import type { InputProps } from "@components/Input/type";
  *   내부 `<input>` 요소의 추가 Tailwind 클래스명
  * @param {string} [props.iconStyle]
  *   아이콘의 추가 Tailwind 클래스명
- * @param {React.componentPropsWithoutRef<'input'>} [props.rest]
+ * @param {React.ComponentPropsWithoutRef<'input'>} [props.rest]
  *   나머지 HTML `<input>` 속성들 (예: `placeholder`, `value`, `onChange` 등)
  *
  * @returns {JSX.Element}
@@ -76,7 +76,7 @@ export default function Input({
         <Icon
           width={16}
           height={16}
-          className={twMerge("text-wh/60 group-focus-within:text-wh", iconStyle)}
+          className={twMerge("text-wh/60 focus-within:text-wh", iconStyle)}
         />
       )}
       <input
