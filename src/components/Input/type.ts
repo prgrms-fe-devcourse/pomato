@@ -2,7 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import type { ComponentProps } from "react";
 
 export interface InputProps extends ComponentProps<"input"> {
-  type?: "text" | "password" | "number";
+  type?: "text" | "password" | "number" | "email";
   error?: boolean;
   id?: string;
   Icon?: LucideIcon;
