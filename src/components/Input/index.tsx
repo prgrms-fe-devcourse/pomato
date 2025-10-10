@@ -78,6 +78,7 @@ export default function Input({
       <input
         type={type}
         id={id || inputId}
+        value={value}
         {...rest}
         className={twMerge(
           "text-wh placeholder:text-wh/50 color-wh label-text-s flex-1 bg-transparent outline-none",
