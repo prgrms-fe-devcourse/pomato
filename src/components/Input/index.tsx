@@ -55,7 +55,6 @@ export default function Input({
   Icon,
   containerStyle,
   innerStyle,
-  iconStyle,
   value,
   disabled,
   className,
@@ -82,7 +81,7 @@ export default function Input({
         containerStyle,
       )}
     >
-      {Icon && <Icon width={16} height={16} className={twMerge("text-wh/70", iconStyle)} />}
+      {Icon && <Icon width={16} height={16} className={twMerge("text-wh/70")} />}
       <input
         type={isPassword ? (showPassword ? "text" : "password") : type}
         id={id || inputId}
