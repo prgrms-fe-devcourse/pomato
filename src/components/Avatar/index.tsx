@@ -1,8 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { Camera } from "lucide-react";
+import type { ComponentPropsWithoutRef } from "react";
 import { twMerge } from "tailwind-merge";
-
-import type { AvatarProps } from "@components/Avatar/type";
 
 const DEFAULT_SIZE = "xl";
 
@@ -44,14 +43,19 @@ const editVariants = cva(
   },
 );
 
-export default function Avatar({
-  status = "edit",
-  size,
-  className,
-  ...rest
-}: AvatarProps & VariantProps<typeof avatarVariants> & VariantProps<typeof editVariants>) {
+interface AvatarProps
+  extends ComponentPropsWithoutRef<"div">,
+    VariantProps<typeof editVariants>,
+    VariantProps<typeof avatarVariants> {
+  status?: string;
+  editStyle?: string;
+  statusStyle?: string;
+}
+
+export default function Avatar({ status = "edit", size, className, ...rest }: AvatarProps) {
   return (
     <div className={twMerge(avatarVariants({ size }), className)} {...rest}>
+      <img src="" alt="" />
       {status === "edit" ? (
         <span className={twMerge(editVariants({ size }))}>
           <Camera />
