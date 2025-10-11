@@ -1,7 +1,5 @@
-import * as React from "react";
+import type { LucideIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
-
-import type { EmptyStateProps } from "@components/Empty/type";
 
 /**
  * 사용자에게 비어있는 상태(Empty)나 접근 제약 상태를 알려주는 공통 컴포넌트입니다.
@@ -20,12 +18,12 @@ import type { EmptyStateProps } from "@components/Empty/type";
  *   Icon={MessageCircle}
  *   action={{
  *     label: "로그인",
+ *     icon: LogIn,
  *     actionClassName: "",
  *     onClick: () => {
  *       console.log("로그인 버튼 클릭");
  *     },
  *   }}
- *   ActionIcon={LogIn}
  * />
  *
  * // 아이콘 + 액션 버튼(아이콘 없음)
@@ -50,13 +48,32 @@ import type { EmptyStateProps } from "@components/Empty/type";
  * @param {React.ComponentType<React.SVGProps<SVGSVGElement>>} [props.Icon]
  *  상단 상태 아이콘(예: Lucide 아이콘)
  * @param {string} [props.iconStyle] - 아이콘에 추가할 Tailwind 클래스명
- * @param {{label: string; onClick?: () => void; actionClassName?: string}} [props.action]
- *  액션 버튼 설정(라벨/클릭 핸들러/추가 클래스)
- * @param {React.ComponentType<React.SVGProps<SVGSVGElement>>} [props.ActionIcon]
- *  액션 버튼 왼쪽에 표시할 아이콘(예: Lucide 아이콘)
+ * @param {Action} [props.action] - 액션 버튼 설정 객체
+ * @param {string} props.action.label - 액션 버튼의 텍스트 라벨 (필수)
+ * @param {LucideIcon} [props.action.icon] - 액션 버튼 왼쪽에 표시할 아이콘 (선택)
+ * @param {() => void} [props.action.onClick] - 액션 버튼 클릭 시 실행될 함수 (선택)
+ * @param {string} [props.action.actionClassName] - 액션 버튼에 추가할 Tailwind 클래스명 (선택)
  *
  * @returns {JSX.Element} 비어있는 상태를 나타내는 섹션 엘리먼트
  */
+
+// 액션(실행) 버튼
+type Action = {
+  label: string;
+  icon?: LucideIcon;
+  onClick?: () => void;
+  actionClassName?: string;
+};
+
+// Empty State 관리
+type EmptyStateProps = {
+  title: string;
+  description: string;
+  Icon?: LucideIcon;
+  iconStyle?: string;
+  className?: string;
+  action?: Action;
+};
 
 export default function EmptyState({
   title,
@@ -65,7 +82,6 @@ export default function EmptyState({
   iconStyle,
   className,
   action,
-  ActionIcon,
 }: EmptyStateProps) {
   return (
     <section
@@ -107,12 +123,12 @@ export default function EmptyState({
               // active
               "active:bg-wh/40 active:border-wh/35",
               "dark:active:bg-bl/50 dark:active:border-wh/25",
-              ActionIcon ? "px-2" : "px-4",
+              action?.icon ? "px-2" : "px-4",
               action.actionClassName,
             )}
           >
-            {ActionIcon && (
-              <ActionIcon width={14} height={14} className={twMerge("text-wh", iconStyle)} />
+            {action.icon && (
+              <action.icon width={14} height={14} className={twMerge("text-wh", iconStyle)} />
             )}
             {action.label}
           </button>
