@@ -1,60 +1,32 @@
-import { cva, type VariantProps } from "class-variance-authority";
 import { twMerge } from "tailwind-merge";
 
-const button = cva(
-  [
-    "inline-flex items-center justify-center text-wh cursor-pointer",
-    "outline-none focus-visible:ring-2 focus-visible:ring-wh/12",
-    "disabled:opacity-45 disabled:cursor-not-allowed",
-  ],
-  {
-    variants: {
-      intent: {
-        glass: [
-          "bg-wh/20 border border-wh/15",
-          "enabled:hover:bg-wh/30 enabled:hover:border-wh/25",
-          "enabled:active:bg-wh/40 enabled:active:border-wh/35",
-          "dark:bg-bl/30 dark:border-wh/12",
-          "dark:enabled:hover:bg-bl/40 dark:enabled:hover:border-wh/18",
-          "dark:enabled:active:bg-bl/50 dark:enabled:active:border-wh/25",
-        ],
-        ghost: ["bg-wh/15 enabled:hover:bg-wh/25", "dark:bg-bl/25 dark:enabled:hover:bg-bl/35"],
-        reveal: [
-          "bg-transparent",
-          "enabled:hover:bg-wh/15 enabled:active:bg-wh/25",
-          "dark:enabled:hover:bg-bl/25 dark:enabled:active:bg-bl/35",
-        ],
-        subtle: [
-          "bg-transparent text-wh/65 enabled:hover:text-wh/90",
-          "enabled:active:bg-wh/20 dark:enabled:active:bg-bl/30",
-        ],
-        primary: "bg-blue-500 enabled:hover:bg-blue-600 enabled:active:bg-blue-700",
-      },
-      size: {
-        lg: "px-4 h-10 label-text-m [&_svg]:size-4.5",
-        md: "px-3 h-8 label-text-s [&_svg]:size-3.5",
-        sm: "px-2 h-6 label-text-xs [&_svg]:size-3",
-      },
-      shape: {
-        default: "rounded-lg",
-        circle: "rounded-full",
-      },
-      composition: {
-        iconOnly: "px-0",
-        iconText: "gap-1",
-      },
-    },
-    compoundVariants: [
-      { size: "lg", composition: "iconOnly", class: "w-10" },
-      { size: "md", composition: "iconOnly", class: "w-8" },
-      { size: "sm", composition: "iconOnly", class: "w-6" },
-    ],
-  },
-);
+import { button, type ButtonVariants } from "./variants";
 
-interface ButtonProps
-  extends React.ComponentPropsWithoutRef<"button">,
-    VariantProps<typeof button> {}
+interface ButtonProps extends React.ComponentPropsWithoutRef<"button">, ButtonVariants {}
+
+/**
+ * 공통 버튼 컴포넌트
+ *
+ * 버튼 스타일, 사이즈, 형태 등을 조합할 수 있도록 CVA를 활용해 구현했습니다.
+ *
+ * @component
+ * @param {"button" | "submit" | "reset"} [type="button"] - 버튼 타입
+ * @param {"glass" | "ghost" | "reveal" | "subtle" | "primary"} [intent="glass"] - 버튼 스타일 유형
+ * @param {"lg" | "md" | "sm"} [size="lg"] - 버튼 크기
+ * @param {"default" | "circle"} [shape="default"] - 버튼 형태: circle의 경우 iconOnly
+ * @param {"iconOnly" | "iconText"} [composition="iconText"] - 아이콘/텍스트 조합 형태
+ * @param {string} [className] - 추가 Tailwind 클래스
+ * @param {React.ReactNode} children - 버튼 내부 콘텐츠
+ * @param {React.MouseEventHandler<HTMLButtonElement>} [onClick] - 클릭 이벤트 핸들러
+ * @returns {JSX.Element} 버튼 엘리먼트
+ *
+ * @example
+ * ```tsx
+ * <Button intent="primary" size="md" onClick={() => alert("clicked")}>
+ *   <Plus /> 저장하기
+ * </Button>
+ * ```
+ */
 
 export default function Button({
   type = "button",
