@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router";
 
 // Layout
-import Layout from "@layout/Layout";
+import Panel from "@layout/panel";
 // pages
 import Chart from "@pages/Chart";
 import Feed from "@pages/Feed";
@@ -14,7 +14,7 @@ import Signup from "@pages/Signup";
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: Layout,
+    Component: Panel,
     children: [
       {
         path: "mate",
