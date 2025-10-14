@@ -1,30 +1,30 @@
-import { X } from "lucide-react";
-import { NavLink, Outlet } from "react-router";
+import { Menu } from "lucide-react";
+import { useState } from "react";
+import { Outlet } from "react-router";
 
-interface PanelProps {
-  close: () => void;
-}
+import Header from "@layout/header";
+import Nav from "@layout/nav";
 
-export default function Panel({ close }: PanelProps) {
+export default function Panel() {
+  const [open, setIsOpen] = useState(false);
   return (
-    <div className="dark:bg-bl/30 border-wh/8 min-h-full w-[576px] border-1">
-      <header className="flex h-[60px] justify-end px-[8px]">
-        <NavLink to="/login">로그인</NavLink>
-        <NavLink to="/signup">회원가입</NavLink>
-        <button onClick={close}>
-          <X width={16} height={16} className="text-wh" />
+    <div>
+      {open ? (
+        <button
+          className="dark:bg-bl/40 border-wh/18 mt-[16px] mr-[16px] flex h-[40px] w-[40px] items-center justify-center rounded-[10px] border-1"
+          onClick={() => setIsOpen(true)}
+        >
+          <Menu className="text-wh" width={16} height={16} />
         </button>
-      </header>
-      <nav>
-        <NavLink to="/mate">메이트</NavLink>
-        <NavLink to="/feed">피드</NavLink>
-        <NavLink to="/chart">차트</NavLink>
-        <NavLink to="/notification">내 소식</NavLink>
-        <NavLink to="/setting">설정</NavLink>
-      </nav>
-      <main>
-        <Outlet />
-      </main>
+      ) : (
+        <div className="dark:bg-bl/30 border-wh/8 min-h-full w-[576px] border-1">
+          <Header close={close} />
+          <Nav />
+          <main>
+            <Outlet />
+          </main>
+        </div>
+      )}
     </div>
   );
 }
