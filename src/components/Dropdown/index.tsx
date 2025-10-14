@@ -96,7 +96,7 @@ export default function Dropdown({
         aria-expanded={open}
         draggable={false}
       >
-        <MoreHorizontal className="h-4 w-4" aria-hidden />
+        <MoreHorizontal className="text-wh h-4 w-4" aria-hidden />
       </button>
 
       {/* Menu */}
@@ -142,8 +142,8 @@ export default function Dropdown({
                 className={twMerge(
                   "inline-flex h-[37px] w-[146px] items-center justify-start gap-[10px]",
                   "label-text-s rounded-[6px] px-[12px] transition-colors",
-                  "hover:bg-[#EF4444]/15",
-                  "dark:hover:bg-[#EF4444]/15",
+                  "hover:bg-red-500/15",
+                  "dark:hover:bg-red-500/15",
                   !isEnable && "pointer-events-none cursor-not-allowed disabled:opacity-40",
                 )}
                 aria-label="삭제"
@@ -151,8 +151,8 @@ export default function Dropdown({
                 draggable={false}
                 disabled={!isEnable}
               >
-                <Trash className="h-4 w-4 text-[#EF4444]" aria-hidden />
-                <span className="text-[#EF4444]">삭제하기</span>
+                <Trash className="h-4 w-4 text-red-500" aria-hidden />
+                <span className="text-red-500">삭제하기</span>
               </button>
             </li>
           </ul>
