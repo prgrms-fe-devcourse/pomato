@@ -130,7 +130,7 @@ export default function Dropdown({
                   draggable={false}
                   disabled={!isEnable}
                 >
-                  <SquarePen className="h-4 w-4" aria-hidden />
+                  <SquarePen className="text-wh/75 h-4 w-4" aria-hidden />
                   <span className="text-wh">수정</span>
                 </button>
               </li>
