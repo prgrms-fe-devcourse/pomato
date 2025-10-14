@@ -73,7 +73,6 @@ export default function NotificationItem({
 }: NotificationItemProps) {
   const TypeIcon = typeIconMap[type];
   const hasImage = typeof avatar === "string";
-  const AvatarIcon: LucideIcon = hasImage ? UserRound : avatar;
 
   return (
     <div
@@ -88,24 +87,8 @@ export default function NotificationItem({
       draggable={false}
     >
       <div className="flex w-full items-start gap-[16px]">
-        <div
-          className={twMerge(
-            "mt-1 h-[40px] w-[40px] overflow-hidden rounded-[20px] border-[2px]",
-            "border-white/15 dark:border-white/15",
-          )}
-          aria-hidden="true"
-        >
-          {hasImage ? (
-            <img
-              src={avatar}
-              alt={`${name}'s avatar`}
-              className="h-full w-full object-cover"
-              draggable={false}
-            />
-          ) : (
-            <AvatarIcon className="text-wh h-full w-full" aria-hidden="true" />
-          )}
-        </div>
+        {/* 아바타 영역 */}
+        {hasImage ? <Avatar src={avatar} size={"s"} /> : <Avatar size={"s"} />}
 
         {/* Content */}
         <div className="relative flex-1">
