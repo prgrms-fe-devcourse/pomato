@@ -1,7 +1,5 @@
 import { createBrowserRouter } from "react-router";
 
-// Layout
-import Panel from "@layout/panel";
 // pages
 import Chart from "@pages/Chart";
 import Feed from "@pages/Feed";
@@ -11,10 +9,12 @@ import Notification from "@pages/Notification";
 import Setting from "@pages/Setting";
 import Signup from "@pages/Signup";
 
+import App from "../App";
+
 export const router = createBrowserRouter([
   {
     path: "/",
-    Component: Panel,
+    Component: App,
     children: [
       {
         path: "mate",
