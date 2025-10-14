@@ -1,8 +1,16 @@
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, type LucideIcon } from "lucide-react";
 import { useId, useState } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 import { twMerge } from "tailwind-merge";
 
-import type { InputProps } from "@components/Input/type";
+interface InputProps extends ComponentPropsWithoutRef<"input"> {
+  type?: "text" | "password" | "number" | "email";
+  error?: boolean;
+  id?: string;
+  Icon?: LucideIcon;
+  containerStyle?: string;
+  innerStyle?: string;
+}
 
 /**
  *
