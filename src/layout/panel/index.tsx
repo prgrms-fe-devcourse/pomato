@@ -11,7 +11,7 @@ export default function Panel() {
     <div>
       {open ? (
         <div className="dark:bg-bl/30 border-wh/8 min-h-full w-[576px] border-1">
-          <Header close={() => setIsOpen(false)} />
+          <Header onClose={() => setIsOpen(false)} />
           <Nav />
           <main>
             <Outlet />
