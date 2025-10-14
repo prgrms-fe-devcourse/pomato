@@ -89,7 +89,7 @@ export default function Input({
         {...rest}
         disabled={disabled}
         className={twMerge(
-          "text-wh placeholder:text-wh/50 label-text-s disabled:text-wh/30 color-wh flex-1 bg-transparent outline-none",
+          "text-wh placeholder:text-wh/50 label-text-s disabled:text-wh/30 flex-1 bg-transparent outline-none",
           innerStyle,
         )}
       />
