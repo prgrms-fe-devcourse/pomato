@@ -102,8 +102,8 @@ export default function EmptyState({
         )}
 
         <div className="flex flex-col gap-[12px]">
-          <p className="text-wh/100 label-text-m-bold text-[20px]">{title}</p>
-          <p className="text-wh/75 dark:text-wh/70 label-text-s text-[15px]">{description}</p>
+          <p className="text-wh/100 label-text-m-bold">{title}</p>
+          <p className="text-wh/75 dark:text-wh/70 label-text-s">{description}</p>
         </div>
 
         {action && (
@@ -127,9 +127,7 @@ export default function EmptyState({
               action.actionClassName,
             )}
           >
-            {action.icon && (
-              <action.icon width={14} height={14} className={twMerge("text-wh", iconStyle)} />
-            )}
+            {action.icon && <action.icon width={14} height={14} className={twMerge("text-wh")} />}
             {action.label}
           </button>
         )}
