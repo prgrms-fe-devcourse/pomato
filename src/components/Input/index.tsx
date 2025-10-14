@@ -69,7 +69,6 @@ export default function Input({
       className={twMerge(
         "flex h-[40px] min-w-[260px] items-center gap-[14px] overflow-hidden rounded-[8px] border px-[16px]",
         "text-wh focus-within:bg-wh/25 focus-within:dark:bg-bl/40 focus-within:shadow-[0_0_0_2px_rgba(250,250,250,0.12)]",
-        "focus-within:dark:bg-bl/40",
         isEmpty ? "bg-wh/20 dark:bg-bl/30" : "bg-wh/30 dark:bg-bl/50",
         error
           ? "border-red-500/60 shadow-[0_0_0_2px_rgba(239,68,68,0.2)] focus-within:border-red-500/60"
