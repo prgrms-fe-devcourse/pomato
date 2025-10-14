@@ -40,8 +40,6 @@ import type { InputProps } from "@components/Input/type";
  *   상위 `<label>` 컨테이너의 추가 Tailwind 클래스명
  * @param {string} [props.innerStyle]
  *   내부 `<input>` 요소의 추가 Tailwind 클래스명
- * @param {string} [props.iconStyle]
- *   아이콘의 추가 Tailwind 클래스명
  * @param {React.ComponentPropsWithoutRef<'input'>} [props.rest]
  *   나머지 HTML `<input>` 속성들 (예: `placeholder`, `value`, `onChange` 등)
  *
