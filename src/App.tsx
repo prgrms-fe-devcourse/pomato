@@ -1,14 +1,15 @@
+import Timer from "@features/timer";
 import Overlay from "@layout/overlay";
 import Panel from "@layout/panel";
 
 function App() {
   return (
-    <>
+    <main className="min-h-dvh w-full">
       <Overlay>
-        <section className="flex-1">TIMER</section>
+        <Timer />
         <Panel />
       </Overlay>
-    </>
+    </main>
   );
 }
 
