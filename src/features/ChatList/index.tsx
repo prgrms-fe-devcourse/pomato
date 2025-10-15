@@ -1,55 +1,70 @@
+import { UserRound, type LucideIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+
+/**
+ * @component
+ *
+ * @example
+ * ```tsx
+ * import { UserRound, MessageCircle } from "lucide-react";
+ *
+ * // 기본 사용법 (이미지 아바타)
+ * <ChatListItem
+ *   avatar="https://example.com/avatar.jpg"
+ *   type="online"
+ *   name="김철수"
+ *   message="안녕하세요! 오늘 날씨가 좋네요."
+ *   lastTime={new Date()}
+ *   unreadCount={3}
+ * />
+ *
+ * // 아이콘 아바타 사용
+ * <ChatListItem
+ *   avatar={MessageCircle}
+ *   type="offline"
+ *   name="이영희"
+ *   message="내일 회의 준비는 어떻게 되었나요?"
+ *   lastTime={new Date(Date.now() - 2 * 60 * 60 * 1000)}
+ *   unreadCount={0}
+ * />
+ *
+ * // 기본값 사용
+ * <ChatListItem />
+ * ```
+ *
+ * @param {object} props - ChatListItem 컴포넌트의 속성
+ * @param {string | LucideIcon} [props.avatar=UserRound] - 사용자 아바타 (이미지 URL 또는 Lucide 아이콘)
+ * @param {UserStatusType} [props.type="offline"] - 사용자 상태 ("online" | "offline")
+ * @param {string} [props.name="홍길동"] - 사용자 이름
+ * @param {string} [props.message] - 마지막 메시지 내용 (기본값: Lorem Ipsum 텍스트)
+ * @param {number} [props.unreadCount=99] - 읽지 않은 메시지 수 (0이면 표시되지 않음)
+ * @param {string} [props.className] - 루트 컨테이너에 추가할 Tailwind 클래스명
+ *
+ * @returns {JSX.Element} 채팅 목록 항목을 나타내는 div 엘리먼트
+ */
 
 type UserStatusType = "online" | "offline";
 
 type ChatListItemProps = {
-  avatar?: string;
+  avatar?: string | LucideIcon;
   type?: UserStatusType;
-  name?: string;
-  message?: string;
-  lastTime?: Date;
+  name: string;
+  message: string;
   unreadCount?: number;
   className?: string;
-  onClick?: () => void;
 };
 
-function formatLastTime(d: Date): string {
-  const now = new Date();
-
-  const isSameDay =
-    d.getFullYear() === now.getFullYear() &&
-    d.getMonth() === now.getMonth() &&
-    d.getDate() === now.getDate();
-
-  const y = new Date(now);
-  y.setDate(now.getDate() - 1);
-  const isYesterday =
-    d.getFullYear() === y.getFullYear() &&
-    d.getMonth() === y.getMonth() &&
-    d.getDate() === y.getDate();
-
-  if (isSameDay) {
-    return d.toLocaleTimeString("ko-KR", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-  }
-  if (isYesterday) return "어제";
-  return d.toLocaleDateString("ko-KR", { month: "short", day: "numeric" });
-}
-
 export default function ChatListItem({
-  avatar = "https://picsum.photos/seed/user1/80",
-  type = "online",
+  avatar = UserRound,
+  type = "offline",
   name = "홍길동",
   message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-  lastTime = new Date(Date.now() - 14 * 60 * 60 * 1000),
   unreadCount = 99,
   className,
-  onClick,
 }: ChatListItemProps) {
   const hasUnread = typeof unreadCount === "number" && unreadCount > 0;
+  const hasImage = typeof avatar === "string";
+  const AvatarIcon: LucideIcon = hasImage ? UserRound : avatar;
 
   return (
     <div
@@ -63,13 +78,19 @@ export default function ChatListItem({
         className,
       )}
       draggable={false}
-      onClick={onClick}
     >
       {/* 왼쪽: 아바타 + 상태 */}
       <div className="relative mt-1 mr-[16px] h-[52px] w-[52px]">
         <div className="h-full w-full overflow-hidden rounded-[26px] border-[2px] border-white/15 dark:border-white/15">
-          {avatar && (
-            <img src={avatar} alt="" className="h-full w-full object-cover" draggable={false} />
+          {hasImage ? (
+            <img
+              src={avatar}
+              alt={`${name}'s avatar`}
+              className="h-full w-full object-cover"
+              draggable={false}
+            />
+          ) : (
+            <AvatarIcon className="text-wh h-full w-full" aria-hidden={true} />
           )}
         </div>
         <span
@@ -97,11 +118,11 @@ export default function ChatListItem({
       {/* 우측: 마지막 메시지 시간 + 안읽은 횟수 */}
       <div
         className={twMerge(
-          "absolute inset-y-0 right-[16px] flex w-[56px] flex-col items-end gap-2",
+          "absolute inset-y-0 right-[16px] flex min-w-[60px] flex-col items-end gap-2",
           hasUnread ? "justify-center" : "justify-start pt-[20px]",
         )}
       >
-        <span className="label-text-xs text-wh/70">{formatLastTime(lastTime)}</span>
+        <span className="label-text-xs text-wh/70 pb-1">오후 12:10</span>
 
         {hasUnread && (
           <span
@@ -110,7 +131,7 @@ export default function ChatListItem({
               "label-text-xs text-wh",
               "bg-red-500",
             )}
-            aria-label={`${unreadCount} unread messages`}
+            aria-label={"unread messages"}
           >
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
