@@ -28,7 +28,7 @@ import { twMerge } from "tailwind-merge";
  * ```
  *
  * @param {object} props - UserListItem 컴포넌트의 속성
- * @param {string} [props.avatar="https://picsum.photos/seed/user1/80"] - 사용자 아바타 이미지 URL
+ * @param {string|LucideIcon} [props.avatar=UserRound] - 사용자 아바타 이미지 URL 또는 Lucide 아이콘 컴포넌트. 기본값은 UserRound 아이콘입니다.
  * @param {UserStatusType} [props.type="online"] - 사용자 상태 ("online" | "offline")
  * @param {string} [props.name="김철수"] - 사용자 이름
  * @param {string} [props.className] - 루트 컨테이너에 추가할 Tailwind 클래스명
@@ -48,11 +48,11 @@ type UserListItemProps = {
 export default function UserListItem({
   avatar = UserRound,
   type = "offline",
-  name = "김철수",
+  name,
   className,
 }: UserListItemProps) {
-  const isImage = typeof avatar === "string";
-  const Icon: LucideIcon = isImage ? UserRound : avatar;
+  const hasImage = typeof avatar === "string";
+  const Icon: LucideIcon = hasImage ? UserRound : avatar;
   return (
     <div
       className={twMerge(
