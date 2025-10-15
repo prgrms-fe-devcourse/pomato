@@ -2,37 +2,44 @@ import { Check, X, Heart, Mail, MessageCircle, UserRound, type LucideIcon } from
 import { twMerge } from "tailwind-merge";
 
 /**
- * NotificationItem
- *
- * 스크린샷의 알림 카드 스타일을 단일 컴포넌트로 구현
- *
- * - props
- *   - avatar: string (이미지 URL 또는 이니셜 텍스트)
- *   - type: "like" | "message" | "comment"
- *   - name: string
- *   - comment?: string
- *   - occurredTime?: string (ex. "2h", "3h")
- *
  * @component
  *
  * @example
  * ```tsx
+ * import { Heart, MessageCircle, Mail, UserRound } from "lucide-react";
+ *
+ * // 좋아요 알림 (이미지 아바타)
  * <NotificationItem
- *   avatar="https://picsum.photos/80"
- *   type="comment"
- *   name="Sarah Kim"
- *   comment="This looks amazing! The glassmorphism effect is so clean and modern. 🙂"
- *   occurredTime="2h"
+ *   avatar="https://example.com/avatar.jpg"
+ *   type="like"
+ *   name="김철수"
+ *   comment="정말 멋진 디자인이네요! 👍"
  * />
  *
+ * // 댓글 알림 (아이콘 아바타)
  * <NotificationItem
- *   avatar="SK" // 이니셜 텍스트도 가능
- *   type="like"
- *   name="Jordan Taylor"
- *   comment="Love the consistency across all components!"
- *   occurredTime="3h"
+ *   avatar={UserRound}
+ *   type="comment"
+ *   name="이영희"
+ *   comment="이 부분에 대해 더 자세히 설명해주실 수 있나요?"
+ * />
+ *
+ * // 메시지 알림
+ * <NotificationItem
+ *   type="message"
+ *   name="박민수"
+ *   comment="회의 시간을 3시로 변경해도 될까요?"
  * />
  * ```
+ *
+ * @param {object} props - NotificationItem 컴포넌트의 속성
+ * @param {string | LucideIcon} [props.avatar=UserRound] - 사용자 아바타 (이미지 URL 또는 Lucide 아이콘)
+ * @param {NotificationType} [props.type="like"] - 알림 타입 ("like" | "message" | "comment")
+ * @param {string} [props.name="홍길동"] - 사용자 이름
+ * @param {string} [props.comment] - 알림 내용/댓글 (기본값: Lorem Ipsum 텍스트)
+ * @param {string} [props.className] - 루트 컨테이너에 추가할 Tailwind 클래스명
+ *
+ * @returns {JSX.Element} 알림 목록 항목을 나타내는 div 엘리먼트
  */
 
 type NotificationType = "like" | "message" | "comment";
