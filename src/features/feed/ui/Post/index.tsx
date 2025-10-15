@@ -1,5 +1,7 @@
-import { Ellipsis, Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+
+import Dropdown from "@components/Dropdown";
 
 export default function Post() {
   return (
@@ -22,9 +24,7 @@ export default function Post() {
             <span className="label-text-s text-wh/60">id and times</span>
           </div>
         </div>
-        <button className="text-wh hover:bg-wh/15 flex h-[24px] w-[24px] cursor-pointer items-center justify-center rounded-[6px]">
-          <Ellipsis width={16} height={16} />
-        </button>
+        <Dropdown />
       </div>
       <div className="paragraph-text-m text-wh flex flex-col gap-[12px]">
         <p className="paragraph-text-medium">
