@@ -10,11 +10,14 @@ interface AvatarProps
     VariantProps<typeof editVariants>,
     VariantProps<typeof avatarVariants> {
   src?: string;
-  status?: "default" | "online" | "offline" | "edit";
+  status?: StatusType;
   containerStyle?: string;
   editStyle?: string;
   statusStyle?: string;
 }
+
+type StatusType = "default" | "online" | "offline" | "edit";
+
 /**
  * Avatar 컴포넌트
  *
