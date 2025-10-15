@@ -80,11 +80,7 @@ export default function ChatListItem({
       {/* 왼쪽: 아바타 + 상태 */}
       <div className="relative mt-1 mr-[16px] h-[52px] w-[52px]">
         {/* 아바타 영역 */}
-        {hasImage ? (
-          <Avatar src={avatar} status={type || "default"} />
-        ) : (
-          <Avatar status={type || "default"} />
-        )}
+        {hasImage ? <Avatar src={avatar} status={type} /> : <Avatar status={type} />}
       </div>
 
       {/* 본문 */}
