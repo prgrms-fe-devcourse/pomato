@@ -1,18 +1,18 @@
 import { cva } from "class-variance-authority";
 
-const DEFAULT_SIZE = "m";
+export const DEFAULT_SIZE = "m";
 
 export const avatarVariants = cva(
-  "border-2 border-wh/15 bg-wh relative [&_label]:absolute [&_label]:border-wh [&_label]:rounded-full",
+  "flex bg-wh/25 dark:bg-bl/40 justify-center items-center border-2 border-wh/15 relative [&_label]:absolute [&_label]:border-wh [&_label]:rounded-full",
   {
     variants: {
       size: {
-        xxs: "w-[24px] h-[24px] rounded-[12px] [&_label]:w-[8px] [&_label]:h-[8px] [&_label]:border-1 [&_label]:left-[12px] [&_label]:top-[12px]",
-        xs: "w-[32px] h-[32px] rounded-[16px] [&_label]:w-[12px] [&_label]:h-[12px] [&_label]:border-2 [&_label]:left-[18px] [&_label]:top-[18px]",
-        s: "w-[40px] h-[40px] rounded-[20px] [&_label]:w-[14px] [&_label]:h-[14px] [&_label]:border-2 [&_label]:left-[24px] [&_label]:top-[24px]",
-        m: "w-[52px] h-[52px] rounded-[26px] [&_label]:w-[16px] [&_label]:h-[16px] [&_label]:border-2 [&_label]:left-[30px] [&_label]:top-[30px]",
-        l: "w-[80px] h-[80px] rounded-[40px] [&_label]:w-[20px] [&_label]:h-[20px] [&_label]:border-2 [&_label]:left-[52px] [&_label]:top-[52px]",
-        xl: "w-[120px] h-[120px] rounded-[60px] [&_label]:w-[24px] [&_label]:h-[24px] [&_label]:border-3 [&_label]:left-[88px] [&_label]:top-[88px]",
+        xxs: "w-[24px] h-[24px] rounded-[12px] [&_label]:w-[8px] [&_label]:h-[8px] [&_label]:border-1 [&_label]:left-[12px] [&_label]:top-[12px] [&>svg]:w-[12px] [&>svg]:h-[12px]",
+        xs: "w-[32px] h-[32px] rounded-[16px] [&_label]:w-[12px] [&_label]:h-[12px] [&_label]:border-2 [&_label]:left-[18px] [&_label]:top-[18px] [&>svg]:w-[16px] [&>svg]:h-[16px]",
+        s: "w-[40px] h-[40px] rounded-[20px] [&_label]:w-[14px] [&_label]:h-[14px] [&_label]:border-2 [&_label]:left-[24px] [&_label]:top-[24px] [&>svg]:w-[20px] [&>svg]:h-[20px]",
+        m: "w-[52px] h-[52px] rounded-[26px] [&_label]:w-[16px] [&_label]:h-[16px] [&_label]:border-2 [&_label]:left-[30px] [&_label]:top-[30px] [&>svg]:w-[26px] [&>svg]:h-[26px]",
+        l: "w-[80px] h-[80px] rounded-[40px] [&_label]:w-[20px] [&_label]:h-[20px] [&_label]:border-2 [&_label]:left-[52px] [&_label]:top-[52px] [&>svg]:w-[40px] [&>svg]:h-[40px]",
+        xl: "w-[120px] h-[120px] rounded-[60px] [&_label]:w-[24px] [&_label]:h-[24px] [&_label]:border-3 [&_label]:left-[88px] [&_label]:top-[88px] [&>svg]:w-[60px] [&>svg]:h-[60px]",
       },
     },
     defaultVariants: {
