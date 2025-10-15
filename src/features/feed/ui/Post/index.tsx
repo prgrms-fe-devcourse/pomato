@@ -1,6 +1,7 @@
 import { Heart, MessageCircle } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
+import Avatar from "@components/Avatar";
 import Dropdown from "@components/Dropdown";
 
 export default function Post() {
@@ -13,11 +14,7 @@ export default function Post() {
     >
       <div className="flex items-center justify-between">
         <div className="flex gap-[12px]">
-          <img
-            src="https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg"
-            alt="feed-post-avatar"
-            className="border-wh/15 h-[52px] w-[52px] rounded-full border-2 object-cover"
-          />
+          <Avatar />
 
           <div className="flex flex-col justify-start">
             <span className="label-text-m-semibold text-wh">name</span>
@@ -32,9 +29,9 @@ export default function Post() {
         </p>
         <div className="max-w-full overflow-hidden">
           <img
-            src="https://static.vecteezy.com/system/resources/thumbnails/057/068/323/small/single-fresh-red-strawberry-on-table-green-background-food-fruit-sweet-macro-juicy-plant-image-photo.jpg"
+            src=""
             alt="example"
-            className="border-wh/10 h-auto max-w-full rounded-[12px] border-1 object-contain"
+            className="border-wh/10 h-auto w-full rounded-[12px] border-1 object-contain"
           />
         </div>
       </div>
