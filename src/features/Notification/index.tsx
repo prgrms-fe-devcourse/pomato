@@ -1,5 +1,7 @@
-import { Check, X, Heart, Mail, MessageCircle, UserRound, type LucideIcon } from "lucide-react";
+import { Check, X, Heart, Mail, MessageCircle } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+
+import Avatar from "@components/Avatar";
 
 /**
  * @component
@@ -51,7 +53,7 @@ const typeIconMap = {
 } as const;
 
 type NotificationItemProps = {
-  avatar?: string | LucideIcon;
+  avatar?: string;
   type?: NotificationType;
   name: string;
   comment: string;
@@ -65,13 +67,14 @@ const TITLE_SUFFIX = {
 } as const;
 
 export default function NotificationItem({
-  avatar = UserRound,
+  avatar,
   type = "like",
   name = "홍길동",
   comment = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
   className,
 }: NotificationItemProps) {
   const TypeIcon = typeIconMap[type];
+
   const hasImage = typeof avatar === "string";
 
   return (
