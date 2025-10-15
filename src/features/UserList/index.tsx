@@ -20,7 +20,7 @@ export default function UserListItem({
     <div
       className={twMerge(
         "group relative flex min-h-[78px] w-full min-w-[400px] items-center rounded-[12px] transition select-none",
-        "mb-2 px-[16px] py-[12px]",
+        "mb-2 border-[1px] px-[16px] py-[12px]",
         "bg-wh/8 border-wh/10",
         "dark:bg-bl/25 dark:border-wh/10",
         "hover:bg-wh/12 dark:hover:bg-bl/35",
@@ -33,7 +33,12 @@ export default function UserListItem({
         <div className="relative mt-1 h-[52px] w-[52px]">
           <div className="h-full w-full overflow-hidden rounded-[26px] border-[2px] border-white/15 dark:border-white/15">
             {avatar && (
-              <img src={avatar} alt="" className="h-full w-full object-cover" draggable={false} />
+              <img
+                src={avatar}
+                alt={`${name}'s avatar`}
+                className="h-full w-full object-cover"
+                draggable={false}
+              />
             )}
           </div>
           <span
@@ -69,7 +74,7 @@ export default function UserListItem({
         <button
           type="button"
           className={twMerge(
-            "text-wh inline-flex h-8 w-8 items-center justify-center rounded-[10px]",
+            "text-wh inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-[1px]",
             "bg-wh/20 border-wh/15 hover:bg-wh/30 hover:border-wh/25 active:bg-wh/35",
             "dark:bg-bl/30 dark:border-wh/12 dark:hover:bg-bl/40 dark:hover:border-wh/18 dark:active:bg-bl/45",
           )}
@@ -78,7 +83,7 @@ export default function UserListItem({
           }}
           draggable={false}
         >
-          <MessageCircle className="text-wh h-[14px] w-[14px]" aria-hidden />
+          <MessageCircle className="text-wh h-[14px] w-[14px]" aria-hidden={true} />
         </button>
       </div>
     </div>
