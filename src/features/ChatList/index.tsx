@@ -88,7 +88,7 @@ export default function ChatListItem({
               draggable={false}
             />
           ) : (
-            <AvatarIcon className="text-wh h-full w-full" aria-hidden={true} />
+            <AvatarIcon className="text-wh h-full w-full" aria-hidden="true" />
           )}
         </div>
         <span
@@ -129,7 +129,6 @@ export default function ChatListItem({
               "label-text-xs text-wh",
               "bg-red-500",
             )}
-            aria-label={"unread messages"}
           >
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
