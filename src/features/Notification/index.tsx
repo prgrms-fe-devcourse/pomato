@@ -51,11 +51,11 @@ type NotificationItemProps = {
   className?: string;
 };
 
-const TITLE_SUFFIX: Record<NotificationType, string> = {
+const TITLE_SUFFIX = {
   like: "님이 좋아요를 남겼습니다",
   message: "님이 메세지를 보냈습니다",
   comment: "님이 댓글을 남겼습니다",
-};
+} as const;
 
 export default function NotificationItem({
   avatar = UserRound,
