@@ -12,7 +12,7 @@ export default function Panel() {
     <>
       {open ? (
         <div
-          className="bg-wh/18 dark:bg-bl/18 border-wh/12 dark:border-wh/8 min-h-full w-[560px] rounded-[8px] border-1 backdrop-blur-[12px]"
+          className="bg-wh/18 dark:bg-bl/18 border-wh/12 dark:border-wh/8 min-h-full w-[40%] max-w-[650px] min-w-[576px] rounded-[8px] border-1 backdrop-blur-[12px]"
           aria-label="panel"
         >
           <Header onClose={() => setIsOpen(false)} />
