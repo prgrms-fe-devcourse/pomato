@@ -14,7 +14,6 @@ import { twMerge } from "tailwind-merge";
  *   type="online"
  *   name="김철수"
  *   message="안녕하세요! 오늘 날씨가 좋네요."
- *   lastTime={new Date()}
  *   unreadCount={3}
  * />
  *
@@ -24,7 +23,6 @@ import { twMerge } from "tailwind-merge";
  *   type="offline"
  *   name="이영희"
  *   message="내일 회의 준비는 어떻게 되었나요?"
- *   lastTime={new Date(Date.now() - 2 * 60 * 60 * 1000)}
  *   unreadCount={0}
  * />
  *
