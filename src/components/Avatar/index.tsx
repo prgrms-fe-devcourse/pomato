@@ -12,8 +12,6 @@ interface AvatarProps
   src?: string;
   status?: StatusType;
   containerStyle?: string;
-  editStyle?: string;
-  statusStyle?: string;
 }
 
 type StatusType = "default" | "online" | "offline" | "edit";
@@ -46,8 +44,6 @@ type StatusType = "default" | "online" | "offline" | "edit";
  * @param {"default" | "online" | "offline" | "edit"} [props.status="default"] - 아바타 상태
  * @param {string} [props.size] - `avatarVariants`에 정의된 크기 옵션
  * @param {string} [props.containerStyle] - 최상위 div에 추가할 사용자 정의 Tailwind 클래스
- * @param {string} [props.editStyle] - `edit` 모드 시 label에 추가할 스타일 (미사용 시 생략 가능)
- * @param {string} [props.statusStyle] - 상태 표시 라벨에 추가할 스타일 (미사용 시 생략 가능)
  * @param {string} [props.className] - `<img>` 태그에 추가할 클래스명
  * @param {React.ImgHTMLAttributes<HTMLImageElement>} [rest] - 기타 `<img>` 태그 속성 (alt, loading 등)
  *
