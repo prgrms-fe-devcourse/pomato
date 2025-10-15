@@ -23,7 +23,7 @@ const dot = cva(
 
 export default function Timer() {
   return (
-    <section className="flex h-full flex-col items-center justify-center gap-5">
+    <section className="flex flex-1 flex-col items-center justify-center gap-5">
       <header>
         <h2 className="text-wh/70 font-semibold tracking-widest">{SESSION_STATUS_TEXT[0]}</h2>
       </header>
