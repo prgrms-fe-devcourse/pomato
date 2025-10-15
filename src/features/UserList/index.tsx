@@ -1,4 +1,4 @@
-import { MessageCircle, UserRound, type LucideIcon } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
@@ -42,14 +42,14 @@ import Button from "@components/Button";
 type UserStatusType = "online" | "offline";
 
 type UserListItemProps = {
-  avatar?: string | LucideIcon;
+  avatar?: string;
   type?: UserStatusType;
   name: string;
   className?: string;
 };
 
 export default function UserListItem({
-  avatar = UserRound,
+  avatar,
   type = "offline",
   name,
   className,
@@ -64,7 +64,7 @@ export default function UserListItem({
         "bg-wh/8 border-wh/10",
         "dark:bg-bl/25 dark:border-wh/10",
         "hover:bg-wh/12 dark:hover:bg-bl/35",
-        // "active:bg-wh/20 dark:active:bg-bl/45",
+        "active:bg-wh/20 dark:active:bg-bl/45",
         className,
       )}
       draggable={false}
