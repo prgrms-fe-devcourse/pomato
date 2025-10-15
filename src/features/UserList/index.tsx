@@ -69,7 +69,7 @@ export default function UserListItem({
       <div className="flex items-center gap-[16px]">
         <div className="relative mt-1 h-[52px] w-[52px]">
           <div className="h-full w-full overflow-hidden rounded-[26px] border-[2px] border-white/15 dark:border-white/15">
-            {isImage ? (
+            {hasImage ? (
               <img
                 src={avatar}
                 alt={`${name}'s avatar`}
