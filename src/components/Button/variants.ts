@@ -3,15 +3,15 @@ import { cva, type VariantProps } from "class-variance-authority";
 export const button = cva(
   // Base styles
   [
-    "inline-flex items-center justify-center text-wh cursor-pointer",
-    "outline-none focus-visible:ring-2 focus-visible:ring-wh/12",
-    "disabled:opacity-45 disabled:cursor-not-allowed",
+    "text-wh inline-flex cursor-pointer items-center justify-center",
+    "focus-visible:ring-wh/12 outline-none focus-visible:ring-2",
+    "disabled:cursor-not-allowed disabled:opacity-45",
   ],
   {
     variants: {
       intent: {
         glass: [
-          "bg-wh/20 border border-wh/15",
+          "bg-wh/20 border-wh/15 border",
           "enabled:hover:bg-wh/30 enabled:hover:border-wh/25",
           "enabled:active:bg-wh/40 enabled:active:border-wh/35",
           "dark:bg-bl/30 dark:border-wh/12",
@@ -25,15 +25,15 @@ export const button = cva(
           "dark:enabled:hover:bg-bl/25 dark:enabled:active:bg-bl/35",
         ],
         subtle: [
-          "bg-transparent text-wh/65 enabled:hover:text-wh/90",
+          "text-wh/65 enabled:hover:text-wh/90 bg-transparent",
           "enabled:active:bg-wh/20 dark:enabled:active:bg-bl/30",
         ],
         primary: "bg-blue-500 enabled:hover:bg-blue-600 enabled:active:bg-blue-700",
       },
       size: {
-        lg: "px-4 h-10 label-text-m [&_svg]:size-4", // 필요시 size-[18px]
-        md: "px-3 h-8 label-text-s [&_svg]:size-3.5",
-        sm: "px-2 h-6 label-text-xs [&_svg]:size-3",
+        lg: "label-text-m h-10 px-4 [&_svg]:size-4", // 필요시 size-[18px]
+        md: "label-text-s h-8 px-3 [&_svg]:size-3.5",
+        sm: "label-text-xs h-6 px-2 [&_svg]:size-3",
       },
       shape: {
         default: "rounded-lg",
