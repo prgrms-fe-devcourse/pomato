@@ -1,21 +1,63 @@
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, UserRound, type LucideIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+
+/**
+ * @component
+ *
+ * @example
+ * ```tsx
+ * import { MessageCircle } from "lucide-react";
+ *
+ * // 기본 사용법
+ * <UserListItem
+ *   avatar="https://example.com/avatar.jpg"
+ *   type="online"
+ *   name="김철수"
+ * />
+ *
+ * // 오프라인 사용자
+ * <UserListItem
+ *   avatar="https://example.com/avatar2.jpg"
+ *   type="offline"
+ *   name="이영희"
+ *   className="mb-4"
+ * />
+ *
+ * // 기본값 사용
+ * <UserListItem />
+ * ```
+ *
+ * @param {object} props - UserListItem 컴포넌트의 속성
+ * @param {string} [props.avatar="https://picsum.photos/seed/user1/80"] - 사용자 아바타 이미지 URL
+ * @param {UserStatusType} [props.type="online"] - 사용자 상태 ("online" | "offline")
+ * @param {string} [props.name="김철수"] - 사용자 이름
+ * @param {string} [props.className] - 루트 컨테이너에 추가할 Tailwind 클래스명
+ *
+ * @returns {JSX.Element} 사용자 목록 항목을 나타내는 div 엘리먼트
+ */
 
 type UserStatusType = "online" | "offline";
 
 type UserListItemProps = {
-  avatar?: string;
+  avatar?: string | LucideIcon;
   type?: UserStatusType;
-  name?: string;
+  name: string;
   className?: string;
 };
 
 export default function UserListItem({
-  avatar = "https://picsum.photos/seed/user1/80",
-  type = "online",
+  avatar = UserRound,
+  type = "offline",
   name = "김철수",
   className,
 }: UserListItemProps) {
+  const isImage = typeof avatar === "string";
+  let Icon: LucideIcon = UserRound;
+
+  if (!isImage) {
+    Icon = avatar;
+  }
+
   return (
     <div
       className={twMerge(
@@ -32,13 +74,15 @@ export default function UserListItem({
       <div className="flex items-center gap-[16px]">
         <div className="relative mt-1 h-[52px] w-[52px]">
           <div className="h-full w-full overflow-hidden rounded-[26px] border-[2px] border-white/15 dark:border-white/15">
-            {avatar && (
+            {isImage ? (
               <img
                 src={avatar}
                 alt={`${name}'s avatar`}
                 className="h-full w-full object-cover"
                 draggable={false}
               />
+            ) : (
+              <Icon className="text-wh h-full w-full" aria-hidden={true} />
             )}
           </div>
           <span
