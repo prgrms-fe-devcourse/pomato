@@ -52,12 +52,7 @@ export default function UserListItem({
   className,
 }: UserListItemProps) {
   const isImage = typeof avatar === "string";
-  let Icon: LucideIcon = UserRound;
-
-  if (!isImage) {
-    Icon = avatar;
-  }
-
+  const Icon: LucideIcon = isImage ? UserRound : avatar;
   return (
     <div
       className={twMerge(
@@ -124,6 +119,7 @@ export default function UserListItem({
           )}
           onClick={(e) => {
             e.stopPropagation();
+            // TODO: 기능 추가
           }}
           draggable={false}
         >
