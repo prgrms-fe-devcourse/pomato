@@ -2,6 +2,7 @@ import { Check, X, Heart, Mail, MessageCircle } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
+import Button from "@components/Button";
 
 /**
  * NotificationItem
@@ -114,25 +115,25 @@ export default function NotificationItem({
               {/* 액션: hover 시 노출 */}
               <div className={twMerge("hidden items-center gap-[6px]", "group-hover:flex")}>
                 {/* 확인 */}
-                <button
-                  type="button"
+
+                <Button
                   onClick={(e) => {
                     e.stopPropagation();
                     // 확인 버튼 클릭 시 실행할 함수 선언
                   }}
-                  className={twMerge(
-                    "inline-flex h-7 w-7 items-center justify-center rounded-[6px] transition-none",
-                    "hover:bg-wh/15 dark:hover:bg-bl/50 transition-colors",
-                  )}
+                  className={
+                    "hover:bg-wh/15 dark:hover:bg-bl/50 inline-flex h-7 w-7 items-center justify-center rounded-[6px] transition-colors transition-none"
+                  }
+                  intent={"reveal"}
                   aria-label="확인"
-                  draggable={false}
+                  composition={"iconOnly"}
                 >
                   <Check className="text-wh/85 h-4 w-4" aria-hidden />
-                </button>
+                </Button>
 
                 {/* 닫기 */}
-                <button
-                  type="button"
+
+                <Button
                   onClick={(e) => {
                     e.stopPropagation();
                     // 닫기 버튼 클릭 시 실행할 함수 선언
@@ -141,11 +142,12 @@ export default function NotificationItem({
                     "inline-flex h-7 w-7 items-center justify-center rounded-[6px] transition-none",
                     "hover:bg-wh/15 dark:hover:bg-bl/50 transition-colors",
                   )}
-                  aria-label="닫기"
-                  draggable={false}
+                  intent={"reveal"}
+                  aria-label="확인"
+                  composition={"iconOnly"}
                 >
                   <X className="text-wh/85 h-4 w-4" aria-hidden />
-                </button>
+                </Button>
               </div>
             </div>
           </div>
