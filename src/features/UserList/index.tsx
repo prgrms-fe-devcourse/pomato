@@ -109,7 +109,7 @@ export default function UserListItem({
           size="md"
           aria-label="메세지 전송"
           draggable={false}
-          composition={"iconOnly"}
+          composition="iconOnly"
         >
           <MessageCircle className="text-wh h-[14px] w-[14px]" aria-hidden="true" />
         </Button>
