@@ -7,6 +7,7 @@ type ItemProps = {
   Icon: LucideIcon;
   danger?: boolean;
   disabled?: boolean;
+  className?: string;
   onClick?: () => void;
 };
 /**
@@ -79,6 +80,7 @@ export default function Item({
   Icon,
   danger = false,
   disabled = false,
+  className,
   onClick,
 }: ItemProps) {
   return (
@@ -90,6 +92,7 @@ export default function Item({
             ? "bg-wh/4 dark:bg-bl/15 border-wh/6 hover:border-red-500/15 hover:bg-red-500/8 active:border-red-500/20 active:bg-red-500/12"
             : "bg-wh/4 dark:bg-bl/15 border-wh/6 hover:bg-wh/10 hover:border-wh/12 hover:dark:bg-bl/30 hover:dark:border-wh/10 active:bg-wh/15 active:border-wh/15 active:dark:bg-bl/40 active:dark:border-wh/12 border-1",
         "group flex cursor-pointer items-center justify-between rounded-[8px] px-[20px] py-[18px]",
+        className,
       )}
       {...(!disabled && { onClick })}
     >
