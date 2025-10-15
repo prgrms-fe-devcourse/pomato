@@ -71,7 +71,11 @@ export default function UserListItem({
     >
       <div className="flex items-center gap-[16px]">
         {/* 아바타 영역 */}
-        {hasImage ? <Avatar src={avatar} status={type || "default"} /> : <Avatar />}
+        {hasImage ? (
+          <Avatar src={avatar} status={type || "default"} />
+        ) : (
+          <Avatar status={type || "default"} />
+        )}
 
         {/* Content */}
         <div className="flex-1">
