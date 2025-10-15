@@ -23,6 +23,12 @@
   }
 }
 
+@layer base {
+  html {
+    color: var(--color-wh);
+  }
+}
+
 /* 커스텀 paragraph 글자 영역 */
 .paragraph-text-l {
   font-size: 18px;
