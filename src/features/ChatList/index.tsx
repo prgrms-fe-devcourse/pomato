@@ -1,5 +1,6 @@
-import { UserRound, type LucideIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+
+import Avatar from "@components/Avatar";
 
 /**
  * @component
@@ -19,7 +20,7 @@ import { twMerge } from "tailwind-merge";
  *
  * // 아이콘 아바타 사용
  * <ChatListItem
- *   avatar={MessageCircle}
+ *   avatar="https://example.com/avatar.jpg"
  *   type="offline"
  *   name="이영희"
  *   message="내일 회의 준비는 어떻게 되었나요?"
@@ -31,7 +32,7 @@ import { twMerge } from "tailwind-merge";
  * ```
  *
  * @param {object} props - ChatListItem 컴포넌트의 속성
- * @param {string | LucideIcon} [props.avatar=UserRound] - 사용자 아바타 (이미지 URL 또는 Lucide 아이콘)
+ * @param {string} [props.avatar] - 사용자 아바타 (이미지 URL)
  * @param {UserStatusType} [props.type="offline"] - 사용자 상태 ("online" | "offline")
  * @param {string} [props.name="홍길동"] - 사용자 이름
  * @param {string} [props.message] - 마지막 메시지 내용 (기본값: Lorem Ipsum 텍스트)
@@ -44,7 +45,7 @@ import { twMerge } from "tailwind-merge";
 type UserStatusType = "online" | "offline";
 
 type ChatListItemProps = {
-  avatar?: string | LucideIcon;
+  avatar?: string;
   type?: UserStatusType;
   name: string;
   message: string;
@@ -53,7 +54,7 @@ type ChatListItemProps = {
 };
 
 export default function ChatListItem({
-  avatar = UserRound,
+  avatar,
   type = "offline",
   name = "홍길동",
   message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
@@ -62,7 +63,6 @@ export default function ChatListItem({
 }: ChatListItemProps) {
   const hasUnread = typeof unreadCount === "number" && unreadCount > 0;
   const hasImage = typeof avatar === "string";
-  const AvatarIcon: LucideIcon = hasImage ? UserRound : avatar;
 
   return (
     <div
@@ -79,26 +79,12 @@ export default function ChatListItem({
     >
       {/* 왼쪽: 아바타 + 상태 */}
       <div className="relative mt-1 mr-[16px] h-[52px] w-[52px]">
-        <div className="h-full w-full overflow-hidden rounded-[26px] border-[2px] border-white/15 dark:border-white/15">
-          {hasImage ? (
-            <img
-              src={avatar}
-              alt={`${name}'s avatar`}
-              className="h-full w-full object-cover"
-              draggable={false}
-            />
-          ) : (
-            <AvatarIcon className="text-wh h-full w-full" aria-hidden="true" />
-          )}
-        </div>
-        <span
-          className={twMerge(
-            "absolute right-0.5 bottom-1 h-[16px] w-[16px] rounded-[8px]",
-            "border-wh dark:border-wh border-[2px]",
-            type === "online" ? "bg-green-500" : "bg-gray-400",
-          )}
-          aria-hidden="true"
-        />
+        {/* 아바타 영역 */}
+        {hasImage ? (
+          <Avatar src={avatar} status={type || "default"} />
+        ) : (
+          <Avatar status={type || "default"} />
+        )}
       </div>
 
       {/* 본문 */}
