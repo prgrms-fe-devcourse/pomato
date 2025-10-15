@@ -64,7 +64,6 @@ export default function UserListItem({
         "bg-wh/8 border-wh/10",
         "dark:bg-bl/25 dark:border-wh/10",
         "hover:bg-wh/12 dark:hover:bg-bl/35",
-        "active:bg-wh/20 dark:active:bg-bl/45",
         className,
       )}
       draggable={false}
