@@ -4,6 +4,22 @@ import { twMerge } from "tailwind-merge";
 import Avatar from "@components/Avatar";
 import Dropdown from "@components/Dropdown";
 
+/**
+ * Post 컴포넌트
+ *
+ * 하나의 게시글 카드(UI)를 렌더링합니다.
+ * 아바타, 작성자 정보, 본문 텍스트, 이미지, 좋아요/댓글 버튼을 포함합니다.
+ *
+ * - Avatar 컴포넌트와 Dropdown 메뉴 포함
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <Post />
+ * ```
+ *
+ * @returns {JSX.Element} 렌더링된 게시글 카드 컴포넌트
+ */
 export default function Post() {
   return (
     <div
@@ -11,36 +27,49 @@ export default function Post() {
         "bg-wh/4 border-wh/6 dark:bg-bl/15 hover:bg-wh/10 hover:border-wh/12 hover:dark:bg-bl/30 hover:dark:border-bl/10 border-1",
         "flex flex-col gap-[16px] rounded-[12px] px-[24px] py-[20px]",
       )}
+      role="article"
+      aria-label="post"
     >
       <div className="flex items-center justify-between">
-        <div className="flex gap-[12px]">
+        <div className="flex gap-[12px]" aria-label="author information">
           <Avatar />
 
           <div className="flex flex-col justify-start">
-            <span className="label-text-m-semibold text-wh">name</span>
-            <span className="label-text-s text-wh/60">id and times</span>
+            <span className="label-text-m-semibold text-wh" aria-label="author name">
+              name
+            </span>
+            <span className="label-text-s text-wh/60" aria-label="author id timestamp">
+              id and times
+            </span>
           </div>
         </div>
         <Dropdown />
       </div>
-      <div className="paragraph-text-m text-wh flex flex-col gap-[12px]">
-        <p className="paragraph-text-medium">
+      <div className="paragraph-text-m text-wh flex flex-col gap-[12px]" aria-label="post content">
+        <p className="paragraph-text-medium" aria-label="post text">
           Just finished working on this amazing glassmorphism UI kit! 🎨✨
         </p>
-        <div className="max-w-full overflow-hidden">
+        <div className="max-w-full overflow-hidden" aria-label="post image container">
           <img
             src=""
             alt="example"
             className="border-wh/10 h-auto w-full rounded-[12px] border-1 object-contain"
+            aria-label="post image"
           />
         </div>
       </div>
-      <div className="flex gap-[16px]">
-        <button className="text-wh/65 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px] hover:bg-pink-500/10 hover:text-pink-500">
+      <div className="flex gap-[16px]" aria-label="post buttons">
+        <button
+          className="text-wh/65 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px] hover:bg-pink-500/10 hover:text-pink-500"
+          aria-label="post like button"
+        >
           <Heart width={15} height={15} />
           <span className="label-text-xs">999+</span>
         </button>
-        <button className="text-wh/65 hover:bg-wh/10 hover:text-wh/85 hover:dark:bg-bl/30 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]">
+        <button
+          className="text-wh/65 hover:bg-wh/10 hover:text-wh/85 hover:dark:bg-bl/30 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]"
+          aria-label="post comment button"
+        >
           <MessageCircle width={15} height={15} />
           <span className="label-text-xs">999</span>
         </button>
