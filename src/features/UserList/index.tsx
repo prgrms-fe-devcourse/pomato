@@ -1,5 +1,8 @@
-import { MessageCircle, UserRound, type LucideIcon } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { twMerge } from "tailwind-merge";
+
+import Avatar from "@components/Avatar";
+import Button from "@components/Button";
 
 /**
  * @component
@@ -39,20 +42,20 @@ import { twMerge } from "tailwind-merge";
 type UserStatusType = "online" | "offline";
 
 type UserListItemProps = {
-  avatar?: string | LucideIcon;
+  avatar?: string;
   type?: UserStatusType;
   name: string;
   className?: string;
 };
 
 export default function UserListItem({
-  avatar = UserRound,
+  avatar,
   type = "offline",
   name,
   className,
 }: UserListItemProps) {
   const hasImage = typeof avatar === "string";
-  const Icon: LucideIcon = hasImage ? UserRound : avatar;
+
   return (
     <div
       className={twMerge(
@@ -61,35 +64,17 @@ export default function UserListItem({
         "bg-wh/8 border-wh/10",
         "dark:bg-bl/25 dark:border-wh/10",
         "hover:bg-wh/12 dark:hover:bg-bl/35",
-        "active:bg-wh/20 dark:active:bg-bl/45",
         className,
       )}
       draggable={false}
     >
       <div className="flex items-center gap-[16px]">
-        <div className="relative mt-1 h-[52px] w-[52px]">
-          <div className="h-full w-full overflow-hidden rounded-[26px] border-[2px] border-white/15 dark:border-white/15">
-            {hasImage ? (
-              <img
-                src={avatar}
-                alt={`${name}'s avatar`}
-                className="h-full w-full object-cover"
-                draggable={false}
-              />
-            ) : (
-              <Icon className="text-wh h-full w-full" aria-hidden={true} />
-            )}
-          </div>
-          <span
-            className={twMerge(
-              "absolute right-0.5 bottom-1 h-[16px] w-[16px] rounded-[8px]",
-              "border-wh dark:border-wh border-[2px]",
-
-              type === "online" ? "bg-green-500" : "bg-gray-400",
-            )}
-            aria-hidden="true"
-          />
-        </div>
+        {/* 아바타 영역 */}
+        {hasImage ? (
+          <Avatar src={avatar} status={type || "default"} />
+        ) : (
+          <Avatar status={type || "default"} />
+        )}
 
         {/* Content */}
         <div className="flex-1">
@@ -110,21 +95,23 @@ export default function UserListItem({
       </div>
 
       <div className="absolute inset-y-0 right-[16px] flex items-center">
-        <button
-          type="button"
+        <Button
+          onClick={(e) => {
+            e.stopPropagation();
+            // TODO: 기능 추가
+          }}
           className={twMerge(
             "text-wh inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-[1px]",
             "bg-wh/20 border-wh/15 hover:bg-wh/30 hover:border-wh/25 active:bg-wh/35",
             "dark:bg-bl/30 dark:border-wh/12 dark:hover:bg-bl/40 dark:hover:border-wh/18 dark:active:bg-bl/45",
           )}
-          onClick={(e) => {
-            e.stopPropagation();
-            // TODO: 기능 추가
-          }}
+          size="md"
+          aria-label="메세지 전송"
           draggable={false}
+          composition="iconOnly"
         >
-          <MessageCircle className="text-wh h-[14px] w-[14px]" aria-hidden={true} />
-        </button>
+          <MessageCircle className="text-wh h-[14px] w-[14px]" aria-hidden="true" />
+        </Button>
       </div>
     </div>
   );
