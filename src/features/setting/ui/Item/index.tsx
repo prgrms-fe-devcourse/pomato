@@ -1,4 +1,5 @@
 import { ChevronRight, type LucideIcon } from "lucide-react";
+import type React from "react";
 import { twMerge } from "tailwind-merge";
 
 type ItemProps = {
@@ -8,7 +9,7 @@ type ItemProps = {
   danger?: boolean;
   disabled?: boolean;
   className?: string;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler;
 };
 /**
  *
@@ -85,6 +86,7 @@ export default function Item({
 }: ItemProps) {
   return (
     <button
+      type="button"
       className={twMerge(
         disabled
           ? "bg-wh/2 border-wh/4"
@@ -95,6 +97,7 @@ export default function Item({
         className,
       )}
       {...(!disabled && { onClick })}
+      disabled={disabled}
     >
       <div className="flex items-center gap-[16px]">
         <div
@@ -141,7 +144,7 @@ export default function Item({
               : "text-wh/50 group-hover:text-wh/70 group-active:text-wh/80",
         )}
       >
-        <ChevronRight />
+        <ChevronRight aria-hidden="true" />
       </div>
     </button>
   );
