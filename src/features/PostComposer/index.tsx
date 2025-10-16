@@ -1,80 +1,22 @@
 import { Camera } from "lucide-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 
 import "@features/PostComposer/PostComposer.module.css";
 import Button from "@components/Button";
 
-/**
- * 게시물 작성 컴포넌트입니다.
- * 텍스트 입력, 이미지 업로드, 게시물 작성 기능을 제공하며,
- * 다양한 상태(초기, 포커스, 활성, 채워짐, 스크롤, 비활성화)를 지원합니다.
- * 라이트/다크 모드와 접근성을 완벽히 지원합니다.
- *
- * @component
- *
- * @example
- * ```tsx
- * import PostComposer from "@features/PostComposer";
- *
- * // 기본 사용법
- * <PostComposer
- *   onPost={(content, images) => {
- *     console.log("게시물 작성:", content);
- *     console.log("이미지 데이터:", images); // base64 형식의 이미지 배열
- *     images.forEach(img => {
- *       console.log("이미지 ID:", img.id);
- *       console.log("Base64 데이터:", img.base64);
- *       console.log("가공된 파일:", img.file);
- *       console.log("파일명:", img.file.name);
- *       console.log("파일 크기:", img.file.size);
- *       console.log("파일 타입:", img.file.type);
- *       console.log("수정 시간 (숫자):", img.file.lastModified);
- *       console.log("수정 시간 (문자열):", img.file.lastModifiedDate);
- *     });
- *   }}
- *   onImageUpload={(files) => {
- *     console.log("이미지 업로드:", files);
- *   }}
- * />
- *
- * // 비활성화 상태
- * <PostComposer
- *   disabled
- *   placeholder="로그인하여 게시물을 작성하세요"
- *   onPost={() => {}}
- * />
- * ```
- *
- * @param {object} props - PostComposer 컴포넌트의 속성
- * @param {(content: string, images: ImagePreview[]) => void} [props.onPost] - 게시물 작성 시 실행될 함수 (base64 형식의 이미지 데이터 포함)
- * @param {(files: FileList) => void} [props.onImageUpload] - 이미지 업로드 시 실행될 함수
- * @param {boolean} [props.disabled=false] - 컴포넌트 비활성화 여부
- * @param {string} [props.placeholder="What's happening?"] - 텍스트 영역 플레이스홀더
- * @param {string} [props.className] - 루트 컨테이너에 추가할 Tailwind 클래스명
- * @returns {JSX.Element} 게시물 작성 컴포넌트
- */
-
-// 이미지 미리보기 타입
-export type ImagePreview = {
+type LocalImage = {
   id: string;
-  base64: string;
+  image_url: string; // URL.createObjectURL(file)
   file: File;
 };
 
-// 파일을 base64로 변환하는 함수
-function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.addEventListener("load", () => resolve(reader.result as string));
-    reader.addEventListener("error", () => reject(new Error("파일 읽기 실패")));
-  });
+function revokePreview(url?: string) {
+  if (url) URL.revokeObjectURL(url);
 }
-
 // 게시물 작성 컴포넌트 Props 타입
 type PostComposerProps = {
-  onPost: (content: string, images?: ImagePreview[]) => void;
+  onPost: (content: string, images?: LocalImage) => void;
   onImageUpload: (files: FileList) => void;
   disabled?: boolean;
   placeholder?: string;
@@ -90,7 +32,8 @@ export default function PostComposer({
 }: PostComposerProps) {
   const [content, setContent] = useState("");
   const [isFocused, setIsFocused] = useState(false);
-  const [images, setImages] = useState<ImagePreview[]>([]);
+
+  const [image, setImage] = useState<LocalImage | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -119,53 +62,53 @@ export default function PostComposer({
     fileInputRef.current?.click();
   }
 
-  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
     if (!files || disabled) return;
 
-    const fileArray = [...files];
+    // 1장만 허용: 첫 파일만 사용
+    const file = files[0];
+    if (!file) return;
 
-    try {
-      // 각 파일을 base64로 변환
-      const imagePreviews = await Promise.all(
-        fileArray.map(async (file) => {
-          const base64 = await fileToBase64(file);
-          return {
-            id: Math.random().toString(36).slice(2, 11),
-            base64,
-            file,
-          };
-        }),
-      );
+    // (선택) 이미지 타입/용량 검증
+    if (!file.type.startsWith("image/")) return;
+    // if (file.size > 5 * 1024 * 1024) return; // 5MB 제한 예시
 
-      setImages((prev) => [...prev, ...imagePreviews]);
-      onImageUpload?.(files);
+    // 이전 미리보기 URL 정리
+    revokePreview(image?.image_url);
 
-      // 파일 입력 초기화
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    } catch (error) {
-      console.error("이미지 변환 중 오류 발생:", error);
-    }
+    // 새 미리보기 URL 생성
+    const previewUrl = URL.createObjectURL(file);
+
+    setImage({
+      id: crypto.randomUUID(), // 아마 게시글 포스트 ID 값이 들어갈 예정
+      image_url: previewUrl,
+      file,
+    });
+
+    onImageUpload?.(files); // 기존 콜백은 그대로 호출
+    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
-  // 게시물 작성 및 데이터 관리
+  // 게시물 작성 함수
   function handlePost() {
     if (disabled || !content.trim()) return;
 
-    if (images.length > 0) {
-      onPost(content, images);
-    } else {
-      onPost(content);
-    }
+    onPost(
+      content,
+      image ? { id: image.id, image_url: image.image_url, file: image.file } : undefined,
+    );
 
     handleClearData();
   }
 
+  useEffect(() => {
+    return () => revokePreview(image?.image_url);
+  }, [image?.image_url]);
+
   function handleClearData() {
     setContent("");
-    setImages([]);
+    setImage(null);
   }
 
   return (
@@ -216,20 +159,11 @@ export default function PostComposer({
       </div>
 
       {/* 이미지 미리보기 영역 */}
-      {images.length > 0 && (
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {images.map((image) => (
-            <div
-              key={image.id}
-              className="group border-wh/20 dark:border-wh/15 relative aspect-square overflow-hidden rounded-lg border"
-            >
-              <img
-                src={image.base64}
-                alt={`미리보기 ${image.id}`}
-                className="h-full w-full object-cover transition-transform"
-              />
-            </div>
-          ))}
+      {image && (
+        <div className="mt-4">
+          <div className="border-wh/20 dark:border-wh/15 relative aspect-square w-[200px] overflow-hidden rounded-lg border">
+            <img src={image.image_url} alt="미리보기" className="h-full w-full object-cover" />
+          </div>
         </div>
       )}
 
@@ -258,7 +192,8 @@ export default function PostComposer({
             ref={fileInputRef}
             type="file"
             accept="image/*"
-            multiple
+            // multiple
+            multiple={false} // 1장만 하기로 했기에 수정
             onChange={(e) => {
               void handleImageUpload(e);
             }}
