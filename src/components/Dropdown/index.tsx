@@ -131,9 +131,9 @@ export default function Dropdown({
         >
           {/* 좌측 아이콘 */}
           {Icon && typeof Icon === "string" ? (
-            <Avatar containerStyle="h-[24px] w-[24px]" src={Icon} aria-hidden />
+            <Avatar size={"xxs"} src={Icon} aria-hidden />
           ) : (
-            <Avatar containerStyle="h-[24px] w-[24px]" aria-hidden />
+            <Avatar size={"xxs"} aria-hidden />
           )}
           {/* 텍스트 */}
           <span className="label-text-s">{iconText}</span>
