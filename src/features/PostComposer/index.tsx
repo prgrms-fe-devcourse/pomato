@@ -1,4 +1,4 @@
-import { Camera } from "lucide-react";
+import { Camera, X } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -131,7 +131,7 @@ export default function PostComposer({
           disabled={disabled}
           className={twMerge(
             "block w-full rounded-[8px] border px-4 py-3 outline-none",
-            "max-h-[220px] min-h-[100px] resize-none overflow-y-auto",
+            "h-[100px] resize-none overflow-y-auto",
             "text-wh/50 placeholder:text-wh/50 paragraph-text-s",
 
             // 기본 상태
@@ -161,8 +161,28 @@ export default function PostComposer({
       {/* 이미지 미리보기 영역 */}
       {image && (
         <div className="mt-4">
-          <div className="border-wh/20 dark:border-wh/15 relative aspect-square w-[200px] overflow-hidden rounded-lg border">
-            <img src={image.image_url} alt="미리보기" className="h-full w-full object-cover" />
+          <div className="border-wh/10 dark:border-wh/8 ro relative aspect-square max-h-[200px] w-full overflow-hidden rounded-[8px] border select-none">
+            <img src={image.image_url} alt="미리보기" className="h-full w-full object-contain" />
+            {/* 삭제 버튼 (우측 상단) */}
+            <Button
+              onClick={() => {
+                const url = "previewUrl" in image ? image.previewUrl : undefined;
+                if (typeof url === "string" && url.startsWith("blob:")) {
+                  URL.revokeObjectURL(url);
+                }
+                setImage(null);
+              }}
+              className={twMerge(
+                "absolute top-2 right-2 inline-flex h-7 w-7 items-center justify-center rounded-[8px] border",
+                "border-white/15 bg-white/15 hover:bg-white/25 active:bg-white/35",
+                "dark:border-white/12 dark:bg-black/30 dark:hover:bg-black/40 dark:active:bg-black/50",
+              )}
+              intent={"reveal"}
+              aria-label="이미지 삭제"
+              composition={"iconOnly"}
+            >
+              <X className="h-4 w-4 text-white/90" aria-hidden />
+            </Button>
           </div>
         </div>
       )}
