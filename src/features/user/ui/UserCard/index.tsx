@@ -12,14 +12,14 @@ import Button from "@components/Button";
  * import { MessageCircle } from "lucide-react";
  *
  * // 기본 사용법
- * <UserListItem
+ * <UserCard
  *   avatar="https://example.com/avatar.jpg"
  *   type="online"
  *   name="김철수"
  * />
  *
  * // 오프라인 사용자
- * <UserListItem
+ * <UserCard
  *   avatar="https://example.com/avatar2.jpg"
  *   type="offline"
  *   name="이영희"
@@ -27,10 +27,10 @@ import Button from "@components/Button";
  * />
  *
  * // 기본값 사용
- * <UserListItem />
+ * <UserCard />
  * ```
  *
- * @param {object} props - UserListItem 컴포넌트의 속성
+ * @param {object} props - UserCard 컴포넌트의 속성
  * @param {string|LucideIcon} [props.avatar=UserRound] - 사용자 아바타 이미지 URL 또는 Lucide 아이콘 컴포넌트. 기본값은 UserRound 아이콘입니다.
  * @param {UserStatusType} [props.type="online"] - 사용자 상태 ("online" | "offline")
  * @param {string} [props.name="김철수"] - 사용자 이름
@@ -48,19 +48,14 @@ type UserListItemProps = {
   className?: string;
 };
 
-export default function UserListItem({
-  avatar,
-  type = "offline",
-  name,
-  className,
-}: UserListItemProps) {
+export default function UserCard({ avatar, type = "offline", name, className }: UserListItemProps) {
   const hasImage = typeof avatar === "string";
 
   return (
     <div
       className={twMerge(
         "group relative flex min-h-[78px] w-full min-w-[400px] items-center rounded-[12px] transition select-none",
-        "mb-2 border-[1px] px-[16px] py-[12px]",
+        "border-[1px] px-[16px] py-[12px]",
         "bg-wh/8 border-wh/10",
         "dark:bg-bl/25 dark:border-wh/10",
         "hover:bg-wh/12 dark:hover:bg-bl/35",
