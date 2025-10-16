@@ -161,8 +161,12 @@ export default function PostComposer({
       {/* 이미지 미리보기 영역 */}
       {image && (
         <div className="mt-4">
-          <div className="border-wh/10 dark:border-wh/8 ro relative aspect-square max-h-[200px] w-full overflow-hidden rounded-[8px] border select-none">
-            <img src={image.image_url} alt="미리보기" className="h-full w-full object-contain" />
+          <div className="border-wh/20 dark:border-wh/15 w- relative aspect-square max-h-[300px] min-h-[200px] w-full overflow-hidden rounded-lg border">
+            <img
+              src={image.image_url}
+              alt="미리보기"
+              className="h-full w-full object-cover select-none"
+            />
             {/* 삭제 버튼 (우측 상단) */}
             <Button
               onClick={() => {
@@ -173,7 +177,7 @@ export default function PostComposer({
                 setImage(null);
               }}
               className={twMerge(
-                "absolute top-2 right-2 inline-flex h-7 w-7 items-center justify-center rounded-[8px] border",
+                "absolute top-2 right-2 inline-flex h-7 w-7 items-center justify-center rounded-[8px] border select-none",
                 "border-white/15 bg-white/15 hover:bg-white/25 active:bg-white/35",
                 "dark:border-white/12 dark:bg-black/30 dark:hover:bg-black/40 dark:active:bg-black/50",
               )}
@@ -198,7 +202,7 @@ export default function PostComposer({
             disabled={disabled}
             aria-label="이미지 업로드"
             className={twMerge(
-              "min-w-[93px] gap-[10px] px-[15px] py-[4px]",
+              "min-w-[93px] gap-[10px] px-[15px] py-[4px] select-none",
               "bg-wh/15 dark:bg-bl/25 opacity-100",
               disabled && ["cursor-not-allowed bg-transparent opacity-30 dark:bg-transparent"],
             )}
