@@ -9,7 +9,7 @@ interface InputProps extends ComponentPropsWithoutRef<"input"> {
   type?: "text" | "password" | "number" | "email";
   error?: boolean;
   id?: string;
-  Icon: IconType;
+  Icon?: IconType;
   containerStyle?: string;
 }
 
@@ -125,7 +125,7 @@ export default function Input({
       )}
     >
       {Icon && (
-        <button onClick={handleIconClick}>
+        <button onClick={handleIconClick} type="button" tabIndex={-1}>
           <Icon.Component
             width={16}
             height={16}
