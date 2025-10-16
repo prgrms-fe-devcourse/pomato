@@ -10,7 +10,8 @@
 }
 
 :global(.pc-scroll::-webkit-scrollbar-track) {
-  /* margin: 4px 0; */
+  border-radius: 4px;
+  margin: 4px 0;
 }
 
 :global(.pc-scroll::-webkit-scrollbar-thumb) {
@@ -44,9 +45,10 @@
 }
 
 :global(.pc-scroll::-webkit-scrollbar-button) {
-  display: block;
-  background: transparent;
+  display: none;
   width: 0;
+  height: 0;
+  background: transparent;
   border: none;
 }
 
