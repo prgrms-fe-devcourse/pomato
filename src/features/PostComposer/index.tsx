@@ -94,10 +94,7 @@ export default function PostComposer({
   function handlePost() {
     if (disabled || !content.trim()) return;
 
-    onPost(
-      content,
-      image ? { id: image.id, image_url: image.image_url, file: image.file } : undefined,
-    );
+    onPost(content, image || undefined);
 
     handleClearData();
   }
