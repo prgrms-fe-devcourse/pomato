@@ -2,6 +2,14 @@ import { ChevronRight, type LucideIcon } from "lucide-react";
 import type React from "react";
 import { twMerge } from "tailwind-merge";
 
+import {
+  itemVariants,
+  iconVariants,
+  descriptionVariants,
+  nameVariants,
+  chevronVariants,
+} from "@features/setting/ui/Item/variants";
+
 type ItemProps = {
   name: string;
   description: string;
@@ -84,66 +92,24 @@ export default function Item({
   className,
   onClick,
 }: ItemProps) {
+  const intent = disabled ? "disabled" : danger ? "danger" : "default";
   return (
     <button
       type="button"
-      className={twMerge(
-        disabled
-          ? "bg-wh/2 border-wh/4"
-          : danger
-            ? "bg-wh/4 dark:bg-bl/15 border-wh/6 hover:border-red-500/15 hover:bg-red-500/8 active:border-red-500/20 active:bg-red-500/12"
-            : "bg-wh/4 dark:bg-bl/15 border-wh/6 hover:bg-wh/10 hover:border-wh/12 hover:dark:bg-bl/30 hover:dark:border-wh/10 active:bg-wh/15 active:border-wh/15 active:dark:bg-bl/40 active:dark:border-wh/12 border-1",
-        "group flex cursor-pointer items-center justify-between rounded-[8px] px-[20px] py-[18px]",
-        className,
-      )}
+      className={twMerge(itemVariants({ intent }), className)}
       {...(!disabled && { onClick })}
       disabled={disabled}
     >
       <div className="flex items-center gap-[16px]">
-        <div
-          className={twMerge(
-            disabled
-              ? "bg-wh/8 text-wh/40"
-              : danger
-                ? "bg-red-500/15 text-red-500 group-hover:bg-red-500/20 group-active:bg-red-500/25"
-                : "bg-wh/15 group-hover:bg-wh/20 group-active:bg-wh/25 text-wh",
-            "flex h-[40px] w-[40px] items-center justify-center rounded-full",
-          )}
-        >
+        <div className={twMerge(iconVariants({ intent }))}>
           <Icon />
         </div>
         <div className="flex flex-col justify-center gap-[4px] text-left select-none">
-          <span
-            className={twMerge(
-              disabled ? "text-wh/50" : danger ? "text-red-500" : "text-wh",
-              "label-text-m-semibold",
-            )}
-          >
-            {name}
-          </span>
-          <span
-            className={twMerge(
-              disabled
-                ? "text-wh/35"
-                : danger
-                  ? "text-red-500/70 group-hover:text-red-500/80 group-active:text-red-500/85"
-                  : "text-wh/65 group-hover:text-wh/75 group-active:text-wh/80",
-              "label-text-small",
-            )}
-          >
-            {description}
-          </span>
+          <span className={twMerge(nameVariants({ intent }))}>{name}</span>
+          <span className={twMerge(descriptionVariants({ intent }))}>{description}</span>
         </div>
       </div>
-      <div
-        className={twMerge(
-          disabled
-            ? "text-wh/30"
-            : danger
-              ? "text-red-500/85 group-hover:text-red-500/75 group-active:text-red-500/85"
-              : "text-wh/50 group-hover:text-wh/70 group-active:text-wh/80",
-        )}
-      >
+      <div className={twMerge(chevronVariants({ intent }))}>
         <ChevronRight aria-hidden="true" />
       </div>
     </button>
