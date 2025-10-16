@@ -54,7 +54,7 @@ import Button from "@components/Button";
  *    label: "로그아웃",
  *    icon: LogOut,
  *    isRed: true,
- *     onSelect: () => console.log("로그아웃"),
+ *    onSelect: () => console.log("로그아웃"),
  *  },
  * ]}
  * />
