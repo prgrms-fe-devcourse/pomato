@@ -2,6 +2,7 @@ import { ChevronDown, MoreHorizontal, type LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
+import Avatar from "@components/Avatar";
 import Button from "@components/Button";
 
 type DropdownItem = {
@@ -15,7 +16,7 @@ type DropdownItem = {
 
 type DropdownProps = {
   isEnable?: boolean;
-  Icon?: LucideIcon;
+  Icon?: string | LucideIcon;
   iconText?: string;
   items: DropdownItem[];
   className?: string;
@@ -31,7 +32,9 @@ export default function Dropdown({
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  const hasLabelTrigger = !!Icon && !!iconText;
+  // iconText만 있으면 기본 Avatar가 표시 되어야함
+  // icon은 있으나 iconText가 없으면 그냥 MoreHorizontal 표시 (거의 그럴일은 없으나 에러 처리가 필요해서 로직 추가)
+  const hasLabelTrigger = (!Icon && iconText) || iconText;
 
   const toggle = () => setOpen((v) => !v);
 
@@ -61,7 +64,11 @@ export default function Dropdown({
           draggable={false}
         >
           {/* 좌측 아이콘 */}
-          {Icon && <Icon className="text-wh h-[24px] w-[24px]" aria-hidden />}
+          {Icon && typeof Icon === "string" ? (
+            <Avatar containerStyle="h-[24px] w-[24px]" src={Icon} aria-hidden />
+          ) : (
+            <Avatar containerStyle="h-[24px] w-[24px]" aria-hidden />
+          )}
           {/* 텍스트 */}
           <span className="label-text-s">{iconText}</span>
           {/* 드롭다운 캐럿 */}
@@ -71,18 +78,19 @@ export default function Dropdown({
           />
         </Button>
       ) : (
-        <button
-          type="button"
+        <Button
           onClick={toggle}
+          draggable={false}
+          intent="reveal"
+          composition="iconOnly"
           className={twMerge(
             "inline-flex h-[24px] w-[24px] items-center justify-center rounded-[6px] transition-colors",
             "hover:bg-wh/15 dark:hover:bg-bl/25",
             open && "bg-wh/15 dark:bg-bl/25",
           )}
-          draggable={false}
         >
           <MoreHorizontal className="text-wh h-4 w-4" aria-hidden />
-        </button>
+        </Button>
       )}
 
       {/* 메뉴 영역 */}
@@ -102,6 +110,8 @@ export default function Dropdown({
               const isDisabled = !isEnable || !!item.disabled;
               return (
                 <li key={item.key}>
+                  {/* 해당 부분은 item.isRed에 따라 background 컬러 변경이 적용이 안되는 문제 때문에 기존의 button을 사용했습니다.
+                  Button 컴포넌트에서 text-red-500은 되지만 bg-red-500/15는 적용이 안되는 문제 */}
                   <button
                     type="button"
                     disabled={isDisabled}
