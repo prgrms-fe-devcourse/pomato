@@ -51,13 +51,11 @@ export default function Dropdown({
       {hasLabelTrigger ? (
         <Button
           onClick={toggle}
-          disabled={!isEnable}
           className={twMerge(
             "inline-flex items-center justify-center rounded-md whitespace-nowrap transition-colors",
             "hover:text-bl flex items-center gap-2 px-4 py-2",
             "hover:bg-wh/15 dark:hover:bg-bl/25",
             open && "bg-wh/15 dark:bg-bl/25",
-            !isEnable && "cursor-not-allowed opacity-50",
           )}
           intent="reveal"
           draggable={false}
