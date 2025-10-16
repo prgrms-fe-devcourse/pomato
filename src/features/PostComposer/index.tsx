@@ -16,7 +16,7 @@ function revokePreview(url?: string) {
 }
 // 게시물 작성 컴포넌트 Props 타입
 type PostComposerProps = {
-  onPost: (content: string, images?: LocalImage) => void;
+  onPost: (content: string, image?: LocalImage) => void;
   onImageUpload: (files: FileList) => void;
   disabled?: boolean;
   placeholder?: string;
@@ -178,10 +178,7 @@ export default function PostComposer({
             {/* 삭제 버튼 (우측 상단) */}
             <Button
               onClick={() => {
-                const url = "previewUrl" in image ? image.previewUrl : undefined;
-                if (typeof url === "string" && url.startsWith("blob:")) {
-                  URL.revokeObjectURL(url);
-                }
+                URL.revokeObjectURL(image.image_url);
                 setImage(null);
               }}
               className={twMerge(

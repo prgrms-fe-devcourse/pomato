@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-.textarea {
-  overflow-y: auto;
-}
-
 :global(.pc-scroll::-webkit-scrollbar) {
   width: 8px;
   background: transparent;
