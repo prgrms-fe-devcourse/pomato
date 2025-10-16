@@ -160,12 +160,19 @@ export default function PostComposer({
 
       {/* 이미지 미리보기 영역 */}
       {image && (
-        <div className="mt-4">
-          <div className="border-wh/20 dark:border-wh/15 w- relative aspect-square max-h-[300px] min-h-[200px] w-full overflow-hidden rounded-lg border">
+        <div className="mt-4 select-none">
+          <div
+            className={twMerge(
+              "relative max-h-[300px] w-full rounded-[8px] border",
+              "border-wh/20 dark:border-wh/15 transition-colors",
+              "flex items-center justify-center overflow-hidden",
+            )}
+          >
             <img
               src={image.image_url}
               alt="미리보기"
-              className="h-full w-full object-cover select-none"
+              className="h-auto max-h-full w-auto max-w-full object-contain select-none"
+              draggable={false}
             />
             {/* 삭제 버튼 (우측 상단) */}
             <Button
