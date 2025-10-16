@@ -36,6 +36,29 @@ import Button from "@components/Button";
  *
  * // 아이콘 전용 트리거(우측 점 3개)
  * <Dropdown items={items} />
+ *
+ * // items 변수 없이 선언할 경우
+ * <Dropdown
+ *  Icon="https://picsum.photos/seed/user1/80"
+ *  // isEnable={false}
+ *  iconText="김유저"
+ *  items={[
+ *  {
+ *    key: "edit",
+ *    label: "프로필 수정",
+ *    icon: Pencil,
+ *    onSelect: () => console.log("프로필 수정"),
+ *  },
+ *  {
+ *    key: "logout",
+ *    label: "로그아웃",
+ *    icon: LogOut,
+ *    isRed: true,
+ *     onSelect: () => console.log("로그아웃"),
+ *  },
+ * ]}
+ * />
+ *
  * ```
  *
  * @param {Object} props - Dropdown 컴포넌트의 속성
