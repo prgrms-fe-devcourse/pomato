@@ -55,7 +55,7 @@ export default function Dropdown({
         <Button
           onClick={toggle}
           className={twMerge(
-            "inline-flex items-center justify-center rounded-md whitespace-nowrap transition-colors",
+            "inline-flex items-center justify-center rounded-[6px] whitespace-nowrap transition-colors",
             "hover:text-bl flex items-center gap-2 px-4 py-2",
             "hover:bg-wh/15 dark:hover:bg-bl/25",
             open && "bg-wh/15 dark:bg-bl/25",
