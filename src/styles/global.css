@@ -27,6 +27,10 @@
   html {
     color: var(--color-wh);
   }
+
+  a:focus-visible {
+    @apply ring-wh/12 ring-2 outline-none;
+  }
 }
 
 /* 커스텀 paragraph 글자 영역 */
