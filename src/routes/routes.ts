@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router";
 // pages
 import Signup from "@pages/auth/Signup";
 import Chart from "@pages/Chart";
+import Dm from "@pages/Dm";
 import Feed from "@pages/Feed";
 import Login from "@pages/Login";
 import Mate from "@pages/Mate";
@@ -27,6 +28,10 @@ export const router = createBrowserRouter([
       {
         path: "chart",
         Component: Chart,
+      },
+      {
+        path: "dm",
+        Component: Dm,
       },
       {
         path: "notification",
