@@ -1,160 +1,138 @@
-import { MoreHorizontal, SquarePen, Trash } from "lucide-react";
+import { ChevronDown, MoreHorizontal, type LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-/**
- *
- * @component
- *
- * @example
- * ```tsx
- * import Dropdown from "./components/Dropdown";
- *
- * // 기본 사용법 (수정/삭제 모두 활성화)
- * <Dropdown
- *   onEdit={() => {
- *     console.log("수정 버튼 클릭");
- *   }}
- *   onDelete={() => {
- *     console.log("삭제 버튼 클릭");
- *   }}
- * />
- *
- * // 수정 기능만 비활성화
- * <Dropdown
- *   isEdit={false}
- *   onDelete={() => {
- *     console.log("삭제 버튼 클릭");
- *   }}
- * />
- *
- * // 전체 드롭다운 비활성화
- * <Dropdown
- *   isEnable={false}
- *   onEdit={() => {
- *     console.log("수정 버튼 클릭");
- *   }}
- *   onDelete={() => {
- *     console.log("삭제 버튼 클릭");
- *   }}
- * />
- * ```
- *
- * @param {object} props - Dropdown 컴포넌트의 속성
- * @param {boolean} [props.isEnable=true] - 드롭다운 전체 활성화 여부
- * @param {boolean} [props.isEdit=true] - 수정 버튼 활성화 여부
- * @param {() => void} [props.onEdit] - 수정 버튼 클릭 시 실행될 함수
- * @param {() => void} [props.onDelete] - 삭제 버튼 클릭 시 실행될 함수
- *
- * @returns {JSX.Element} 드롭다운 메뉴를 포함한 버튼 엘리먼트
- */
+import Button from "@components/Button";
+
+type DropdownItem = {
+  key: string;
+  label: string;
+  icon?: LucideIcon;
+  onSelect?: () => void;
+  disabled?: boolean;
+  isRed?: boolean; // 빨간 톤 강조
+};
 
 type DropdownProps = {
   isEnable?: boolean;
-  isEdit?: boolean;
-  onEdit?: () => void;
-  onDelete?: () => void;
+  Icon?: LucideIcon;
+  iconText?: string;
+  items: DropdownItem[];
+  className?: string;
 };
 
 export default function Dropdown({
   isEnable = true,
-  isEdit = true,
-  onEdit,
-  onDelete,
+  Icon,
+  iconText,
+  items,
+  className,
 }: DropdownProps) {
   const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
 
-  function handleToggle() {
-    setOpen((value) => !value);
-  }
+  const hasLabelTrigger = !!Icon && !!iconText;
+
+  const toggle = () => setOpen((v) => !v);
 
   useEffect(() => {
     if (!open) return;
-
-    // 바깥 클릭 시 닫기
-    const onClose = (e: MouseEvent) => {
-      const t = e.target;
-      if (containerRef.current && !containerRef.current.contains(t as Node)) setOpen(false);
+    const onDocClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
-    document.addEventListener("mousedown", onClose);
-    return () => document.removeEventListener("mousedown", onClose);
+    document.addEventListener("mousedown", onDocClick);
+    return () => {
+      document.removeEventListener("mousedown", onDocClick);
+    };
   }, [open]);
 
   return (
-    <div ref={containerRef} className={twMerge("relative inline-flex select-none")}>
-      <button
-        type="button"
-        onClick={handleToggle}
-        className={twMerge(
-          "inline-flex h-[24px] w-[24px] items-center justify-center rounded-[6px] transition-colors",
-          "hover:bg-wh/15",
-          "dark:hover:bg-bl/25",
-          open && "bg-wh/15 dark:bg-bl/25",
-        )}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        draggable={false}
-      >
-        <MoreHorizontal className="text-wh h-4 w-4" aria-hidden />
-      </button>
+    <div ref={ref} className={twMerge("relative inline-flex select-none", className)}>
+      {hasLabelTrigger ? (
+        <Button
+          onClick={toggle}
+          disabled={!isEnable}
+          className={twMerge(
+            "inline-flex items-center justify-center rounded-md whitespace-nowrap transition-colors",
+            "hover:text-bl flex items-center gap-2 px-4 py-2",
+            "hover:bg-wh/15 dark:hover:bg-bl/25",
+            open && "bg-wh/15 dark:bg-bl/25",
+            !isEnable && "cursor-not-allowed opacity-50",
+          )}
+          intent="reveal"
+          draggable={false}
+        >
+          {/* 좌측 아이콘 */}
+          {Icon && <Icon className="text-wh h-[24px] w-[24px]" aria-hidden />}
+          {/* 텍스트 */}
+          <span className="label-text-s">{iconText}</span>
+          {/* 드롭다운 캐럿 */}
+          <ChevronDown
+            className={twMerge("h-4 w-4 transition-transform", open && "rotate-180")}
+            aria-hidden
+          />
+        </Button>
+      ) : (
+        <button
+          type="button"
+          onClick={toggle}
+          className={twMerge(
+            "inline-flex h-[24px] w-[24px] items-center justify-center rounded-[6px] transition-colors",
+            "hover:bg-wh/15 dark:hover:bg-bl/25",
+            open && "bg-wh/15 dark:bg-bl/25",
+          )}
+          draggable={false}
+        >
+          <MoreHorizontal className="text-wh h-4 w-4" aria-hidden />
+        </button>
+      )}
 
-      {/* Menu */}
+      {/* 메뉴 영역 */}
       {open && (
-        // 버튼 컨테이너 영역
         <div
           role="menu"
           className={twMerge(
-            "absolute right-0 z-[999] mt-[25px] flex flex-col",
-            "min-w-[160px] rounded-[8px] border-[1px] px-[7px] py-[7px]",
-            "bg-wh/30 border-wh/25",
-            "dark:bg-bl/40 dark:border-wh/18",
+            "absolute right-0 z-[999] mt-6 min-w-[160px] rounded-[8px] border px-[7px] py-[7px]",
+            "bg-wh/30 border-wh/25 dark:bg-bl/40 dark:border-wh/18",
+            hasLabelTrigger && "mt-10",
           )}
           onClick={() => setOpen(false)}
         >
-          {/* 버튼 영역 */}
-          <ul>
-            {isEdit && (
-              <li>
-                <button
-                  type="button"
-                  className={twMerge(
-                    "inline-flex h-[37px] w-[146px] items-center justify-start gap-[10px]",
-                    "label-text-s rounded-[6px] px-[12px] transition-colors",
-                    "hover:bg-wh/20",
-                    "dark:hover:bg-bl/40",
-                    !isEnable && "pointer-events-none cursor-not-allowed disabled:opacity-40",
-                  )}
-                  aria-label="수정"
-                  onClick={() => onEdit?.()}
-                  draggable={false}
-                  disabled={!isEnable}
-                >
-                  <SquarePen className="text-wh/75 h-4 w-4" aria-hidden />
-                  <span className="text-wh">수정</span>
-                </button>
-              </li>
-            )}
-
-            <li>
-              <button
-                type="button"
-                className={twMerge(
-                  "inline-flex h-[37px] w-[146px] items-center justify-start gap-[10px]",
-                  "label-text-s rounded-[6px] px-[12px] transition-colors",
-                  "hover:bg-red-500/15",
-                  "dark:hover:bg-red-500/15",
-                  !isEnable && "pointer-events-none cursor-not-allowed disabled:opacity-40",
-                )}
-                aria-label="삭제"
-                onClick={() => onDelete?.()}
-                draggable={false}
-                disabled={!isEnable}
-              >
-                <Trash className="h-4 w-4 text-red-500" aria-hidden />
-                <span className="text-red-500">삭제하기</span>
-              </button>
-            </li>
+          <ul className="flex flex-col">
+            {items.map((item) => {
+              const ItemIcon = item.icon;
+              const isDisabled = !isEnable || !!item.disabled;
+              return (
+                <li key={item.key}>
+                  <button
+                    type="button"
+                    disabled={isDisabled}
+                    onClick={() => {
+                      if (isDisabled) return;
+                      item.onSelect?.();
+                    }}
+                    className={twMerge(
+                      "inline-flex h-[37px] w-[146px] items-center justify-start gap-[10px]",
+                      "label-text-s rounded-[6px] px-[12px] transition-colors",
+                      item.isRed
+                        ? "text-red-500 hover:bg-red-500/15"
+                        : "hover:bg-wh/20 dark:hover:bg-bl/40",
+                      isDisabled && "pointer-events-none cursor-not-allowed opacity-40",
+                    )}
+                  >
+                    {ItemIcon && (
+                      <ItemIcon
+                        className={twMerge("h-4 w-4", item.isRed && "text-red-500")}
+                        aria-hidden
+                      />
+                    )}
+                    <span className={twMerge("text-wh", item.isRed && "text-red-500")}>
+                      {item.label}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}
