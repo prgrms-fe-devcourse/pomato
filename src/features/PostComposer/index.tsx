@@ -103,6 +103,7 @@ export default function PostComposer({
   }
 
   useEffect(() => {
+    // unmount
     return () => revokePreview(image?.image_url);
   }, [image?.image_url]);
 
@@ -125,8 +126,8 @@ export default function PostComposer({
           ref={textareaRef}
           value={content}
           onChange={handleContentChange}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          onFocus={handleFocus} // 포커스 확인 여부 영역
+          onBlur={handleBlur} // 포커스 해제 영역
           placeholder={placeholder}
           disabled={disabled}
           className={twMerge(
