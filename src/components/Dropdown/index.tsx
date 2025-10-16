@@ -5,6 +5,49 @@ import { twMerge } from "tailwind-merge";
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
 
+/**
+ * @component
+ *
+ * @typedef {Object} DropdownItem
+ * @property {string} key - 항목 고유 키
+ * @property {string} label - 항목 라벨 텍스트
+ * @property {LucideIcon} [icon] - 항목 왼쪽에 표시할 Lucide 아이콘
+ * @property {() => void} [onSelect] - 항목 클릭 시 호출되는 핸들러
+ * @property {boolean} [disabled=false] - 항목 비활성화 여부
+ * @property {boolean} [isRed=false] - 위험/강조 항목(텍스트 빨간색, hover 배경 빨간 톤)
+ *
+ * @example
+ * ```tsx
+ * import { ChevronDown, LogOut, Settings, Trash2, User } from "lucide-react";
+ *
+ * const items: DropdownItem[] = [
+ *   { key: "profile", label: "프로필", icon: User, onSelect: () => console.log("프로필") },
+ *   { key: "settings", label: "설정", icon: Settings, onSelect: () => console.log("설정") },
+ *   { key: "logout", label: "로그아웃", icon: LogOut, onSelect: () => console.log("로그아웃") },
+ *   { key: "delete", label: "계정 삭제", icon: Trash2, isRed: true, onSelect: () => console.log("삭제") },
+ * ];
+ *
+ * // 라벨 트리거(아바타 + 텍스트 + 캐럿)
+ * <Dropdown
+ *   iconText="홍길동"
+ *   Icon="https://example.com/avatar.jpg" // 여기 부분이 없을 경우 기본 UserRound Lucide 아이콘 표시
+ *   items={items}
+ * />
+ *
+ * // 아이콘 전용 트리거(우측 점 3개)
+ * <Dropdown items={items} />
+ * ```
+ *
+ * @param {Object} props - Dropdown 컴포넌트의 속성
+ * @param {boolean} [props.isEnable=true] - 전체 드롭다운 활성화 여부(비활성화 항목 처리에 사용)
+ * @param {string | LucideIcon} [props.Icon] - 라벨 트리거 왼쪽 아바타(이미지 URL) 또는 아이콘 컴포넌트
+ * @param {string} [props.iconText] - 라벨 트리거 텍스트(있으면 아바타/텍스트/캐럿 형태로 렌더)
+ * @param {DropdownItem[]} props.items - 드롭다운 항목 목록
+ * @param {string} [props.className] - 루트 컨테이너에 추가할 Tailwind 클래스명
+ *
+ * @returns {JSX.Element} 드롭다운 루트 요소
+ */
+
 type DropdownItem = {
   key: string;
   label: string;
