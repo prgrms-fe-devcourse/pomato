@@ -100,7 +100,7 @@ export default function Dropdown({
 
   // iconText만 있으면 기본 Avatar가 표시 되어야함
   // icon은 있으나 iconText가 없으면 그냥 MoreHorizontal 표시 (거의 그럴일은 없으나 에러 처리가 필요해서 로직 추가)
-  const hasLabelTrigger = (!Icon && iconText) || iconText;
+  const hasLabelTrigger = !!iconText;
 
   const toggle = () => setOpen((v) => !v);
 
