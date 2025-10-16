@@ -26,6 +26,9 @@
 @layer base {
   html {
     color: var(--color-wh);
+    a:focus-visible {
+      @apply ring-wh/12 ring-2 outline-none;
+    }
   }
 }
 
