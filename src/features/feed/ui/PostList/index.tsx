@@ -35,7 +35,7 @@ const items: DropdownItem[] = [
   { key: "delete", label: "삭제", icon: Trash, isRed: true, onSelect: () => console.log("삭제") },
 ];
 
-export default function Post() {
+export default function PostList() {
   return (
     <div
       className={twMerge(
@@ -66,7 +66,8 @@ export default function Post() {
         </p>
         <div className="max-w-full overflow-hidden" aria-label="post image container">
           <img
-            src=""
+            src="https://img.freepik.com/free-vector/flat-post-its-boards-infographics_23-2148649295.jpg"
+            // src=""
             alt="example"
             className="border-wh/10 h-auto w-full rounded-[12px] border-1 object-contain"
             aria-label="post image"
