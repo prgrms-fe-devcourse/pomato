@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
+import Button from "@components/Button";
+import Input from "@components/Input";
 
 export type Comment = {
   id: string;
@@ -19,7 +21,6 @@ type CommentPanelProps = {
 
 export default function Comment({ comments, onSubmit, className }: CommentPanelProps) {
   const [value, setValue] = useState("");
-
   const [items, setItems] = useState<Comment[]>([]);
 
   useEffect(() => {
@@ -47,14 +48,12 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
           <li key={c.id}>
             <div className="flex gap-3 py-2">
               {/* 아바타 */}
-              <div className="shrink-0">
-                {c.author.avatar ? <Avatar src={c.author.avatar} size="s" /> : <Avatar size="s" />}
-              </div>
+              {c.author.avatar ? <Avatar src={c.author.avatar} size="s" /> : <Avatar size="s" />}
 
               {/* Comments 영역 */}
               <div className="min-w-0 flex-1">
                 <div className="rounded-lg bg-white/5 p-3 dark:bg-black/10">
-                  <div className="flex items-center justify-between">
+                  <div className="mb-1.5 flex items-center justify-start gap-2">
                     <span className="label-text-s-semibold text-wh">{c.author.name}</span>
                     <span className="label-text-xs text-wh/60">{formatTimeShort(c.createdAt)}</span>
                   </div>
@@ -67,36 +66,31 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
       </ul>
 
       {/* 입력창 — 한 줄 배치 */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <Avatar size="s" />
-        <input
+        <Input
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSend()}
           placeholder="댓글을 입력하세요..."
-          className={twMerge(
-            "flex-1 rounded-[10px] border px-3 py-2 outline-none",
-            "border-white/20 bg-white/10 text-white placeholder:text-white/50",
-            "dark:border-white/10 dark:bg-black/20 dark:text-white dark:placeholder:text-white/30",
-          )}
+          containerStyle={twMerge("flex-1 border px-3 py-2")}
           aria-label="댓글 입력"
         />
 
-        <button
-          type="button"
+        <Button
+          size={"md"}
+          intent="primary"
+          composition="iconOnly"
           onClick={handleSend}
           disabled={!value.trim()}
           className={twMerge(
             "inline-flex h-11 w-11 items-center justify-center rounded-[10px] border px-2 py-2",
-            "border-wh/12 bg-wh/15 text-white/85",
-            "hover:bg-wh/25 active:bg-wh/30",
-            "dark:border-wh/10 dark:bg-bl/40 dark:hover:bg-bl/50",
             !value.trim() && "cursor-not-allowed opacity-50",
           )}
           aria-label="댓글 보내기"
         >
           <Send className="h-4 w-4" aria-hidden />
-        </button>
+        </Button>
       </div>
     </>
   );
