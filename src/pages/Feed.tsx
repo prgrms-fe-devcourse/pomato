@@ -6,7 +6,7 @@ import PostList from "@features/feed/ui/PostList";
 
 export default function Feed() {
   return (
-    <div className="flex flex-col gap-[12px] p-[16px]">
+    <div className="flex flex-col gap-[12px] p-[16px] select-none">
       {/* 글쓰기 영역 + 구분선*/}
       <FeedHeader />
 
