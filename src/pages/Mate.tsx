@@ -1,3 +1,18 @@
+import { Search } from "lucide-react";
+
+import Input from "@components/Input";
+import UserHeader from "@features/user/ui/UserHeader";
+import UserList from "@features/user/ui/UserList";
+
 export default function Mate() {
-  return <>메이트 페이지</>;
+  return (
+    <div className="flex flex-col gap-[12px] p-[16px]">
+      <UserHeader />
+      <Input
+        Icon={{ Component: Search, align: "right" }}
+        placeholder="찾을 메이트의 이름을 검색해주세요..."
+      />
+      <UserList />
+    </div>
+  );
 }
