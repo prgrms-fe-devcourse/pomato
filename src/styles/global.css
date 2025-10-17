@@ -33,6 +33,8 @@
   }
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* 커스텀 paragraph 글자 영역 */
 .paragraph-text-l {
   font-size: 18px;
