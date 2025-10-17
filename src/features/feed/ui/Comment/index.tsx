@@ -1,4 +1,4 @@
-import { Send, Heart } from "lucide-react";
+import { Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -9,7 +9,6 @@ export type Comment = {
   author: { name: string; avatar?: string };
   text: string;
   createdAt: Date;
-  likes?: number;
 };
 
 type CommentPanelProps = {
@@ -21,31 +20,11 @@ type CommentPanelProps = {
 export default function Comment({ comments, onSubmit, className }: CommentPanelProps) {
   const [value, setValue] = useState("");
 
-  const [items, setItems] = useState<Array<Comment & { likes: number; liked: boolean }>>([]);
+  const [items, setItems] = useState<Comment[]>([]);
 
   useEffect(() => {
-    setItems(
-      comments.map((c) => ({
-        ...c,
-        likes: c.likes ?? 0, // Likes 값이 없으면 0
-        liked: false, // UI 토글 상태
-      })),
-    );
+    setItems(comments);
   }, [comments]);
-
-  // 좋아요 토글
-  const toggleLike = (id: string) => {
-    setItems((prev) =>
-      prev.map((c) => {
-        if (c.id !== id) return c;
-
-        const nextLiked = !c.liked;
-        const nextLikes = Math.max(0, c.likes + (nextLiked ? 1 : -1));
-
-        return { ...c, liked: nextLiked, likes: nextLikes };
-      }),
-    );
-  };
 
   const handleSend = () => {
     const text = value.trim();
@@ -59,19 +38,14 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
       <div
         role="separator"
         aria-orientation="horizontal"
-        className={
-          (twMerge(
-            "-mx-[16px] h-[1px] bg-white/15 from-transparent to-transparent dark:bg-white/10",
-          ),
-          className)
-        }
+        className="-mx-[16px] h-[1px] bg-white/15 from-transparent to-transparent dark:bg-white/10"
       />
 
       {/* 리스트 */}
-      <ul className="flex flex-col gap-2">
+      <ul className={(twMerge("flex flex-col gap-1"), className)}>
         {items.map((c) => (
           <li key={c.id}>
-            <div className="flex gap-3">
+            <div className="flex gap-3 py-2">
               {/* 아바타 */}
               <div className="shrink-0">
                 {c.author.avatar ? <Avatar src={c.author.avatar} size="s" /> : <Avatar size="s" />}
@@ -86,26 +60,6 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
                   </div>
                   <p className="paragraph-text-s text-wh/85 mt-0.5 break-words">{c.text}</p>
                 </div>
-
-                {/* 좋아요 버튼*/}
-                <button
-                  type="button"
-                  onClick={() => toggleLike(c.id)}
-                  aria-pressed={c.liked}
-                  className={twMerge(
-                    "mt-1 inline-flex items-center gap-1 rounded-[8px] px-2 py-0.5",
-                    c.liked ? "text-pink-500" : "hover:bg-wh/10 dark:hover:bg-bl/30 text-white/60",
-                  )}
-                >
-                  <Heart
-                    className={twMerge(
-                      "h-3.5 w-3.5 stroke-current",
-                      c.liked && "fill-current", // ON이면 속 채우기
-                    )}
-                    aria-hidden
-                  />
-                  <span className="label-text-xs">{c.likes}</span>
-                </button>
               </div>
             </div>
           </li>
@@ -113,7 +67,7 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
       </ul>
 
       {/* 입력창 — 한 줄 배치 */}
-      <div className="mt-3 flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <Avatar size="s" />
         <input
           value={value}
