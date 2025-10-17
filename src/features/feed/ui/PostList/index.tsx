@@ -1,3 +1,4 @@
+import { SquarePen, Trash, type LucideIcon } from "lucide-react";
 import { Heart, MessageCircle } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
@@ -20,6 +21,20 @@ import Dropdown from "@components/Dropdown";
  *
  * @returns {JSX.Element} 렌더링된 게시글 카드 컴포넌트
  */
+
+type DropdownItem = {
+  key: string;
+  label: string;
+  icon: LucideIcon;
+  onSelect: () => void;
+  isRed?: boolean;
+};
+
+const items: DropdownItem[] = [
+  { key: "edit", label: "수정", icon: SquarePen, onSelect: () => console.log("수정") },
+  { key: "delete", label: "삭제", icon: Trash, isRed: true, onSelect: () => console.log("삭제") },
+];
+
 export default function Post() {
   return (
     <div
@@ -30,11 +45,11 @@ export default function Post() {
       role="article"
       aria-label="post"
     >
-      <div className="flex items-center justify-between">
-        <div className="flex gap-[12px]" aria-label="author information">
+      {/* 헤더 라인 */}
+      <div className="flex min-h-[40px] items-center justify-between">
+        <div className="flex items-center gap-[12px]" aria-label="author information">
           <Avatar />
-
-          <div className="flex flex-col justify-start">
+          <div className="flex flex-col justify-center">
             <span className="label-text-m-semibold text-wh" aria-label="author name">
               name
             </span>
@@ -43,7 +58,7 @@ export default function Post() {
             </span>
           </div>
         </div>
-        <Dropdown />
+        <Dropdown className={"top-[-10px]"} items={items} />
       </div>
       <div className="paragraph-text-m text-wh flex flex-col gap-[12px]" aria-label="post content">
         <p className="paragraph-text-medium" aria-label="post text">
