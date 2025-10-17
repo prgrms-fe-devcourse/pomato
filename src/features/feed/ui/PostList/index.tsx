@@ -56,14 +56,12 @@ export default function PostList() {
       author: { name: "홍길동", avatar: "https://picsum.photos/seed/a/60" },
       text: "대단해요! 꾸준함이 제일 어려운데 👏",
       createdAt: new Date(Date.now() - 60 * 1000),
-      likes: 2,
     },
     {
       id: "2",
       author: { name: "김철수", avatar: "https://picsum.photos/seed/b/60" },
       text: "저도 오늘 3세션 했어요! 함께 화이팅!",
       createdAt: new Date(Date.now() - 14 * 60 * 60 * 1000),
-      likes: 1,
     },
   ]);
 
