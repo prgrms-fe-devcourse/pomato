@@ -4,7 +4,8 @@ import { createBrowserRouter } from "react-router";
 import Login from "@pages/auth/Login";
 import Signup from "@pages/auth/Signup";
 import Chart from "@pages/Chart";
-import Dm from "@pages/Dm";
+import Chat from "@pages/dm/Chat";
+import Dm from "@pages/dm/Dm";
 import Feed from "@pages/Feed";
 import Mate from "@pages/Mate";
 import Notification from "@pages/Notification";
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path: "dm",
         Component: Dm,
+      },
+      {
+        path: "dm/:id",
+        Component: Chat,
       },
       {
         path: "notification",
