@@ -1,10 +1,13 @@
-import { dummyPosts } from "@features/feed/model/PostProps";
-import { usePosts } from "@features/feed/model/usePosts";
+import type { Post } from "@features/feed/model/PostProps";
 import PostCard from "@features/feed/ui/PostCard";
 
-export default function PostList() {
-  const { posts, toggleLike, addComment } = usePosts(dummyPosts);
+type PostListProps = {
+  posts: Post[];
+  onToggleLike: (postId: string) => void;
+  onAddComment: (postId: string, text: string) => void;
+};
 
+export default function PostList({ posts, onToggleLike, onAddComment }: PostListProps) {
   return (
     <section className="flex flex-col gap-3">
       {posts.map((p) => (
@@ -17,8 +20,8 @@ export default function PostList() {
           likes={p.likes}
           liked={p.liked}
           comments={p.comments}
-          onToggleLike={toggleLike}
-          onAddComment={addComment}
+          onToggleLike={onToggleLike}
+          onAddComment={onAddComment}
         />
       ))}
     </section>
