@@ -5,6 +5,10 @@ import type { Post } from "@features/feed/model/PostProps";
 export function usePosts(initial: Post[]) {
   const [posts, setPosts] = useState<Post[]>(initial);
 
+  const addPost = useCallback((newPost: Post) => {
+    setPosts((prev) => [newPost, ...prev]);
+  }, []);
+
   const toggleLike = useCallback((postId: string) => {
     setPosts((prev) =>
       prev.map((p) =>
@@ -40,5 +44,5 @@ export function usePosts(initial: Post[]) {
     );
   }, []);
 
-  return { posts, toggleLike, addComment };
+  return { posts, addPost, toggleLike, addComment };
 }
