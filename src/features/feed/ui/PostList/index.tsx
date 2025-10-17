@@ -1,5 +1,5 @@
-import { SquarePen, Trash, type LucideIcon } from "lucide-react";
-import { Heart, MessageCircle } from "lucide-react";
+import { SquarePen, Trash, Heart, MessageCircle, type LucideIcon } from "lucide-react";
+import { useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
@@ -36,6 +36,17 @@ const items: DropdownItem[] = [
 ];
 
 export default function PostList() {
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(999);
+
+  const toggleLike = () => {
+    setLiked((v) => {
+      // 카운트도 함께 조절하고 싶으면 아래 적용
+      setLikeCount((c) => (v ? c - 1 : c + 1));
+      return !v;
+    });
+  };
+
   return (
     <div
       className={twMerge(
@@ -75,13 +86,38 @@ export default function PostList() {
         </div>
       </div>
       <div className="flex gap-[16px]" aria-label="post buttons">
-        <button
+        {/* <button
           className="text-wh/65 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px] hover:bg-pink-500/10 hover:text-pink-500"
           aria-label="post like button"
         >
           <Heart width={15} height={15} />
           <span className="label-text-xs">999+</span>
+        </button> */}
+
+        {/* 좋아요 토글 */}
+        <button
+          type="button"
+          onClick={toggleLike}
+          aria-pressed={liked}
+          aria-label="post like button"
+          className={twMerge(
+            "text-wh/65 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]",
+            "hover:bg-pink-500/10 hover:text-pink-500",
+            liked && "bg-pink-500/10 text-pink-500",
+          )}
+        >
+          <Heart
+            width={15}
+            height={15}
+            className={twMerge(
+              "stroke-current",
+              liked && "fill-current", // on일 때 내부 채움
+            )}
+            aria-hidden="true"
+          />
+          <span className="label-text-xs">{likeCount > 999 ? "999+" : likeCount}</span>
         </button>
+
         <button
           className="text-wh/65 hover:bg-wh/10 hover:text-wh/85 hover:dark:bg-bl/30 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]"
           aria-label="post comment button"
