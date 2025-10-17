@@ -2,7 +2,6 @@ import { Camera, X } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 
-import "@features/PostComposer/PostComposer.module.css";
 import Button from "@components/Button";
 
 /**
