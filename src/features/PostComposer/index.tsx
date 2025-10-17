@@ -5,6 +5,43 @@ import { twMerge } from "tailwind-merge";
 import "@features/PostComposer/PostComposer.module.css";
 import Button from "@components/Button";
 
+/**
+ * @component
+ *
+ * @example
+ * ```tsx
+ *
+ * function MyComponent() {
+ *   const handlePost = (content: string, image?: LocalImage) => {
+ *     console.log("게시물 작성:", { content, image });
+ *     // 게시물 저장 로직
+ *   };
+ *
+ *   const handleImageUpload = (files: FileList) => {
+ *     console.log("이미지 업로드:", files);
+ *     // 이미지 업로드 로직
+ *   };
+ *
+ *   return (
+ *     <PostComposer
+ *       onPost={handlePost}
+ *       onImageUpload={handleImageUpload}
+ *       placeholder="무슨 일이 일어나고 있나요?"
+ *     />
+ *   );
+ * }
+ * ```
+ *
+ * @param {Object} props - PostComposer 컴포넌트의 속성
+ * @param {(content: string, image?: LocalImage) => void} props.onPost - 게시물 작성 시 호출되는 콜백 함수
+ * @param {(files: FileList) => void} props.onImageUpload - 이미지 업로드 시 호출되는 콜백 함수
+ * @param {boolean} [props.disabled=false] - 컴포넌트 비활성화 여부
+ * @param {string} [props.placeholder="Sign in to post"] - 텍스트 영역 플레이스홀더
+ * @param {string} [props.className] - 루트 컨테이너에 추가할 Tailwind 클래스명
+ *
+ * @returns {JSX.Element} 게시물 작성 컴포넌트
+ */
+
 type LocalImage = {
   id: string;
   image_url: string; // URL.createObjectURL(file)
@@ -112,7 +149,7 @@ export default function PostComposer({
   return (
     <div
       className={twMerge(
-        "mx-auto w-full max-w-[600px] p-4 transition-colors",
+        "mx-auto w-full transition-colors",
         disabled && "pointer-events-none opacity-50 select-none",
         className,
       )}
@@ -159,17 +196,11 @@ export default function PostComposer({
       {/* 이미지 미리보기 영역 */}
       {image && (
         <div className="mt-4 select-none">
-          <div
-            className={twMerge(
-              "relative max-h-[300px] w-full rounded-[8px] border",
-              "border-wh/20 dark:border-wh/15 transition-colors",
-              "flex items-center justify-center overflow-hidden",
-            )}
-          >
+          <div className="border-wh/20 dark:border-wh/15 relative mx-auto flex max-h-[300px] w-full items-center justify-center overflow-hidden rounded-[8px] border">
             <img
               src={image.image_url}
               alt="미리보기"
-              className="h-auto max-h-full w-auto max-w-full object-contain select-none"
+              className="h-full w-full object-fill select-none"
               draggable={false}
             />
             {/* 삭제 버튼 (우측 상단) */}
@@ -187,7 +218,7 @@ export default function PostComposer({
               aria-label="이미지 삭제"
               composition={"iconOnly"}
             >
-              <X className="h-4 w-4 text-white/90" aria-hidden />
+              <X className="h-4 w-4 text-white" aria-hidden />
             </Button>
           </div>
         </div>

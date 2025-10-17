@@ -165,7 +165,7 @@ export default function Dropdown({
           role="menu"
           className={twMerge(
             "absolute right-0 z-[999] mt-6 min-w-[160px] rounded-[8px] border px-[7px] py-[7px]",
-            "bg-wh/30 border-wh/25 dark:bg-bl/40 dark:border-wh/18",
+            "bg-wh/48 border-wh/20 dark:bg-bl/64 dark:border-wh/24",
             hasLabelTrigger && "mt-10",
           )}
           onClick={() => setOpen(false)}
