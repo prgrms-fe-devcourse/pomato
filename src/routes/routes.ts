@@ -1,11 +1,11 @@
 import { createBrowserRouter } from "react-router";
 
 // pages
+import Login from "@pages/auth/Login";
 import Signup from "@pages/auth/Signup";
 import Chart from "@pages/Chart";
 import Dm from "@pages/Dm";
 import Feed from "@pages/Feed";
-import Login from "@pages/Login";
 import Mate from "@pages/Mate";
 import Notification from "@pages/Notification";
 import Setting from "@pages/Setting";
