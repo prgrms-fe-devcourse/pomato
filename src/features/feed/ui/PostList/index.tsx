@@ -4,6 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Dropdown from "@components/Dropdown";
+import CommentPanel, { type Comment } from "@features/feed/ui/Comment";
 
 /**
  * Post 컴포넌트
@@ -45,6 +46,37 @@ export default function PostList() {
       setLikeCount((c) => (v ? c - 1 : c + 1));
       return !v;
     });
+  };
+
+  // 코멘트 영역
+  const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState<Comment[]>([
+    {
+      id: "1",
+      author: { name: "홍길동", avatar: "https://picsum.photos/seed/a/60" },
+      text: "대단해요! 꾸준함이 제일 어려운데 👏",
+      createdAt: new Date(Date.now() - 60 * 1000),
+      likes: 2,
+    },
+    {
+      id: "2",
+      author: { name: "김철수", avatar: "https://picsum.photos/seed/b/60" },
+      text: "저도 오늘 3세션 했어요! 함께 화이팅!",
+      createdAt: new Date(Date.now() - 14 * 60 * 60 * 1000),
+      likes: 1,
+    },
+  ]);
+
+  const addComment = (text: string) => {
+    setComments((prev) => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        author: { name: "You" },
+        text,
+        createdAt: new Date(),
+      },
+    ]);
   };
 
   return (
@@ -103,7 +135,7 @@ export default function PostList() {
           className={twMerge(
             "text-wh/65 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]",
             "hover:bg-pink-500/10 hover:text-pink-500",
-            liked && "bg-pink-500/10 text-pink-500",
+            liked && "text-pink-500",
           )}
         >
           <Heart
@@ -119,13 +151,20 @@ export default function PostList() {
         </button>
 
         <button
-          className="text-wh/65 hover:bg-wh/10 hover:text-wh/85 hover:dark:bg-bl/30 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]"
+          // className="text-wh/65 hover:bg-wh/10 hover:text-wh/85 hover:dark:bg-bl/30 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]"
+          className={twMerge(
+            "text-wh/65 hover:bg-wh/10 hover:text-wh/85 hover:dark:bg-bl/30 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]",
+            showComments && "bg-wh/10 dark:bg-bl/30",
+          )}
           aria-label="post comment button"
+          onClick={() => setShowComments((v) => !v)}
         >
-          <MessageCircle width={15} height={15} />
+          <MessageCircle width={15} height={15} className={twMerge("stroke-current")} />
           <span className="label-text-xs">999</span>
         </button>
       </div>
+      {/* 토글로 열기 */}
+      {showComments && <CommentPanel comments={comments} onSubmit={addComment} />}
     </div>
   );
 }
