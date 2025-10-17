@@ -10,7 +10,7 @@ import Avatar from "@components/Avatar";
  * import { UserRound, MessageCircle } from "lucide-react";
  *
  * // 기본 사용법 (이미지 아바타)
- * <ChatListItem
+ * <ChatCard
  *   avatar="https://example.com/avatar.jpg"
  *   type="online"
  *   name="김철수"
@@ -19,7 +19,7 @@ import Avatar from "@components/Avatar";
  * />
  *
  * // 아이콘 아바타 사용
- * <ChatListItem
+ * <ChatCard
  *   avatar="https://example.com/avatar.jpg"
  *   type="offline"
  *   name="이영희"
@@ -44,7 +44,7 @@ import Avatar from "@components/Avatar";
 
 type UserStatusType = "online" | "offline";
 
-type ChatListItemProps = {
+type ChatCardProps = {
   avatar?: string;
   type?: UserStatusType;
   name: string;
@@ -53,14 +53,14 @@ type ChatListItemProps = {
   className?: string;
 };
 
-export default function ChatListItem({
+export default function ChatCard({
   avatar,
   type = "offline",
   name = "홍길동",
   message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
   unreadCount = 99,
   className,
-}: ChatListItemProps) {
+}: ChatCardProps) {
   const hasUnread = typeof unreadCount === "number" && unreadCount > 0;
   const hasImage = typeof avatar === "string";
 
