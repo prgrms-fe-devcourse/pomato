@@ -102,18 +102,12 @@ export default function PostComposer({
     const files = e.target.files;
     if (!files || disabled) return;
 
-    // 1장만 허용: 첫 파일만 사용
     const file = files[0];
     if (!file) return;
 
-    // (선택) 이미지 타입/용량 검증
     if (!file.type.startsWith("image/")) return;
-    // if (file.size > 5 * 1024 * 1024) return; // 5MB 제한 예시
 
-    // 이전 미리보기 URL 정리
     revokePreview(image?.image_url);
-
-    // 새 미리보기 URL 생성
     const previewUrl = URL.createObjectURL(file);
 
     setImage({
@@ -122,16 +116,14 @@ export default function PostComposer({
       file,
     });
 
-    onImageUpload?.(files); // 기존 콜백은 그대로 호출
+    onImageUpload?.(files);
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
-  // 게시물 작성 함수
   function handlePost() {
     if (disabled || !content.trim()) return;
 
     onPost(content, image || undefined);
-
     handleClearData();
   }
 

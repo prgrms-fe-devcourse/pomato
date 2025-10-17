@@ -1,10 +1,10 @@
+import type { Post } from "@features/feed/model/PostProps";
 import WritePost from "@features/feed/ui/WritePost";
 
-export default function FeedHeader() {
+export default function FeedHeader({ onCreatePost }: { onCreatePost: (p: Post) => void }) {
   return (
     <>
-      {/* 글쓰기 영역*/}
-      <WritePost />
+      <WritePost onCreatePost={onCreatePost} />
 
       {/* 구분선 */}
       <div
