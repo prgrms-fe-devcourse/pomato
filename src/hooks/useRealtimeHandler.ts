@@ -65,6 +65,7 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
 
   const addChannel = (
     channelFactory: ChannelFactory,
+    isLogin = true,
     newSubscriptionEventCallbacks?: SubscriptionEventCallbacks,
   ) => {
     const channel = createChannel(channelFactory);
@@ -73,13 +74,12 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
       unsubscribeFromChannel(channel.topic);
     }
     addChannels(channel.topic, channel);
-
     if (newSubscriptionEventCallbacks) {
       addSubscriptionEventCallbacks(channel.topic, newSubscriptionEventCallbacks);
     }
 
     if (started) {
-      void subscribeToChannel(channel);
+      void subscribeToChannel(channel, isLogin);
     }
 
     return () => {
@@ -92,7 +92,7 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
     unsubscribeFromChannel(topic);
   };
 
-  const subscribeToChannel = async (channel: RealtimeChannel) => {
+  const subscribeToChannel = async (channel: RealtimeChannel, isLogin = true) => {
     if (
       channel.state === ("joined" as typeof channel.state) ||
       channel.state === ("joining" as typeof channel.state)
@@ -100,7 +100,7 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
       console.debug("이미 연결되어있습니다");
       return;
     }
-    await refreshSession();
+    if (isLogin) await refreshSession();
 
     channel.subscribe((status, err) => {
       void handleSubscriptionStateEvent(channel, status, err);
@@ -238,6 +238,7 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   };
 
   return {
+    started,
     start, // 전체 Realtime 시스템 시작 및 구독 등록
     stop: unsubscribeFromAllChannels, // 전체 중지용 (선택)
     addChannel, // 개별 채널 추가
