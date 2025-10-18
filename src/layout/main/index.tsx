@@ -11,11 +11,12 @@ export default function Main({ children }: { children: React.ReactNode }) {
   }, [isDark]);
 
   return (
-    <main className="relative flex min-h-dvh w-full items-stretch gap-4 bg-[radial-gradient(106.3%_106.3%_at_20%_30%,rgba(168,85,247,0.25)_0%,rgba(0,0,0,0)_40%),radial-gradient(113.14%_113.14%_at_80%_20%,rgba(236,72,153,0.20)_0%,rgba(0,0,0,0)_40%),radial-gradient(100%_100%_at_40%_80%,rgba(59,130,246,0.20)_0%,rgba(23,23,27,0.50)_0%,rgba(23,23,27,0.75)_100%)] p-4">
+    <main className="group bg-gradient relative flex min-h-dvh w-full items-stretch gap-4 p-4">
       <Button
         onClick={() => setIsDark((prev) => !prev)}
         composition="iconOnly"
-        aria-label="테마 변경 버튼"
+        className="absolute top-4 left-4 group-has-[section[aria-label='Panel']]:max-[800px]:hidden"
+        aria-label="Theme Toggle Button"
       >
         <Sun className="hidden dark:block" />
         <Moon className="block dark:hidden" />
