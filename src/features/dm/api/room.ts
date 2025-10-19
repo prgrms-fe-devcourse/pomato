@@ -1,7 +1,15 @@
-import type { Database, Tables } from "@type/supabase";
+import type { Tables } from "@type/database.types";
 import supabase from "@utils/supabase";
 
-type DmConversationFunction = Database["public"]["Functions"]["get_or_create_dm_conversation"];
+type DmConversationFunction =
+  //Database["public"]["Functions"]["get_or_create_dm_conversation"]
+  {
+    Args: {
+      _user_a: string;
+      _user_b: string;
+    };
+    Returns: string;
+  };
 
 export const getChatRoomIdByUser = async ({
   _user_a: userAId,
