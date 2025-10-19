@@ -24,3 +24,14 @@ export const persistMessage = async ({ content, conversation_id }: DmMessagesTab
   if (error) throw error;
   return data;
 };
+
+export const getMessages = async (conversationId: string) => {
+  const { data, error } = await supabase
+    .from("dm_messages")
+    .select<"*", DmMessagesTable>("*")
+    .eq("conversation_id", conversationId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+  return data;
+};
