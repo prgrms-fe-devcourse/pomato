@@ -1,15 +1,8 @@
-import type { Tables } from "@type/database.types";
+import type {
+  DmConversationFunction,
+  DmConversationTable,
+} from "@features/dm/types/conversation.type";
 import supabase from "@utils/supabase";
-
-type DmConversationFunction =
-  //Database["public"]["Functions"]["get_or_create_dm_conversation"]
-  {
-    Args: {
-      _user_a: string;
-      _user_b: string;
-    };
-    Returns: string;
-  };
 
 export const getChatRoomIdByUser = async ({
   _user_a: userAId,
@@ -28,15 +21,18 @@ export const getChatRoomIdByUser = async ({
   return data;
 };
 
-type DmConversationTable = Tables<"dm_conversations">;
+export type GetMyChatRoomIdsReturn = {
+  isLogin: boolean;
+  rooms: DmConversationTable[];
+};
 
-export const getMyChatRoomIds = async (): Promise<DmConversationTable[]> => {
+export const getMyChatRoomIds = async (): Promise<GetMyChatRoomIdsReturn> => {
   const {
     data: { user },
     error: userError,
   } = await supabase.auth.getUser();
 
-  if (userError) throw userError;
+  if (userError) return { isLogin: false, rooms: [] };
 
   const { data, error: dataError } = await supabase
     .from("dm_conversations")
@@ -44,5 +40,5 @@ export const getMyChatRoomIds = async (): Promise<DmConversationTable[]> => {
     .or(`user_a.eq.${user?.id},user.b.eq.${user?.id}`);
 
   if (dataError) throw dataError;
-  return data;
+  return { isLogin: true, rooms: data };
 };

@@ -1,7 +1,5 @@
-import type { Database } from "@type/database.types";
+import type { DmMessagesTable } from "@features/dm/types/messages.type";
 import supabase from "@utils/supabase";
-
-export type DmMessagesTable = Database["public"]["Tables"]["dm_messages"];
 
 export const persistMessage = async ({ content, conversation_id }: DmMessagesTable["Insert"]) => {
   const {
@@ -32,6 +30,6 @@ export const getMessages = async (conversationId: string) => {
     .eq("conversation_id", conversationId)
     .order("created_at", { ascending: false });
 
-  if (error) throw error;
+  if (error) return [];
   return data;
 };
