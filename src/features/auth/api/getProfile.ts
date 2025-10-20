@@ -1,7 +1,6 @@
-import type { Tables } from "@type/database.types";
 import supabase from "@utils/supabase";
 
-export type ProfileRow = Tables<"profiles">;
+import type { ProfileRow } from "../types/auth.types";
 
 export const getProfile = async (id: string): Promise<ProfileRow> => {
   const { data, error } = await supabase.from("profiles").select("*").eq("user_id", id).single();

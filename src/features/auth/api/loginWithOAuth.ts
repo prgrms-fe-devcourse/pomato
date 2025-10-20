@@ -1,6 +1,6 @@
 import supabase from "@utils/supabase";
 
-type OAuthProviders = "google" | "github" | "kakao";
+import type { OAuthProviders } from "../types/auth.types";
 
 export const loginWithOAuth = async (provider: OAuthProviders) => {
   const { error } = await supabase.auth.signInWithOAuth({
