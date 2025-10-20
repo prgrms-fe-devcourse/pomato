@@ -3,20 +3,22 @@ import { useEffect } from "react";
 import { useLoaderData } from "react-router";
 
 import Input from "@components/Input";
-import { dummyPosts } from "@features/feed/model/PostProps";
 import type { PostWithComments } from "@features/feed/model/tables";
 import { usePosts } from "@features/feed/model/usePosts";
 import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
 
 export default function Feed() {
-  const { addPost, toggleLike, addComment } = usePosts(dummyPosts);
+  const { posts, setPosts, addPost, toggleLike, addComment } = usePosts();
 
   const post_data = useLoaderData<PostWithComments[]>();
 
   useEffect(() => {
-    if (post_data) console.log("데이터 출력", post_data);
-  }, [post_data]);
+    if (post_data) {
+      setPosts(post_data);
+      console.log("데이터 출력", post_data);
+    }
+  }, [post_data, setPosts]);
 
   return (
     <div className="flex h-screen flex-col gap-[12px] p-[16px] select-none">
@@ -28,7 +30,7 @@ export default function Feed() {
 
       {/* Post List 영역 */}
       <div className="pc-scroll min-h-0 flex-1 overflow-y-auto">
-        <PostList posts={post_data} onToggleLike={toggleLike} onAddComment={addComment} />
+        <PostList posts={posts} onToggleLike={toggleLike} onAddComment={addComment} />
       </div>
     </div>
   );

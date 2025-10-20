@@ -1,7 +1,11 @@
-import type { Post } from "@features/feed/types/post.type";
+import type { PostWithComments } from "@features/feed/model/tables";
 import WritePost from "@features/feed/ui/WritePost";
 
-export default function FeedHeader({ onCreatePost }: { onCreatePost: (p: Post) => void }) {
+export default function FeedHeader({
+  onCreatePost,
+}: {
+  onCreatePost: (p: PostWithComments) => void;
+}) {
   return (
     <>
       <WritePost onCreatePost={onCreatePost} />
