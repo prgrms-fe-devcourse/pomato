@@ -33,3 +33,8 @@ export const useAuthStore = create<AuthStore>()(
     })),
   ),
 );
+
+export const useSession = () => useAuthStore((state) => state.session);
+export const useProfile = () => useAuthStore((state) => state.profile);
+export const useIsLoggedIn = () => useAuthStore((state) => !!state.session);
+export const useUserId = () => useAuthStore((state) => state.session?.user?.id);
