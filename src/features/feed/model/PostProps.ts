@@ -10,6 +10,7 @@ export type Post = {
   author: { name: string; avatar?: string; id: string };
   text: string;
   imageUrl?: string;
+  createdAt: Date;
   likes: number;
   liked?: boolean;
   comments: Comment[];
@@ -23,6 +24,7 @@ export const dummyPosts: Post[] = [
     text: "Just finished working on this amazing glassmorphism UI kit! 🎨✨",
     imageUrl:
       "https://img.freepik.com/free-vector/flat-post-its-boards-infographics_23-2148649295.jpg",
+    createdAt: new Date(Date.now() - 36 * 60 * 1000),
     likes: 3,
     liked: false,
     comments: [
@@ -45,6 +47,7 @@ export const dummyPosts: Post[] = [
     author: { name: "Alex Chen", avatar: "https://picsum.photos/seed/alex/60", id: "@tester02" },
     text: "Can you review the latest design updates?",
     imageUrl: "https://picsum.photos/seed/design/1000/600",
+    createdAt: new Date(Date.now() - 14 * 60 * 60 * 1000),
     likes: 1,
     liked: true,
     comments: [],
@@ -53,6 +56,7 @@ export const dummyPosts: Post[] = [
     id: "p3",
     author: { name: "System", id: "@tester03" },
     text: "Your weekly summary report is ready.",
+    createdAt: new Date(Date.now() - 92 * 60 * 60 * 1000),
     likes: 0,
     liked: false,
     comments: [],

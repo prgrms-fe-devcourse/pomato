@@ -24,6 +24,7 @@ export type PostCardProps = {
   author: { name: string; avatar?: string; id: string };
   text: string;
   imageUrl?: string;
+  date: Date;
   likes: number;
   liked?: boolean;
   comments: Comment[];
@@ -36,6 +37,7 @@ export default function PostCard({
   author,
   text,
   imageUrl,
+  date,
   likes,
   liked = false,
   comments,
@@ -59,7 +61,9 @@ export default function PostCard({
           {author.avatar ? <Avatar src={author.avatar} /> : <Avatar />}
           <div className="flex flex-col justify-center">
             <span className="label-text-m-semibold text-wh">{author.name}</span>
-            <span className="label-text-s text-wh/60">{author.id} · 2h</span>
+            <span className="label-text-s text-wh/60">
+              {author.id} · {formatOccurredTime(date)}
+            </span>
           </div>
         </div>
         <Dropdown className="top-[-10px]" items={menu} />
@@ -122,4 +126,19 @@ export default function PostCard({
       )}
     </div>
   );
+}
+
+// 게시글 영역 (1m, 36m, 4h .... etc)
+// 메세지 시간 발생 기준을 표시 (date 타입을 계산하여 표시하는 함수)
+function formatOccurredTime(value: Date, now: Date = new Date()): string {
+  const diffMs = Math.max(0, now.getTime() - value.getTime());
+
+  const minutes = Math.floor(diffMs / 60_000);
+  if (minutes < 60) return `${Math.max(1, minutes)}m`; // 0분도 최소 1m
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`; // 1h, 2h, 3h, ... 23h
+
+  const days = Math.floor(hours / 24);
+  return `${days}d`; // 1d, 2d, ...
 }
