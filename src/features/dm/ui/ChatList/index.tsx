@@ -11,9 +11,9 @@ export default function ChatList({ rooms = [] }: ChatListProps) {
   const navigate = useNavigate();
   return (
     <ul className="flex flex-col gap-[4px]">
-      {rooms.map((value) => {
+      {rooms.map((room) => {
         return (
-          <li key={value.id} id={value.id} onClick={() => void navigate(`${value.id}`)}>
+          <li key={room.id} id={room.id} onClick={() => void navigate(`${room.id}`)}>
             <ChatCard name="Sera" message="message" />
           </li>
         );
