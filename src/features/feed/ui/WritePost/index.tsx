@@ -13,8 +13,8 @@ export default function WritePost({ onCreatePost }: { onCreatePost: (p: Post) =>
         const newPost: Post = {
           id: crypto.randomUUID(),
           author: { name: "나", avatar: "https://picsum.photos/seed/me/60", id: "@elecharu" },
-          text: content,
-          imageUrl: image?.image_url,
+          content: content,
+          image_url: image?.image_url,
           createdAt: new Date(),
           likes: 0,
           liked: false,

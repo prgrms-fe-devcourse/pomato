@@ -22,8 +22,8 @@ const menu: DropdownItem[] = [
 export type PostCardProps = {
   id: string;
   author: { name: string; avatar?: string; id: string };
-  text: string;
-  imageUrl?: string;
+  content: string;
+  image_url?: string;
   date: Date;
   likes: number;
   liked?: boolean;
@@ -35,8 +35,8 @@ export type PostCardProps = {
 export default function PostCard({
   id,
   author,
-  text,
-  imageUrl,
+  content,
+  image_url,
   date,
   likes,
   liked = false,
@@ -71,12 +71,12 @@ export default function PostCard({
 
       {/* 본문 */}
       <div className="paragraph-text-m text-wh flex flex-col gap-[12px]" aria-label="post content">
-        <p className="paragraph-text-medium">{text}</p>
+        <p className="paragraph-text-medium">{content}</p>
 
-        {imageUrl && (
+        {image_url && (
           <div className="max-w-full overflow-hidden">
             <img
-              src={imageUrl}
+              src={image_url}
               alt=""
               className="border-wh/10 h-auto w-full rounded-[12px] border-1 object-contain"
               aria-hidden

@@ -9,7 +9,7 @@ import Input from "@components/Input";
 export type Comment = {
   id: string;
   author: { name: string; avatar?: string };
-  text: string;
+  content: string;
   createdAt: Date;
 };
 
@@ -57,7 +57,7 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
                     <span className="label-text-s-semibold text-wh">{c.author.name}</span>
                     <span className="label-text-xs text-wh/60">{formatTimeShort(c.createdAt)}</span>
                   </div>
-                  <p className="paragraph-text-s text-wh/85 mt-0.5 break-words">{c.text}</p>
+                  <p className="paragraph-text-s text-wh/85 mt-0.5 break-words">{c.content}</p>
                 </div>
               </div>
             </div>
