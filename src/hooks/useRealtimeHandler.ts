@@ -79,7 +79,7 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
     }
 
     if (started) {
-      void subscribeToChannel(channel, isLogin);
+      void subscribeToChannel(channel, isLogin, newSubscriptionEventCallbacks);
     }
 
     return () => {
@@ -95,7 +95,11 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
     unsubscribeFromChannel(topic);
   };
 
-  const subscribeToChannel = async (channel: RealtimeChannel, isLogin = true) => {
+  const subscribeToChannel = async (
+    channel: RealtimeChannel,
+    isLogin = true,
+    newSubscriptionEventCallbacks?: SubscriptionEventCallbacks,
+  ) => {
     if (
       channel.state === ("joined" as typeof channel.state) ||
       channel.state === ("joining" as typeof channel.state)
@@ -106,7 +110,7 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
     if (isLogin) await refreshSession();
 
     channel.subscribe((status, err) => {
-      void handleSubscriptionStateEvent(channel, status, err);
+      void handleSubscriptionStateEvent(channel, status, err, newSubscriptionEventCallbacks);
     });
   };
 
@@ -155,9 +159,11 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
     channel: RealtimeChannel,
     status: REALTIME_SUBSCRIBE_STATES,
     err: Error | undefined,
+    newSubscriptionEventCallbacks?: SubscriptionEventCallbacks,
   ) => {
     const { topic } = channel;
-    const callbacks = subscriptionEventCallbacks.get(channel.topic);
+    const callbacks =
+      newSubscriptionEventCallbacks ?? subscriptionEventCallbacks.get(channel.topic);
     switch (status) {
       case REALTIME_SUBSCRIBE_STATES.SUBSCRIBED: {
         console.debug(`'${topic}'에 구독완료`);
