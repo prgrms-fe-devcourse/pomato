@@ -148,6 +148,7 @@ export type Database = {
       };
       posts: {
         Row: {
+          image_url: undefined;
           content: string;
           created_at: string;
           id: string;

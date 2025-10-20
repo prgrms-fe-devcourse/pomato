@@ -4,7 +4,8 @@ import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Dropdown from "@components/Dropdown";
-import CommentPanel, { type Comment } from "@features/feed/ui/Comment";
+import type { Comment } from "@features/feed/types/post.type";
+import CommentPanel from "@features/feed/ui/Comment";
 
 type DropdownItem = {
   key: string;
@@ -21,7 +22,7 @@ const menu: DropdownItem[] = [
 
 export type PostCardProps = {
   id: string;
-  author: { name: string; avatar?: string; id: string };
+  author: { username: string; display_name?: string; avatar?: string; id: string };
   content: string;
   image_url?: string;
   date: Date;
@@ -60,7 +61,7 @@ export default function PostCard({
         <div className="flex items-center gap-[12px]" aria-label="author information">
           {author.avatar ? <Avatar src={author.avatar} /> : <Avatar />}
           <div className="flex flex-col justify-center">
-            <span className="label-text-m-semibold text-wh">{author.name}</span>
+            <span className="label-text-m-semibold text-wh">{author.username}</span>
             <span className="label-text-s text-wh/60">
               {author.id} · {formatOccurredTime(date)}
             </span>

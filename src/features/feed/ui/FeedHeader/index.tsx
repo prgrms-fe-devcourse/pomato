@@ -1,4 +1,4 @@
-import type { Post } from "@features/feed/model/PostProps";
+import type { Post } from "@features/feed/types/post.type";
 import WritePost from "@features/feed/ui/WritePost";
 
 export default function FeedHeader({ onCreatePost }: { onCreatePost: (p: Post) => void }) {

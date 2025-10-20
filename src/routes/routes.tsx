@@ -1,7 +1,8 @@
 import { createBrowserRouter } from "react-router";
 
 // pages
-import { getPost } from "@features/feed/api/post";
+import { listPosts } from "@features/feed/api/post";
+import type { Post } from "@features/feed/types/post.type";
 import Login from "@pages/auth/Login";
 import Signup from "@pages/auth/Signup";
 import Chart from "@pages/Chart";
@@ -30,7 +31,8 @@ export const router = createBrowserRouter([
         path: "feed",
         Component: Feed,
         loader: async () => {
-          return await getPost();
+          const posts: Post[] = await listPosts();
+          return posts;
         },
       },
       {

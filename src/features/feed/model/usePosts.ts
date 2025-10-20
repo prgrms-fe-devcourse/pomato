@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
 
-import type { Post } from "@features/feed/model/PostProps";
+import type { Post } from "@features/feed/types/post.type";
 
 export function usePosts(initial: Post[]) {
   const [posts, setPosts] = useState<Post[]>(initial);
@@ -34,7 +34,7 @@ export function usePosts(initial: Post[]) {
                 {
                   id: crypto.randomUUID(),
                   post_id: postId,
-                  author: { name: "테스터" },
+                  author: { username: "테스터", display_name: "테스터", id: crypto.randomUUID() },
                   content: text,
                   createdAt: new Date(),
                 },
