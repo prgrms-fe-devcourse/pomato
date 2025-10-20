@@ -28,7 +28,7 @@ export const getMessages = async (conversationId: string) => {
     .from("dm_messages")
     .select<"*", DmMessagesTable>("*")
     .eq("conversation_id", conversationId)
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: true });
 
   if (error) return [];
   return data;
