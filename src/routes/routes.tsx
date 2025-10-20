@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router";
 
+import { authLoader } from "@features/auth/model/authLoader";
 import Login from "@pages/auth/Login";
 import Signup from "@pages/auth/Signup";
 import Chart from "@pages/Chart";
@@ -19,6 +20,7 @@ export const router = createBrowserRouter([
     path: "/",
     Component: App,
     errorElement: <GlobalError />,
+    loader: authLoader,
     children: [
       {
         path: "mate",
