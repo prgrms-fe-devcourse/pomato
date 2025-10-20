@@ -8,8 +8,8 @@ export type ChatMessagesProps = {
 export default function ChatMessages({ messages = [] }: ChatMessagesProps) {
   return (
     <div className="flex-1 px-[16px]">
-      {messages.map((value) => {
-        return <ChatBubble key={value.id} text={value.content} />;
+      {messages.map((message) => {
+        return <ChatBubble key={message.id} text={message.content} />;
       })}
     </div>
   );
