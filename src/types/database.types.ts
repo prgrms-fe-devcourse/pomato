@@ -8,6 +8,26 @@ export type Database = {
   };
   public: {
     Tables: {
+      active_users: {
+        Row: {
+          id: string;
+        };
+        Insert: {
+          id?: string;
+        };
+        Update: {
+          id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "active_users_id_fkey";
+            columns: ["id"];
+            isOneToOne: true;
+            referencedRelation: "profiles";
+            referencedColumns: ["user_id"];
+          },
+        ];
+      };
       dm_conversations: {
         Row: {
           created_at: string;
@@ -156,30 +176,27 @@ export type Database = {
           bio: string | null;
           created_at: string;
           display_name: string;
-          email: string | null;
           updated_at: string;
           user_id: string;
-          username: string | null;
+          username: string;
         };
         Insert: {
           avatar_url?: string | null;
           bio?: string | null;
-          created_at: string;
+          created_at?: string;
           display_name: string;
-          email?: string | null;
-          updated_at: string;
-          user_id: string;
-          username?: string | null;
+          updated_at?: string;
+          user_id?: string;
+          username: string;
         };
         Update: {
           avatar_url?: string | null;
           bio?: string | null;
           created_at?: string;
           display_name?: string;
-          email?: string | null;
           updated_at?: string;
           user_id?: string;
-          username?: string | null;
+          username?: string;
         };
         Relationships: [];
       };
@@ -188,11 +205,15 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      get_or_create_dm_conversation: {
+        Args: { _user_a: string; _user_b: string };
+        Returns: string;
+      };
     };
     Enums: {
       notification_type: "like" | "comment" | "dm";
     };
+    // never 타입 에러 시 CompositeTypes를 Record<string, never>로 변경해주세요
     CompositeTypes: Record<string, never>;
   };
 };
