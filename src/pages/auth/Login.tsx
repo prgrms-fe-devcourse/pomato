@@ -6,7 +6,7 @@ import google from "@assets/auth/google.svg";
 import kakao from "@assets/auth/kakao.svg";
 import Button from "@components/Button";
 import Input from "@components/Input";
-import { loginWithOAuth } from "@features/auth/api/loginWithOAuth";
+import { loginWithOAuth } from "@features/auth/api/login";
 
 export default function Login() {
   return (
