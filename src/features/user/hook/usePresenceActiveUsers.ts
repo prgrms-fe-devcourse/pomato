@@ -29,7 +29,7 @@ export const usePresenceActiveUsers = () => {
             config: { presence: { key: user.id } },
           });
 
-          // presence 채널 동기화 => acrive_user 추가 / 현재 활성 사용자 저장
+          // presence 채널 동기화 => active_user 추가 / 현재 활성 사용자 저장
           channel.on("presence", { event: "sync" }, () => {
             const state = channel.presenceState();
             const users = Object.entries(state).map(([id]) => ({ id }));
