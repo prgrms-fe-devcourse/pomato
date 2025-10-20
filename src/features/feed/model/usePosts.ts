@@ -33,8 +33,9 @@ export function usePosts(initial: Post[]) {
                 ...p.comments,
                 {
                   id: crypto.randomUUID(),
+                  post_id: postId,
                   author: { name: "테스터" },
-                  text,
+                  content: text,
                   createdAt: new Date(),
                 },
               ],

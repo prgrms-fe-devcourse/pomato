@@ -15,8 +15,8 @@ export default function PostList({ posts, onToggleLike, onAddComment }: PostList
           key={p.id}
           id={p.id}
           author={p.author}
-          text={p.text}
-          imageUrl={p.imageUrl}
+          content={p.content}
+          image_url={p.image_url}
           date={p.createdAt}
           likes={p.likes}
           liked={p.liked}
