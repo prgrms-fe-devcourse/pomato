@@ -14,7 +14,7 @@ export const persistMessage = async ({ content, conversation_id }: DmMessagesTab
     .insert({
       content,
       conversation_id,
-      sender_id: user?.id,
+      sender_id: user!.id,
     })
     .select<"*", DmMessagesTable>()
     .single();
