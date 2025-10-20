@@ -97,7 +97,7 @@ export default function EmptyState({
           <Icon
             width={64}
             height={64}
-            className={twMerge("text-wh/60 dark:text-wh/50 group-focus-within:text-wh", iconStyle)}
+            className={twMerge("text-wh/60 dark:text-wh/50", iconStyle)}
           />
         )}
 
