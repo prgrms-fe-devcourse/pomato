@@ -7,7 +7,7 @@ export type Comment = {
 
 export type Post = {
   id: string;
-  author: { name: string; avatar?: string };
+  author: { name: string; avatar?: string; id: string };
   text: string;
   imageUrl?: string;
   likes: number;
@@ -19,7 +19,7 @@ export type Post = {
 export const dummyPosts: Post[] = [
   {
     id: "p1",
-    author: { name: "Sarah Kim", avatar: "https://picsum.photos/seed/sarah/60" },
+    author: { name: "Sarah Kim", avatar: "https://picsum.photos/seed/sarah/60", id: "@tester01" },
     text: "Just finished working on this amazing glassmorphism UI kit! 🎨✨",
     imageUrl:
       "https://img.freepik.com/free-vector/flat-post-its-boards-infographics_23-2148649295.jpg",
@@ -42,7 +42,7 @@ export const dummyPosts: Post[] = [
   },
   {
     id: "p2",
-    author: { name: "Alex Chen", avatar: "https://picsum.photos/seed/alex/60" },
+    author: { name: "Alex Chen", avatar: "https://picsum.photos/seed/alex/60", id: "@tester02" },
     text: "Can you review the latest design updates?",
     imageUrl: "https://picsum.photos/seed/design/1000/600",
     likes: 1,
@@ -51,7 +51,7 @@ export const dummyPosts: Post[] = [
   },
   {
     id: "p3",
-    author: { name: "System" },
+    author: { name: "System", id: "@tester03" },
     text: "Your weekly summary report is ready.",
     likes: 0,
     liked: false,
