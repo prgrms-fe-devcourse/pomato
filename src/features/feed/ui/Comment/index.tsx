@@ -96,11 +96,27 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
   );
 }
 
-function formatTimeShort(d: Date) {
+// 댓글 영역 (1분 전, 36분 전, 4시간 전 .... etc)
+function formatTimeShort(d: Date): string {
   const now = new Date();
-  const diff = Math.max(0, (now.getTime() - d.getTime()) / 1000);
-  if (diff < 60) return "방금 전";
-  if (diff < 3600) return `${Math.floor(diff / 60)}분 전`;
-  if (diff < 86_400) return `${Math.floor(diff / 3600)}시간 전`;
-  return d.toLocaleDateString();
+  const diffSec = Math.max(0, Math.floor((now.getTime() - d.getTime()) / 1000));
+
+  const MIN = 60;
+  const HOUR = 60 * MIN;
+  const DAY = 24 * HOUR;
+
+  if (diffSec < MIN) return "방금 전";
+  if (diffSec < HOUR) return `${Math.floor(diffSec / MIN)}분 전`;
+  if (diffSec < DAY) return `${Math.floor(diffSec / HOUR)}시간 전`;
+
+  const days = Math.floor(diffSec / DAY);
+  if (days < 30) return `${days}d`; // 1d, 2d, ...
+
+  const sameYear = d.getFullYear() === now.getFullYear();
+  return d.toLocaleDateString(
+    "ko-KR",
+    sameYear
+      ? { month: "numeric", day: "numeric" }
+      : { year: "numeric", month: "numeric", day: "numeric" },
+  );
 }
