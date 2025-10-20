@@ -88,6 +88,9 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   };
 
   const removeChannel = (topic: Topic) => {
+    if (!topic.startsWith("realtime:")) {
+      topic = `realtime:${topic}`;
+    }
     removeChannels(topic);
     unsubscribeFromChannel(topic);
   };
@@ -133,10 +136,12 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   };
 
   const unsubscribeFromChannel = (topic: Topic) => {
+    if (!topic.startsWith("realtime:")) {
+      topic = `realtime:${topic}`;
+    }
     const channel = channels.get(topic);
     if (channel && supabaseClient) {
       void supabaseClient.removeChannel(channel);
-      // removeChannel(topic);
     }
   };
 
