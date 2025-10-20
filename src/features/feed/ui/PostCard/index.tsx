@@ -21,7 +21,7 @@ const menu: DropdownItem[] = [
 
 export type PostCardProps = {
   id: string;
-  author: { name: string; avatar?: string };
+  author: { name: string; avatar?: string; id: string };
   text: string;
   imageUrl?: string;
   likes: number;
@@ -59,7 +59,7 @@ export default function PostCard({
           {author.avatar ? <Avatar src={author.avatar} /> : <Avatar />}
           <div className="flex flex-col justify-center">
             <span className="label-text-m-semibold text-wh">{author.name}</span>
-            <span className="label-text-s text-wh/60">id and times</span>
+            <span className="label-text-s text-wh/60">{author.id} · 2h</span>
           </div>
         </div>
         <Dropdown className="top-[-10px]" items={menu} />
