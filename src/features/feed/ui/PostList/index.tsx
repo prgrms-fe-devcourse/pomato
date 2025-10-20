@@ -1,3 +1,5 @@
+import { memo, useMemo } from "react";
+
 import type { PostWithComments } from "@features/feed/model/tables";
 import PostCard from "@features/feed/ui/PostCard";
 
@@ -7,11 +9,10 @@ type PostListProps = {
   onAddComment: (postId: string, text: string) => void;
 };
 
-export default function PostList({ posts, onToggleLike, onAddComment }: PostListProps) {
-  console.log("여기 뭔데?", posts[0]);
-  return (
-    <section className="flex flex-col gap-3">
-      {posts.map((p) => (
+function PostList({ posts, onToggleLike, onAddComment }: PostListProps) {
+  const items = useMemo(
+    () =>
+      posts.map((p) => (
         <PostCard
           key={p.id}
           id={p.id}
@@ -30,7 +31,11 @@ export default function PostList({ posts, onToggleLike, onAddComment }: PostList
           onToggleLike={onToggleLike}
           onAddComment={onAddComment}
         />
-      ))}
-    </section>
+      )),
+    [posts, onToggleLike, onAddComment],
   );
+
+  return <section className="flex flex-col gap-3">{items}</section>;
 }
+
+export default memo(PostList);

@@ -1,16 +1,16 @@
 import { useCallback, useState } from "react";
 
-import type { Post } from "@features/feed/types/post.type";
+import type { PostWithComments } from "@features/feed/model/tables";
 
-export function usePosts(initial: Post[]) {
-  const [posts, setPosts] = useState<Post[]>(initial);
+export function usePosts() {
+  const [posts, setPosts] = useState<PostWithComments[]>([]);
 
-  const addPost = useCallback((newPost: Post) => {
-    setPosts((prev) => [newPost, ...prev]);
+  const addPost = useCallback((newPost: PostWithComments) => {
+    setPosts((prev) => [newPost, ...(prev ?? [])]);
   }, []);
 
   const toggleLike = useCallback((postId: string) => {
-    setPosts((prev) =>
+    setPosts((prev = []) =>
       prev.map((p) =>
         p.id === postId
           ? {
@@ -24,19 +24,23 @@ export function usePosts(initial: Post[]) {
   }, []);
 
   const addComment = useCallback((postId: string, text: string) => {
-    setPosts((prev) =>
+    setPosts((prev = []) =>
       prev.map((p) =>
         p.id === postId
           ? {
               ...p,
               comments: [
-                ...p.comments,
+                ...(p.comments ?? []),
                 {
                   id: crypto.randomUUID(),
                   post_id: postId,
-                  author: { username: "테스터", display_name: "테스터", id: crypto.randomUUID() },
+                  author: {
+                    username: "테스터",
+                    display_name: "테스터",
+                    id: crypto.randomUUID(),
+                  },
                   content: text,
-                  createdAt: new Date(),
+                  createdAt: new Date().toISOString(), // <- Fix: store as string
                 },
               ],
             }
@@ -45,5 +49,5 @@ export function usePosts(initial: Post[]) {
     );
   }, []);
 
-  return { posts, addPost, toggleLike, addComment };
+  return { posts, setPosts, addPost, toggleLike, addComment };
 }
