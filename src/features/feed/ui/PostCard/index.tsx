@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Dropdown from "@components/Dropdown";
-import type { Comment } from "@features/feed/types/post.type";
+import type { CommentWithAuthor } from "@features/feed/model/tables";
 import CommentPanel from "@features/feed/ui/Comment";
 
 type DropdownItem = {
@@ -25,10 +25,10 @@ export type PostCardProps = {
   author: { username: string; display_name?: string; avatar?: string; id: string };
   content: string;
   image_url?: string;
-  date: Date;
+  createdAt: Date;
   likes: number;
   liked?: boolean;
-  comments: Comment[];
+  comments: CommentWithAuthor[];
   onToggleLike: (id: string) => void;
   onAddComment: (id: string, text: string) => void;
 };
@@ -38,7 +38,7 @@ export default function PostCard({
   author,
   content,
   image_url,
-  date,
+  createdAt,
   likes,
   liked = false,
   comments,
@@ -61,9 +61,9 @@ export default function PostCard({
         <div className="flex items-center gap-[12px]" aria-label="author information">
           {author.avatar ? <Avatar src={author.avatar} /> : <Avatar />}
           <div className="flex flex-col justify-center">
-            <span className="label-text-m-semibold text-wh">{author.username}</span>
-            <span className="label-text-s text-wh/60">
-              {author.id} · {formatOccurredTime(date)}
+            <span className="label-text-m-semibold text-wh">{author.display_name}</span>
+            <span className="label-text-s text-wh/60 mt-1">
+              {author.username} · {formatOccurredTime(new Date(createdAt))}
             </span>
           </div>
         </div>
@@ -135,11 +135,11 @@ function formatOccurredTime(value: Date, now: Date = new Date()): string {
   const diffMs = Math.max(0, now.getTime() - value.getTime());
 
   const minutes = Math.floor(diffMs / 60_000);
-  if (minutes < 60) return `${Math.max(1, minutes)}m`; // 0분도 최소 1m
+  if (minutes < 60) return `${Math.max(1, minutes)}분 전`; // 0분도 최소 1m
 
   const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h`; // 1h, 2h, 3h, ... 23h
+  if (hours < 24) return `${hours}시간 전`; // 1h, 2h, 3h, ... 23h
 
   const days = Math.floor(hours / 24);
-  return `${days}d`; // 1d, 2d, ...
+  return `${days}일 전`; // 1d, 2d, ...
 }

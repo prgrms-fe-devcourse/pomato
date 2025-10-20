@@ -5,17 +5,17 @@ import { twMerge } from "tailwind-merge";
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
 import Input from "@components/Input";
-import type { Comment } from "@features/feed/types/post.type";
+import type { CommentWithAuthor } from "@features/feed/model/tables";
 
 type CommentPanelProps = {
-  comments: Comment[];
+  comments: CommentWithAuthor[];
   onSubmit: (text: string) => void;
   className?: string;
 };
 
 export default function Comment({ comments, onSubmit, className }: CommentPanelProps) {
   const [value, setValue] = useState("");
-  const [items, setItems] = useState<Comment[]>([]);
+  const [items, setItems] = useState<CommentWithAuthor[]>([]);
 
   useEffect(() => {
     setItems(comments);
@@ -42,14 +42,20 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
           <li key={c.id}>
             <div className="flex gap-3 py-2">
               {/* 아바타 */}
-              {c.author.avatar ? <Avatar src={c.author.avatar} size="s" /> : <Avatar size="s" />}
+              {c.author.avatar_url ? (
+                <Avatar src={c.author.avatar_url} size="s" />
+              ) : (
+                <Avatar size="s" />
+              )}
 
               {/* Comments 영역 */}
               <div className="min-w-0 flex-1">
                 <div className="rounded-lg bg-white/5 p-3 dark:bg-black/10">
                   <div className="mb-1.5 flex items-center justify-start gap-2">
                     <span className="label-text-s-semibold text-wh">{c.author.username}</span>
-                    <span className="label-text-xs text-wh/60">{formatTimeShort(c.createdAt)}</span>
+                    <span className="label-text-xs text-wh/60">
+                      {formatTimeShort(new Date(c.createdAt))}
+                    </span>
                   </div>
                   <p className="paragraph-text-s text-wh/85 mt-0.5 break-words">{c.content}</p>
                 </div>
