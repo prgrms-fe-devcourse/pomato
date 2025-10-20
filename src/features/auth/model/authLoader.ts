@@ -1,24 +1,12 @@
-import type { Session } from "@supabase/supabase-js";
-
-import supabase from "@utils/supabase";
-
-import { getProfile } from "../api/getProfile";
-import type { Profile } from "../types/auth.types";
-
-export type authLoaderData = {
-  session: Session | null;
-  profile: Profile | null;
-};
+import { useAuthStore } from "./useAuthStore";
+import { getProfile } from "../api/profile";
+import { getSession } from "../api/session";
 
 export const authLoader = async () => {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  const session = await getSession();
 
-  if (!session) {
-    return { session: null, profile: null };
+  if (session) {
+    const profile = await getProfile(session.user.id);
+    useAuthStore.getState().setAuth(session, profile);
   }
-
-  const profile = await getProfile(session.user.id);
-  return { session, profile };
 };
