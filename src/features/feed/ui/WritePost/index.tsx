@@ -2,7 +2,7 @@ import { Pen } from "lucide-react";
 import { useState } from "react";
 
 import Button from "@components/Button";
-import type { Post } from "@features/feed/model/PostProps";
+import type { Post } from "@features/feed/types/post.type";
 import PostComposer from "@features/feed/ui/PostComposer";
 
 export default function WritePost({ onCreatePost }: { onCreatePost: (p: Post) => void }) {
@@ -12,7 +12,12 @@ export default function WritePost({ onCreatePost }: { onCreatePost: (p: Post) =>
       onPost={(content, image) => {
         const newPost: Post = {
           id: crypto.randomUUID(),
-          author: { name: "나", avatar: "https://picsum.photos/seed/me/60", id: "@elecharu" },
+          author: {
+            username: "테스터01",
+            display_name: "테스터01",
+            avatar: "https://picsum.photos/seed/me/60",
+            id: "@elecharu",
+          },
           content: content,
           image_url: image?.image_url,
           createdAt: new Date(),

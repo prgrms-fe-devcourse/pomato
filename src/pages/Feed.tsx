@@ -4,18 +4,18 @@ import { useLoaderData } from "react-router";
 
 import Input from "@components/Input";
 import { dummyPosts } from "@features/feed/model/PostProps";
+import type { PostRow } from "@features/feed/model/tables";
 import { usePosts } from "@features/feed/model/usePosts";
-import type { PostTable } from "@features/feed/types/post.type";
 import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
 
 export default function Feed() {
   const { posts, addPost, toggleLike, addComment } = usePosts(dummyPosts);
 
-  const post_data = useLoaderData<PostTable["Row"][]>();
+  const post_data = useLoaderData<PostRow[]>();
 
   useEffect(() => {
-    if (post_data) console.log(post_data);
+    if (post_data) console.log("데이터 출력", post_data);
   }, [post_data]);
 
   return (

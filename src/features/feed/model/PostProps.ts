@@ -1,27 +1,15 @@
-export type Comment = {
-  id: string;
-  post_id: string;
-  author: { name: string; avatar?: string };
-  content: string;
-  createdAt: Date;
-};
-
-export type Post = {
-  id: string;
-  author: { name: string; avatar?: string; id: string };
-  content: string;
-  image_url?: string;
-  createdAt: Date;
-  likes: number;
-  liked?: boolean;
-  comments: Comment[];
-};
+import type { Post } from "@features/feed/types/post.type";
 
 // 더미데이터
 export const dummyPosts: Post[] = [
   {
     id: "p1",
-    author: { name: "Sarah Kim", avatar: "https://picsum.photos/seed/sarah/60", id: "@tester01" },
+    author: {
+      username: "Sarah Kim",
+      display_name: "Sarah Kim",
+      avatar: "https://picsum.photos/seed/sarah/60",
+      id: "@tester01",
+    },
     content: "Just finished working on this amazing glassmorphism UI kit! 🎨✨",
     image_url:
       "https://img.freepik.com/free-vector/flat-post-its-boards-infographics_23-2148649295.jpg",
@@ -32,14 +20,24 @@ export const dummyPosts: Post[] = [
       {
         id: "c1",
         post_id: "post_id_1",
-        author: { name: "홍길동", avatar: "https://picsum.photos/seed/a/60" },
+        author: {
+          username: "홍길동",
+          display_name: "홍길동",
+          avatar: "https://picsum.photos/seed/a/60",
+          id: "",
+        },
         content: "대단해요! 꾸준함이 제일 어려운데 👏",
         createdAt: new Date(Date.now() - 60 * 1000),
       },
       {
         id: "c2",
         post_id: "post_id_2",
-        author: { name: "김철수", avatar: "https://picsum.photos/seed/b/60" },
+        author: {
+          username: "김철수",
+          display_name: "김철수",
+          avatar: "https://picsum.photos/seed/b/60",
+          id: "",
+        },
         content: "저도 오늘 3세션 했어요! 함께 화이팅!",
         createdAt: new Date(Date.now() - 14 * 60 * 60 * 1000),
       },
@@ -47,7 +45,12 @@ export const dummyPosts: Post[] = [
   },
   {
     id: "p2",
-    author: { name: "Alex Chen", avatar: "https://picsum.photos/seed/alex/60", id: "@tester02" },
+    author: {
+      username: "Alex Chen",
+      display_name: "Alex Chen",
+      avatar: "https://picsum.photos/seed/alex/60",
+      id: "@tester02",
+    },
     content: "Can you review the latest design updates?",
     image_url: "https://picsum.photos/seed/design/1000/600",
     createdAt: new Date(Date.now() - 14 * 60 * 60 * 1000),
@@ -57,7 +60,7 @@ export const dummyPosts: Post[] = [
   },
   {
     id: "p3",
-    author: { name: "System", id: "@tester03" },
+    author: { username: "System", display_name: "System", id: "@tester03" },
     content: "Your weekly summary report is ready.",
     createdAt: new Date(Date.now() - 92 * 60 * 60 * 1000),
     likes: 0,

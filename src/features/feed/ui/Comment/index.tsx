@@ -5,13 +5,7 @@ import { twMerge } from "tailwind-merge";
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
 import Input from "@components/Input";
-
-export type Comment = {
-  id: string;
-  author: { name: string; avatar?: string };
-  content: string;
-  createdAt: Date;
-};
+import type { Comment } from "@features/feed/types/post.type";
 
 type CommentPanelProps = {
   comments: Comment[];
@@ -54,7 +48,7 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
               <div className="min-w-0 flex-1">
                 <div className="rounded-lg bg-white/5 p-3 dark:bg-black/10">
                   <div className="mb-1.5 flex items-center justify-start gap-2">
-                    <span className="label-text-s-semibold text-wh">{c.author.name}</span>
+                    <span className="label-text-s-semibold text-wh">{c.author.username}</span>
                     <span className="label-text-xs text-wh/60">{formatTimeShort(c.createdAt)}</span>
                   </div>
                   <p className="paragraph-text-s text-wh/85 mt-0.5 break-words">{c.content}</p>

@@ -1,4 +1,4 @@
-import type { Post } from "@features/feed/model/PostProps";
+import type { Post } from "@features/feed/types/post.type";
 import PostCard from "@features/feed/ui/PostCard";
 
 type PostListProps = {
