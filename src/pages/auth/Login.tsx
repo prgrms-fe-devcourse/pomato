@@ -6,10 +6,11 @@ import google from "@assets/auth/google.svg";
 import kakao from "@assets/auth/kakao.svg";
 import Button from "@components/Button";
 import Input from "@components/Input";
+import { loginWithOAuth } from "@features/auth/api/loginWithOAuth";
 
 export default function Login() {
   return (
-    <section className="min-w- flex min-h-0 flex-1 basis-0 flex-col items-center justify-center gap-6 self-stretch">
+    <section className="flex min-h-0 flex-1 basis-0 flex-col items-center justify-center gap-6 self-stretch">
       <header className="flex flex-col items-center justify-center gap-5">
         <div className="bg-wh/15 dark:bg-bl/20 flex h-15 w-15 items-center justify-center rounded-full">
           <User width={32} height={32} />
@@ -55,13 +56,31 @@ export default function Login() {
         <hr className="border-wh/60 dark:border-wh/40 flex-1 border-t" />
       </div>
       <div className="flex gap-2">
-        <Button shape="circle" composition="iconOnly" intent="subtle" className="h-10 w-10">
+        <Button
+          shape="circle"
+          composition="iconOnly"
+          intent="subtle"
+          className="h-10 w-10"
+          onClick={() => void loginWithOAuth("google")}
+        >
           <img src={google} alt="Google 로그인" />
         </Button>
-        <Button shape="circle" composition="iconOnly" intent="subtle" className="h-10 w-10">
+        <Button
+          shape="circle"
+          composition="iconOnly"
+          intent="subtle"
+          className="h-10 w-10"
+          onClick={() => void loginWithOAuth("kakao")}
+        >
           <img src={kakao} alt="Kakao 로그인" />
         </Button>
-        <Button shape="circle" composition="iconOnly" intent="subtle" className="h-10 w-10">
+        <Button
+          shape="circle"
+          composition="iconOnly"
+          intent="subtle"
+          className="h-10 w-10"
+          onClick={() => void loginWithOAuth("github")}
+        >
           <img src={github} alt="GitHub 로그인" />
         </Button>
       </div>
