@@ -33,6 +33,22 @@
   }
 }
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  .bg-gradient {
+    background-image:
+      radial-gradient(106.3% 106.3% at 20% 30%, rgba(168, 85, 247, 0.25) 0%, rgba(0, 0, 0, 0) 40%),
+      radial-gradient(113.14% 113.14% at 80% 20%, rgba(236, 72, 153, 0.2) 0%, rgba(0, 0, 0, 0) 40%),
+      radial-gradient(
+        100% 100% at 40% 80%,
+        rgba(59, 130, 246, 0.2) 0%,
+        rgba(23, 23, 27, 0.5) 0%,
+        rgba(23, 23, 27, 0.75) 100%
+      );
+  }
+}
+
 /* 커스텀 paragraph 글자 영역 */
 .paragraph-text-l {
   font-size: 18px;
