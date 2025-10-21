@@ -2,12 +2,14 @@ import WritePost from "@features/feed/ui/WritePost";
 
 export default function FeedHeader({
   onCreatePost,
+  isUploading = false,
 }: {
-  onCreatePost: (content: string, image_url?: string) => void;
+  onCreatePost: (content: string, imageFile?: File) => void;
+  isUploading?: boolean;
 }) {
   return (
     <>
-      <WritePost onCreatePost={onCreatePost} />
+      <WritePost onCreatePost={onCreatePost} isUploading={isUploading} />
 
       {/* 구분선 */}
       <div

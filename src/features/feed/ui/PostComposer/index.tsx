@@ -57,6 +57,7 @@ type PostComposerProps = {
   disabled?: boolean;
   placeholder?: string;
   className?: string;
+  isUploading?: boolean;
 };
 
 export default function PostComposer({
@@ -65,6 +66,7 @@ export default function PostComposer({
   disabled = false,
   placeholder = "Sign in to post",
   className,
+  isUploading = false,
 }: PostComposerProps) {
   const [content, setContent] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -75,7 +77,7 @@ export default function PostComposer({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const hasContent = content.length > 0;
-  const canPost = hasContent && !disabled;
+  const canPost = hasContent && !disabled && !isUploading;
 
   // 텍스트 영역 이벤트 핸들러
   function handleContentChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -273,7 +275,7 @@ export default function PostComposer({
             ],
           )}
         >
-          <span className="label-text-s">Post</span>
+          <span className="label-text-s">{isUploading ? "업로드 중..." : "Post"}</span>
         </Button>
       </div>
     </div>
