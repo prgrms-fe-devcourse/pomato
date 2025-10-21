@@ -1,0 +1,35 @@
+import type { DmMessagesTable } from "@features/dm/types/messages.type";
+import supabase from "@utils/supabase";
+
+export const persistMessage = async ({ content, conversation_id }: DmMessagesTable["Insert"]) => {
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) throw userError;
+
+  const { data, error } = await supabase
+    .from("dm_messages")
+    .insert({
+      content,
+      conversation_id,
+      sender_id: user!.id,
+    })
+    .select<"*", DmMessagesTable>()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const getMessages = async (conversationId: string) => {
+  const { data, error } = await supabase
+    .from("dm_messages")
+    .select<"*", DmMessagesTable>("*")
+    .eq("conversation_id", conversationId)
+    .order("created_at", { ascending: true });
+
+  if (error) return [];
+  return data;
+};
