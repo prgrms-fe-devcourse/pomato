@@ -2,7 +2,8 @@ import { createBrowserRouter, Navigate } from "react-router";
 
 import { authLoader } from "@features/auth/model/authLoader";
 import { dmLoader, messageLoader } from "@features/dm/model/loader";
-// pages
+import { listPosts } from "@features/feed/api/post";
+import type { Post } from "@features/feed/types/post.type";
 import Login from "@pages/auth/Login";
 import Signup from "@pages/auth/Signup";
 import Chart from "@pages/Chart";
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: "feed",
         Component: Feed,
+        loader: async () => {
+          const posts: Post[] = await listPosts();
+          return posts;
+        },
       },
       {
         path: "chart",

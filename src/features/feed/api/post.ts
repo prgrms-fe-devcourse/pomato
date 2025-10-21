@@ -1,0 +1,121 @@
+import {
+  groupBy,
+  isCommentRow,
+  isPostRow,
+  isProfileRow,
+  mapProfilesByUserId,
+  rowToPost,
+} from "@features/feed/model/mappers";
+import type { CommentRow, PostRow, ProfileRow } from "@features/feed/model/tables";
+import type { Post } from "@features/feed/types/post.type";
+import supabase from "@utils/supabase";
+
+// /** 게시글 목록 + 댓글 + 각 작성자 프로필까지 조립 */
+export async function listPosts(): Promise<Post[]> {
+  // 1) posts
+  const postsRes = await supabase
+    .from("posts")
+    .select("id,user_id,content,image_url,created_at")
+    .order("created_at", { ascending: false });
+
+  if (postsRes.error || !Array.isArray(postsRes.data)) return [];
+  const postRows: PostRow[] = [];
+  for (const row of postsRes.data) {
+    if (isPostRow(row)) postRows.push(row);
+  }
+  if (postRows.length === 0) return [];
+
+  // 2) comments for those posts
+  const postIds = postRows.map((p) => p.id);
+
+  const commentsRes = await supabase
+    .from("post_comments")
+    .select("id,post_id,user_id,content,created_at")
+    .in("post_id", postIds)
+    .order("created_at", { ascending: true });
+
+  const commentRows: CommentRow[] = Array.isArray(commentsRes.data)
+    ? commentsRes.data.filter((row) => isCommentRow(row))
+    : [];
+
+  // 3) gather ALL user_ids (post authors + comment authors)
+  const authorIds = new Set<string>(postRows.map((p) => p.user_id));
+  for (const c of commentRows) authorIds.add(c.user_id);
+  const userIdList = [...authorIds];
+
+  // 4) fetch profiles for these user_ids
+  const profilesRes = await supabase
+    .from("profiles")
+    .select("user_id,username,display_name,avatar_url")
+    .in("user_id", userIdList);
+
+  const profileRows: ProfileRow[] = Array.isArray(profilesRes.data)
+    ? profilesRes.data.filter((row) => isProfileRow(row))
+    : [];
+
+  const profileByUserId = mapProfilesByUserId(profileRows);
+
+  // 5) group comments by post_id
+  const commentsByPostId = groupBy(
+    commentRows.filter((c) => c && c.post_id !== undefined),
+    (c) => c.post_id,
+  );
+
+  // 6) compose domain
+  const posts: Post[] = postRows.map((row) =>
+    rowToPost(
+      row,
+      commentsByPostId[row.id] ?? [],
+      profileByUserId.get(row.user_id),
+      profileByUserId,
+    ),
+  );
+
+  return posts;
+}
+
+// 게시글 생성
+export async function createPost(content: string, image_url?: string): Promise<Post | null> {
+  const { data: auth } = await supabase.auth.getUser();
+  const userId = auth?.user?.id;
+  if (!userId) return null;
+
+  const { data, error } = await supabase
+    .from("posts")
+    .insert({
+      user_id: userId,
+      content,
+      image_url: image_url ?? null,
+    })
+    .select("id,user_id,content,image_url,created_at")
+    .single();
+
+  if (error || !data) {
+    console.error("게시글 생성 실패:", error?.message);
+    return null;
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+
+  // data는 PostRowLike 형태를 만족하므로 그대로 전달
+  return rowToPost(data, [], profile ?? undefined);
+}
+
+// 삭제(소유자만)
+export async function deletePost(id: string): Promise<boolean> {
+  const { data: auth } = await supabase.auth.getUser();
+  const userId = auth?.user?.id;
+  if (!userId) return false;
+
+  const { error } = await supabase.from("posts").delete().eq("id", id).eq("user_id", userId);
+
+  if (error) {
+    console.error(error.message);
+    return false;
+  }
+  return true;
+}
