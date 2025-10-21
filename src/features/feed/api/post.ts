@@ -10,41 +10,7 @@ import type { CommentRow, PostRow, ProfileRow } from "@features/feed/model/table
 import type { Post } from "@features/feed/types/post.type";
 import supabase from "@utils/supabase";
 
-// export async function listPosts(): Promise<Post[]> {
-//   // 1) posts만 조회
-//   const postsRes = await supabase
-//     .from("posts")
-//     .select("id,user_id,content,image_url,created_at")
-//     .order("created_at", { ascending: false });
-
-//   if (postsRes.error || !Array.isArray(postsRes.data)) return [];
-
-//   // 타입가드로 필터 (no-unsafe)
-//   const postRows: PostRow[] = postsRes.data.filter((r): r is PostRow => isPostRow(r));
-//   if (postRows.length === 0) return [];
-
-//   // 2) 작성자 user_id 수집(중복 제거)
-//   const userIds = [...new Set(postRows.map((p) => p.user_id))];
-
-//   // 3) 해당 프로필 조회
-//   const profilesRes = await supabase
-//     .from("profiles")
-//     .select("user_id,username,display_name,avatar_url")
-//     .in("user_id", userIds);
-
-//   const profileRows: ProfileRow[] = Array.isArray(profilesRes.data)
-//     ? profilesRes.data.filter((r): r is ProfileRow => isProfileRow(r))
-//     : [];
-
-//   const profileByUserId = mapProfilesByUserId(profileRows);
-
-//   // 4) Post 조립 (comments는 제외 → 빈 배열 전달)
-//   const posts: Post[] = postRows.map((row) => rowToPost(row, [], profileByUserId.get(row.user_id)));
-
-//   return posts;
-// }
-
-// /** 게시글 목록 + 댓글 + 각 작성자 프로필까지 조립 (추후 백업용)*/
+// /** 게시글 목록 + 댓글 + 각 작성자 프로필까지 조립 */
 export async function listPosts(): Promise<Post[]> {
   // 1) posts
   const postsRes = await supabase
