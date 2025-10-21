@@ -1,14 +1,16 @@
 import { Menu } from "lucide-react";
-import { useState } from "react";
 import { Outlet } from "react-router";
 import { twMerge } from "tailwind-merge";
 
 import Button from "@components/Button";
 import Header from "@layout/header";
 import Nav from "@layout/nav";
+import { useIsPanelOpen, usePanelStore } from "@stores/usePanelStore";
 
 export default function Panel() {
-  const [isOpen, setIsOpen] = useState(false);
+  const isOpen = useIsPanelOpen();
+  const close = usePanelStore((state) => state.close);
+  const open = usePanelStore((state) => state.open);
   return (
     <>
       {isOpen ? (
@@ -21,13 +23,13 @@ export default function Panel() {
           )}
           aria-label="Panel"
         >
-          <Header onClose={() => setIsOpen(false)} />
+          <Header onClose={close} />
           <Nav />
           <Outlet />
         </section>
       ) : (
         <Button
-          onClick={() => setIsOpen(true)}
+          onClick={open}
           composition={"iconOnly"}
           className="absolute top-4 right-4"
           aria-label="Panel Open Button"
