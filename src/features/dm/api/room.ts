@@ -40,3 +40,18 @@ export const getMyChatRoomIds = async (): Promise<GetMyChatRoomIdsReturn> => {
   if (dataError) throw dataError;
   return { isLogin: true, rooms: data };
 };
+
+export const getRoomInfoById = async (id: string): Promise<DmConversationTable | null> => {
+  const { data, error } = await supabase
+    .from("dm_conversations")
+    .select<"*", DmConversationTable>("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Failed to fetch room info:", error.message);
+    return null;
+  }
+
+  return data;
+};
