@@ -1,11 +1,15 @@
 import { Users } from "lucide-react";
 
 import EmptyState from "@components/Empty";
+import type { ProfilesTable } from "@features/user/types/user.type";
 import UserCard from "@features/user/ui/UserCard";
 
-export default function UserList() {
-  const isEmpty = false;
-  if (isEmpty)
+export type UserListProps = {
+  users: ProfilesTable["Row"][];
+};
+
+export default function UserList({ users }: UserListProps) {
+  if (users.length === 0)
     return (
       <section className="border-wh/6 flex-1 overflow-hidden rounded-[12px] border-1">
         <EmptyState
@@ -15,12 +19,20 @@ export default function UserList() {
         />
       </section>
     );
+
   return (
     <ul className="flex flex-1 flex-col gap-[4px]">
-      <UserCard name="Sarah Kim" />
-      <UserCard name="Sarah Kim" />
-      <UserCard name="Sarah Kim" />
-      <UserCard name="Sarah Kim" />
+      {users.map((user) => {
+        return (
+          <UserCard
+            key={user.user_id}
+            name={user.display_name}
+            avatar={user.avatar_url}
+            bio={user.bio}
+            userId={user.user_id}
+          />
+        );
+      })}
     </ul>
   );
 }

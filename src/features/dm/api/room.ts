@@ -18,7 +18,7 @@ export const getChatRoomIdByUser = async (
 
   if ("error" in rpcResult && rpcResult.error) throw rpcResult.error;
 
-  return rpcResult.data;
+  return rpcResult.data ?? null;
 };
 
 export type GetMyChatRoomIdsReturn = {

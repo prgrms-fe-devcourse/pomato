@@ -1,9 +1,12 @@
 import { Clock4, MessageCircle, Target } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
+import { getChatRoomIdByUser } from "@features/dm/api/room";
+import supabase from "@utils/supabase";
 
 /**
  * @component
@@ -43,16 +46,53 @@ import Button from "@components/Button";
 type UserStatusType = "online" | "offline";
 
 type UserListItemProps = {
-  avatar?: string;
+  avatar: string | null;
+  bio: string | null;
   type?: UserStatusType;
+  userId: string | null;
   name: string;
   className?: string;
 };
 
-export default function UserCard({ avatar, type = "offline", name, className }: UserListItemProps) {
+export default function UserCard({
+  avatar,
+  type = "offline",
+  name,
+  className,
+  userId,
+  bio,
+}: UserListItemProps) {
   const [open, setOpen] = useState(false);
   const hasImage = typeof avatar === "string";
+  const navigate = useNavigate();
+  const handleOnClick = async (e: React.MouseEvent) => {
+    e.stopPropagation();
 
+    const { data, error } = await supabase.auth.getUser();
+    if (error) {
+      console.error("❌ 유저 정보를 가져오지 못했습니다:", error.message);
+      return;
+    }
+
+    const user = data.user;
+    if (!user?.id) {
+      console.warn("로그인된 사용자가 없습니다.");
+      return;
+    }
+
+    if (!userId) {
+      console.warn("상대방 userId가 존재하지 않습니다.");
+      return;
+    }
+
+    try {
+      const roomData = await getChatRoomIdByUser(userId, user.id);
+
+      void navigate(`/dm/${roomData}`);
+    } catch (error) {
+      console.error("채팅방 조회 중 오류:", error);
+    }
+  };
   return (
     <div
       className={twMerge(
@@ -96,10 +136,7 @@ export default function UserCard({ avatar, type = "offline", name, className }: 
         {!open && (
           <div className="absolute inset-y-0 right-[16px] flex items-center">
             <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                // TODO: 기능 추가
-              }}
+              onClick={(e) => void handleOnClick(e)}
               className={twMerge(
                 "text-wh inline-flex h-8 w-8 items-center justify-center rounded-[10px] border-[1px]",
                 "bg-wh/20 border-wh/15 hover:bg-wh/30 hover:border-wh/25 active:bg-wh/35",
@@ -117,18 +154,18 @@ export default function UserCard({ avatar, type = "offline", name, className }: 
       </div>
       {open && (
         <div className="border-wh/6 w-full border-t-1 px-[16px] pb-[12px]">
-          <section className="flex h-[66px] items-center gap-[12px] px-[16px]">
-            <span className="paragraph-text-medium text-wh/75">
-              디자이너 · 개발자 · 크리에이터 아름다운 인터페이스를 만듭니다 ✨
-            </span>
-          </section>
+          {bio && (
+            <section className="flex h-[66px] items-center gap-[12px] px-[16px]">
+              <span className="paragraph-text-medium text-wh/75">{bio}</span>
+            </section>
+          )}
           <section className="flex h-[66px] items-center gap-[12px] px-[16px]">
             <div className="dark:bg-bl/25 bg-wh/8 flex h-[28px] w-[28px] items-center justify-center rounded-[8px]">
               <Clock4 width={16} height={16} className="text-wh/75" />
             </div>
             <div className="flex flex-col gap-[2px]">
               <span className="label-text-xs text-wh/65">총 집중 시간</span>
-              <span className="label-text-s-semibold">20h 50m</span>
+              <span className="label-text-s-semibold">0m</span>
             </div>
           </section>
           <section className="flex h-[66px] items-center gap-[12px] px-[16px]">
@@ -137,7 +174,7 @@ export default function UserCard({ avatar, type = "offline", name, className }: 
             </div>
             <div className="flex flex-col gap-[2px]">
               <span className="label-text-xs text-wh/65">총 세션</span>
-              <span className="label-text-s-semibold">48</span>
+              <span className="label-text-s-semibold">0</span>
             </div>
           </section>
         </div>
