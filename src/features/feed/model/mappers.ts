@@ -5,7 +5,7 @@ import type {
   Post,
   Comment,
   Author,
-} from "@features/feed/model/tables";
+} from "@features/feed/types/feed.types";
 
 export const isPostRow = (v: unknown): v is PostRow =>
   !!v && typeof v === "object" && "id" in v && "user_id" in v && "created_at" in v;

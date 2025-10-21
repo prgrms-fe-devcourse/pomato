@@ -1,5 +1,5 @@
 import { rowToComment } from "@features/feed/model/mappers";
-import type { Comment } from "@features/feed/model/tables";
+import type { Comment } from "@features/feed/types/feed.types";
 import supabase from "@utils/supabase";
 
 // 댓글 생성

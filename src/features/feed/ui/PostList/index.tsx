@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react";
 
-import type { PostWithComments } from "@features/feed/model/tables";
+import type { PostWithComments } from "@features/feed/types/feed.types";
 import PostCard from "@features/feed/ui/PostCard";
 
 type PostListProps = {

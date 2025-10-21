@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Dropdown from "@components/Dropdown";
-import type { CommentWithAuthor } from "@features/feed/model/tables";
+import type { CommentWithAuthor } from "@features/feed/types/feed.types";
 import CommentPanel from "@features/feed/ui/Comment";
 
 type DropdownItem = {
