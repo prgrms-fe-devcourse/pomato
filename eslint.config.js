@@ -116,8 +116,9 @@ export default defineConfig([
     ],
     languageOptions: {
       globals: globals.node,
+      parser: tseslint.parser,
       parserOptions: {
-        projectService: true,
+        project: "./tsconfig.node.json",
         tsconfigRootDir: import.meta.dirname,
         ecmaVersion: "latest",
         sourceType: "module",

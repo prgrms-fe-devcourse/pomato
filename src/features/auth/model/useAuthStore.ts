@@ -5,7 +5,7 @@ import { immer } from "zustand/middleware/immer";
 
 import type { Profile } from "../types/auth.types";
 
-type AuthStore = {
+type AuthState = {
   session: Session | null;
   profile: Profile | null;
 
@@ -13,7 +13,7 @@ type AuthStore = {
   resetAuth: () => void;
 };
 
-export const useAuthStore = create<AuthStore>()(
+export const useAuthStore = create<AuthState>()(
   devtools(
     immer((set) => ({
       session: null,
@@ -31,6 +31,7 @@ export const useAuthStore = create<AuthStore>()(
           state.profile = null;
         }),
     })),
+    { name: "AuthStore" },
   ),
 );
 

@@ -16,7 +16,7 @@ export default function Main({ children }: { children: React.ReactNode }) {
         onClick={() => setIsDark((prev) => !prev)}
         composition="iconOnly"
         className="absolute top-4 left-4 group-has-[section[aria-label='Panel']]:max-[800px]:hidden"
-        aria-label="Theme Toggle Button"
+        aria-label="Toggle Theme"
       >
         <Sun className="hidden dark:block" />
         <Moon className="block dark:hidden" />
