@@ -6,15 +6,14 @@ type PanelState = {
   isOpen: boolean;
   open: () => void;
   close: () => void;
-  toggle: () => void;
 
   title: string;
-  setTitle: (t: string) => void;
+  setTitle: (title: string) => void;
 };
 
 export const usePanelStore = create<PanelState>()(
   devtools(
-    immer((set, get) => ({
+    immer((set) => ({
       isOpen: false,
 
       open: () =>
@@ -25,11 +24,6 @@ export const usePanelStore = create<PanelState>()(
       close: () =>
         set((state) => {
           state.isOpen = false;
-        }),
-
-      toggle: () =>
-        set((state) => {
-          state.isOpen = !get().isOpen;
         }),
 
       title: "",
