@@ -44,7 +44,7 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
           <li key={c.id}>
             <div className="flex gap-3 py-2">
               {/* 아바타 */}
-              {c.author.avatar ? <Avatar src={c.author.avatar} size="s" /> : <Avatar size="s" />}
+              <Avatar src={c.author.avatar || undefined} size="s" />
 
               {/* Comments 영역 */}
               <div className="min-w-0 flex-1">
@@ -65,11 +65,7 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
 
       {/* 입력창 — 한 줄 배치 */}
       <div className="flex items-center gap-3">
-        {currentUser?.avatar_url ? (
-          <Avatar src={currentUser.avatar_url} size="s" />
-        ) : (
-          <Avatar size="s" />
-        )}
+        <Avatar src={currentUser?.avatar_url || undefined} size="s" />
         <Input
           value={value}
           onChange={(e) => setValue(e.target.value)}
