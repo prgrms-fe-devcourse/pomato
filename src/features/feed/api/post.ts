@@ -108,6 +108,37 @@ export async function listPosts(): Promise<Post[]> {
   return posts;
 }
 
+// 게시글 생성
+export async function createPost(content: string, image_url?: string): Promise<Post | null> {
+  const { data: auth } = await supabase.auth.getUser();
+  const userId = auth?.user?.id;
+  if (!userId) return null;
+
+  const { data, error } = await supabase
+    .from("posts")
+    .insert({
+      user_id: userId,
+      content,
+      image_url: image_url ?? null,
+    })
+    .select("id,user_id,content,image_url,created_at")
+    .single();
+
+  if (error || !data) {
+    console.error("게시글 생성 실패:", error?.message);
+    return null;
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+
+  // data는 PostRowLike 형태를 만족하므로 그대로 전달
+  return rowToPost(data, [], profile ?? undefined);
+}
+
 // 삭제(소유자만)
 export async function deletePost(id: string): Promise<boolean> {
   const { data: auth } = await supabase.auth.getUser();

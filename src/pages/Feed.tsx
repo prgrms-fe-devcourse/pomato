@@ -46,7 +46,11 @@ export default function Feed() {
     <div className="flex h-screen flex-col gap-[12px] p-[16px] select-none">
       {isLogin ? (
         // 글쓰기 영역 + 구분선
-        <FeedHeader onCreatePost={addPost} />
+        <FeedHeader
+          onCreatePost={(content, imageUrl) => {
+            void addPost(content, imageUrl);
+          }}
+        />
       ) : (
         <EmptyState
           title="다른 사용자들의 집중 여정을 구경해보세요!"
@@ -78,7 +82,15 @@ export default function Feed() {
           />
         ) : filteredPosts.length > 0 ? (
           // 피드가 있는 경우
-          <PostList posts={filteredPosts} onToggleLike={toggleLike} onAddComment={addComment} />
+          <PostList
+            posts={filteredPosts}
+            onToggleLike={(id) => {
+              void toggleLike(id);
+            }}
+            onAddComment={(id, text) => {
+              void addComment(id, text);
+            }}
+          />
         ) : (
           // 검색 결과가 없는 경우
           <EmptyState

@@ -2,34 +2,18 @@ import { Pen } from "lucide-react";
 import { useState } from "react";
 
 import Button from "@components/Button";
-import type { PostWithComments } from "@features/feed/model/tables";
 import PostComposer from "@features/feed/ui/PostComposer";
 
 export default function WritePost({
   onCreatePost,
 }: {
-  onCreatePost: (p: PostWithComments) => void;
+  onCreatePost: (content: string, image_url?: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   return open ? (
     <PostComposer
       onPost={(content, image) => {
-        const newPost: PostWithComments = {
-          id: crypto.randomUUID(),
-          author: {
-            username: "테스터01",
-            display_name: "테스터01",
-            avatar: "https://picsum.photos/seed/me/60",
-            id: "@elecharu",
-          },
-          content: content,
-          image_url: image?.image_url,
-          createdAt: new Date().toISOString(),
-          likes: 0,
-          liked: false,
-          comments: [],
-        };
-        onCreatePost(newPost);
+        onCreatePost(content, image?.image_url);
         setOpen(false);
       }}
       onImageUpload={() => {}}
