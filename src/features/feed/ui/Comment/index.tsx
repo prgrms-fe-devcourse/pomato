@@ -33,7 +33,7 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
       <div
         role="separator"
         aria-orientation="horizontal"
-        className="-mx-[16px] h-[1px] bg-white/15 from-transparent to-transparent dark:bg-white/10"
+        className="-mx-[16px] h-[1px] bg-white/15 dark:bg-white/10"
       />
 
       {/* 리스트 */}

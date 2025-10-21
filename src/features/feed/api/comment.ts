@@ -11,7 +11,7 @@ export const getComment = async (post_id: string) => {
     .order("created_at", { ascending: true });
 
   if (error || !Array.isArray(data)) return [];
-  return data as unknown[];
+  return data;
 };
 
 // 댓글 생성

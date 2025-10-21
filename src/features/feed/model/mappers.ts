@@ -60,7 +60,7 @@ export function rowToPost(
   postAuthorProfile?: ProfileRow,
   commentProfilesByUserId?: Map<string, ProfileRow>,
 ): Post {
-  const mappedComments: Comment[] = comments.map((c: CommentRow) =>
+  const mappedComments: Comment[] = comments.map((c) =>
     rowToComment(c, commentProfilesByUserId?.get(c.user_id)),
   );
 
