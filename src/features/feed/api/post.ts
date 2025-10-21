@@ -1,3 +1,4 @@
+import { getLikesForPosts } from "@features/feed/api/like";
 import {
   groupBy,
   isCommentRow,
@@ -61,15 +62,21 @@ export async function listPosts(): Promise<Post[]> {
     (c) => c.post_id,
   );
 
-  // 6) compose domain
-  const posts: Post[] = postRows.map((row) =>
-    rowToPost(
+  // 6) get likes for all posts
+  const likesData = await getLikesForPosts(postIds);
+
+  // 7) compose domain
+  const posts: Post[] = postRows.map((row) => {
+    const likeInfo = likesData[row.id] || { count: 0, liked: false };
+    return rowToPost(
       row,
       commentsByPostId[row.id] ?? [],
       profileByUserId.get(row.user_id),
       profileByUserId,
-    ),
-  );
+      likeInfo.count,
+      likeInfo.liked,
+    );
+  });
 
   return posts;
 }

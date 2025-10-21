@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 
 import { createComment } from "@features/feed/api/comment";
+import { addLike, removeLike } from "@features/feed/api/like";
 import { createPost } from "@features/feed/api/post";
 import type { PostWithComments } from "@features/feed/model/tables";
 
@@ -34,19 +35,63 @@ export function usePosts() {
     }
   }, []);
 
-  const toggleLike = useCallback((postId: string) => {
-    setPosts((prev = []) =>
-      prev.map((p) =>
-        p.id === postId
-          ? {
-              ...p,
-              liked: !p.liked,
-              likes: p.likes + (p.liked ? -1 : 1),
-            }
-          : p,
-      ),
-    );
-  }, []);
+  const toggleLike = useCallback(
+    async (postId: string) => {
+      const post = posts.find((p) => p.id === postId);
+      if (!post) return;
+
+      const wasLiked = post.liked;
+
+      // 낙관적 업데이트 (UI 먼저 업데이트)
+      setPosts((prev = []) =>
+        prev.map((p) =>
+          p.id === postId
+            ? {
+                ...p,
+                liked: !p.liked,
+                likes: p.likes + (p.liked ? -1 : 1),
+              }
+            : p,
+        ),
+      );
+
+      try {
+        let success = false;
+        success = await (wasLiked ? removeLike(postId) : addLike(postId));
+
+        // API 호출 실패 시 원래 상태로 되돌리기
+        if (!success) {
+          setPosts((prev = []) =>
+            prev.map((p) =>
+              p.id === postId
+                ? {
+                    ...p,
+                    liked: wasLiked,
+                    likes: p.likes + (wasLiked ? 1 : -1),
+                  }
+                : p,
+            ),
+          );
+          console.error("좋아요 상태 변경 실패");
+        }
+      } catch (error) {
+        // 에러 발생 시 원래 상태로 되돌리기
+        setPosts((prev = []) =>
+          prev.map((p) =>
+            p.id === postId
+              ? {
+                  ...p,
+                  liked: wasLiked,
+                  likes: p.likes + (wasLiked ? 1 : -1),
+                }
+              : p,
+          ),
+        );
+        console.error("좋아요 상태 변경 중 오류:", error);
+      }
+    },
+    [posts],
+  );
 
   const addComment = useCallback(async (postId: string, text: string) => {
     try {
