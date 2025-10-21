@@ -73,7 +73,7 @@ export type Route = (typeof ROUTES)[keyof typeof ROUTES];
  */
 export const route = {
   ...ROUTES,
-  dmChat: (id: string) => `/dm/${id}` as const,
+  dmChat: (id: string): `/dm/${string}` => `/dm/${id}`,
 };
 
 /**
