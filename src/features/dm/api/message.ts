@@ -23,10 +23,10 @@ export const persistMessage = async ({ content, conversation_id }: DmMessagesTab
   return data;
 };
 
-export const getMessages = async (conversationId: string) => {
+export const getMessages = async (conversationId: string): Promise<DmMessagesTable["Row"][]> => {
   const { data, error } = await supabase
     .from("dm_messages")
-    .select<"*", DmMessagesTable>("*")
+    .select<"*", DmMessagesTable["Row"]>("*")
     .eq("conversation_id", conversationId)
     .order("created_at", { ascending: true });
 
