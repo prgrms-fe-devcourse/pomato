@@ -2,6 +2,7 @@ import { cva } from "class-variance-authority";
 import { Play, RotateCcw, SkipForward, Users } from "lucide-react";
 
 import Button from "@components/Button";
+import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
 
 const SESSION_STATUS_TEXT = ["FOCUS", "BREAK", "LONG BREAK"];
 
@@ -22,6 +23,7 @@ const dot = cva(
 );
 
 export default function Timer() {
+  const { activeUsers } = useActiveUsersStore();
   return (
     <section className="flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center gap-5 overflow-auto group-has-[section[aria-label='Panel']]:max-[800px]:hidden">
       <header>
@@ -91,7 +93,7 @@ export default function Timer() {
           composition="iconText"
           className="px-4"
         >
-          <Users /> {127} 명이 함께 집중 중
+          <Users /> {activeUsers.length} 명이 함께 집중 중
         </Button>
       </p>
     </section>

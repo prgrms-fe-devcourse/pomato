@@ -10,10 +10,8 @@ import type { ChannelFactory, SubscriptionEventCallbacks, Topic } from "@type/re
 
 export const useRealtimeHandler = <T extends SupabaseClient>() => {
   const {
-    inactiveTabTimeoutSeconds,
     started,
     supabaseClient,
-    inactiveTabTimer,
     setInactiveTabTimer,
     setStarted,
     addChannels,
@@ -21,10 +19,8 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
     addSubscriptionEventCallbacks,
   } = useRealtimeStore(
     useShallow((state) => ({
-      inactiveTabTimeoutSeconds: state.inactiveTabTimeoutSeconds,
       started: state.started,
       supabaseClient: state.supabaseClient,
-      inactiveTabTimer: state.inactiveTabTimer,
       setInactiveTabTimer: state.setInactiveTabTimer,
       setStarted: state.setStarted,
       addChannels: state.addChannel,
@@ -220,6 +216,8 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   };
 
   const handleVisibilityChange = () => {
+    const inactiveTabTimeoutSeconds = useRealtimeStore.getState().inactiveTabTimeoutSeconds;
+    const inactiveTabTimer = useRealtimeStore.getState().inactiveTabTimer;
     if (document.hidden) {
       if (!inactiveTabTimer) {
         setInactiveTabTimer(
