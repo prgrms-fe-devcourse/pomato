@@ -20,7 +20,7 @@ function PostList({ posts, onToggleLike, onAddComment }: PostListProps) {
             id: p.author.id,
             username: p.author.username,
             display_name: p.author.display_name,
-            avatar: p.author.avatar_url || undefined,
+            avatar: p.author.avatar || undefined,
           }}
           content={p.content}
           image_url={p.image_url}
