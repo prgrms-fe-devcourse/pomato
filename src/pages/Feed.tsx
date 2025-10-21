@@ -28,7 +28,9 @@ export default function Feed() {
   const filteredPosts = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return posts;
-    return posts.filter((p) => p.content.toLowerCase().includes(q));
+    return posts.filter((p) =>
+      (p.comments ?? []).some((c) => (c.content ?? "").toLowerCase().includes(q)),
+    );
   }, [posts, query]);
 
   // 로그인 상태 확인

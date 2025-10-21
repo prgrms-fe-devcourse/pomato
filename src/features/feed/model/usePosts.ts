@@ -28,11 +28,15 @@ export function usePosts() {
           const { data: auth } = await supabase.auth.getUser();
           const userId = auth?.user?.id;
 
+          if (!userId) {
+            setIsUploading(false);
+            return;
+          }
           const { data: updateData, error: updateError } = await supabase
             .from("posts")
             .update({ image_url: imageUrl })
             .eq("id", newPost.id)
-            .eq("user_id", userId ?? "")
+            .eq("user_id", userId)
             .select("image_url");
 
           if (!updateError && updateData && updateData.length > 0) {
@@ -76,10 +80,10 @@ export function usePosts() {
         prev.map((p) =>
           p.id === postId
             ? {
-              ...p,
-              liked: !p.liked,
-              likes: p.likes + (p.liked ? -1 : 1),
-            }
+                ...p,
+                liked: !p.liked,
+                likes: p.likes + (p.liked ? -1 : 1),
+              }
             : p,
         ),
       );
@@ -94,10 +98,10 @@ export function usePosts() {
             prev.map((p) =>
               p.id === postId
                 ? {
-                  ...p,
-                  liked: wasLiked,
-                  likes: p.likes + (wasLiked ? 1 : -1),
-                }
+                    ...p,
+                    liked: wasLiked,
+                    likes: p.likes + (wasLiked ? 1 : -1),
+                  }
                 : p,
             ),
           );
@@ -109,10 +113,10 @@ export function usePosts() {
           prev.map((p) =>
             p.id === postId
               ? {
-                ...p,
-                liked: wasLiked,
-                likes: p.likes + (wasLiked ? 1 : -1),
-              }
+                  ...p,
+                  liked: wasLiked,
+                  likes: p.likes + (wasLiked ? 1 : -1),
+                }
               : p,
           ),
         );
@@ -130,23 +134,23 @@ export function usePosts() {
           prev.map((p) =>
             p.id === postId
               ? {
-                ...p,
-                comments: [
-                  ...(p.comments ?? []),
-                  {
-                    id: newComment.id,
-                    post_id: postId,
-                    author: {
-                      id: newComment.author.id,
-                      username: newComment.author.username,
-                      display_name: newComment.author.display_name || "",
-                      avatar: newComment.author.avatar,
+                  ...p,
+                  comments: [
+                    ...(p.comments ?? []),
+                    {
+                      id: newComment.id,
+                      post_id: postId,
+                      author: {
+                        id: newComment.author.id,
+                        username: newComment.author.username,
+                        display_name: newComment.author.display_name || "",
+                        avatar: newComment.author.avatar,
+                      },
+                      content: newComment.content,
+                      createdAt: newComment.createdAt.toISOString(),
                     },
-                    content: newComment.content,
-                    createdAt: newComment.createdAt.toISOString(),
-                  },
-                ],
-              }
+                  ],
+                }
               : p,
           ),
         );
@@ -161,8 +165,6 @@ export function usePosts() {
       const result = await deletePost(postId);
       if (result) {
         setPosts((prev = []) => prev.filter((p) => p.id !== postId));
-      } else {
-        console.error("게시글 삭제 실패");
       }
     } catch (error) {
       console.error("게시글 삭제 중 오류:", error);

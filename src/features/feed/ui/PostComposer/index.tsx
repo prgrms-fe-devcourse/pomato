@@ -126,6 +126,11 @@ export default function PostComposer({
     if (disabled || !content.trim()) return;
 
     onPost(content, image || undefined);
+    setContent("");
+    if (image) {
+      revokePreview(image.image_url);
+      setImage(null);
+    }
   }
 
   useEffect(() => {
