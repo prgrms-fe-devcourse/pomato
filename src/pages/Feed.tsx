@@ -11,7 +11,7 @@ import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
 
 export default function Feed() {
-  const { posts, setPosts, addPost, toggleLike, addComment } = usePosts();
+  const { posts, setPosts, addPost, toggleLike, addComment, removePost, isUploading } = usePosts();
   const [query, setQuery] = useState("");
   const { user: currentUser } = useCurrentUser();
 
@@ -39,9 +39,10 @@ export default function Feed() {
       {isLoggedIn ? (
         // 글쓰기 영역 + 구분선
         <FeedHeader
-          onCreatePost={(content, imageUrl) => {
-            void addPost(content, imageUrl);
+          onCreatePost={(content, imageFile) => {
+            void addPost(content, imageFile);
           }}
+          isUploading={isUploading}
         />
       ) : (
         <EmptyState
@@ -82,6 +83,10 @@ export default function Feed() {
             onAddComment={(id, text) => {
               void addComment(id, text);
             }}
+            onDelete={(id) => {
+              void removePost(id);
+            }}
+            currentUserId={currentUser?.user_id}
           />
         ) : (
           // 검색 결과가 없는 경우

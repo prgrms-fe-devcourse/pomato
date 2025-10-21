@@ -6,18 +6,21 @@ import PostComposer from "@features/feed/ui/PostComposer";
 
 export default function WritePost({
   onCreatePost,
+  isUploading = false,
 }: {
-  onCreatePost: (content: string, image_url?: string) => void;
+  onCreatePost: (content: string, imageFile?: File) => void;
+  isUploading?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   return open ? (
     <PostComposer
       onPost={(content, image) => {
-        onCreatePost(content, image?.image_url);
+        onCreatePost(content, image?.file);
         setOpen(false);
       }}
       onImageUpload={() => {}}
       placeholder="무슨 생각을 하고 있나요?"
+      isUploading={isUploading}
     />
   ) : (
     // 글쓰기 버튼 (토글)
