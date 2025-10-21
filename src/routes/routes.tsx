@@ -36,10 +36,6 @@ export const router = createBrowserRouter([
           const posts: Post[] = await listPosts();
           return posts;
         },
-        loader: async () => {
-          const posts: Post[] = await listPosts();
-          return posts;
-        },
       },
       {
         path: "chart",
