@@ -11,13 +11,10 @@ import type { ChannelFactory, SubscriptionEventCallbacks, Topic } from "@type/re
 export const useRealtimeHandler = <T extends SupabaseClient>() => {
   const {
     inactiveTabTimeoutSeconds,
+    started,
     supabaseClient,
-    channels,
-    channelFactories,
-    subscriptionEventCallbacks,
     inactiveTabTimer,
     setInactiveTabTimer,
-    started,
     setStarted,
     addChannels,
     removeChannels,
@@ -25,18 +22,13 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   } = useRealtimeStore(
     useShallow((state) => ({
       inactiveTabTimeoutSeconds: state.inactiveTabTimeoutSeconds,
+      started: state.started,
       supabaseClient: state.supabaseClient,
-      channels: state.channels,
-      channelFactories: state.channelFactories,
-      subscriptionEventCallbacks: state.subscriptionEventCallbacks,
       inactiveTabTimer: state.inactiveTabTimer,
       setInactiveTabTimer: state.setInactiveTabTimer,
-      started: state.started,
       setStarted: state.setStarted,
       addChannels: state.addChannel,
       removeChannels: state.removeChannel,
-      addChannelFactory: state.addChannelFactory,
-      removeChannelFactory: state.removeChannelFactory,
       addSubscriptionEventCallbacks: state.addSubscriptionEventCallbacks,
     })),
   );
@@ -65,21 +57,21 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
 
   const addChannel = (
     channelFactory: ChannelFactory,
+    isLogin = true,
     newSubscriptionEventCallbacks?: SubscriptionEventCallbacks,
   ) => {
     const channel = createChannel(channelFactory);
-    if (channelFactories.has(channel.topic)) {
+    if (useRealtimeStore.getState().channelFactories.has(channel.topic)) {
       console.warn("이미 존재하는 채널입니다");
       unsubscribeFromChannel(channel.topic);
     }
     addChannels(channel.topic, channel);
-
     if (newSubscriptionEventCallbacks) {
       addSubscriptionEventCallbacks(channel.topic, newSubscriptionEventCallbacks);
     }
 
     if (started) {
-      void subscribeToChannel(channel);
+      void subscribeToChannel(channel, isLogin, newSubscriptionEventCallbacks);
     }
 
     return () => {
@@ -88,11 +80,18 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   };
 
   const removeChannel = (topic: Topic) => {
+    if (!topic.startsWith("realtime:")) {
+      topic = `realtime:${topic}`;
+    }
     removeChannels(topic);
     unsubscribeFromChannel(topic);
   };
 
-  const subscribeToChannel = async (channel: RealtimeChannel) => {
+  const subscribeToChannel = async (
+    channel: RealtimeChannel,
+    isLogin = true,
+    newSubscriptionEventCallbacks?: SubscriptionEventCallbacks,
+  ) => {
     if (
       channel.state === ("joined" as typeof channel.state) ||
       channel.state === ("joining" as typeof channel.state)
@@ -100,14 +99,15 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
       console.debug("이미 연결되어있습니다");
       return;
     }
-    await refreshSession();
+    if (isLogin) await refreshSession();
 
     channel.subscribe((status, err) => {
-      void handleSubscriptionStateEvent(channel, status, err);
+      void handleSubscriptionStateEvent(channel, status, err, newSubscriptionEventCallbacks);
     });
   };
 
   const subscribeToAllCreatedChannels = () => {
+    const channels = useRealtimeStore.getState().channels;
     for (const channel of channels.values()) {
       if (channel) {
         void subscribeToChannel(channel);
@@ -116,7 +116,7 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   };
 
   const resubscribeToChannel = (topic: Topic) => {
-    const channelFactory = channelFactories.get(topic);
+    const channelFactory = useRealtimeStore.getState().channelFactories.get(topic);
     if (!channelFactory) {
       throw new Error(`Channel factory not found for topic: ${topic}`);
     }
@@ -125,7 +125,8 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   };
 
   const resubscribeToAllChannels = () => {
-    for (const topic of channelFactories.keys()) {
+    const channels = useRealtimeStore.getState().channels;
+    for (const topic of useRealtimeStore.getState().channelFactories.keys()) {
       if (!channels.get(topic)) {
         resubscribeToChannel(topic);
       }
@@ -133,15 +134,18 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   };
 
   const unsubscribeFromChannel = (topic: Topic) => {
-    const channel = channels.get(topic);
+    if (!topic.startsWith("realtime:")) {
+      topic = `realtime:${topic}`;
+    }
+    const channel = useRealtimeStore.getState().channels.get(topic);
     if (channel && supabaseClient) {
       void supabaseClient.removeChannel(channel);
-      // removeChannel(topic);
     }
   };
 
   const unsubscribeFromAllChannels = () => {
-    for (const topic of channels.keys()) {
+    const channel = useRealtimeStore.getState().channels;
+    for (const topic of channel.keys()) {
       unsubscribeFromChannel(topic);
     }
   };
@@ -150,9 +154,12 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
     channel: RealtimeChannel,
     status: REALTIME_SUBSCRIBE_STATES,
     err: Error | undefined,
+    newSubscriptionEventCallbacks?: SubscriptionEventCallbacks,
   ) => {
     const { topic } = channel;
-    const callbacks = subscriptionEventCallbacks.get(channel.topic);
+    const callbacks =
+      newSubscriptionEventCallbacks ??
+      useRealtimeStore.getState().subscriptionEventCallbacks.get(channel.topic);
     switch (status) {
       case REALTIME_SUBSCRIBE_STATES.SUBSCRIBED: {
         console.debug(`'${topic}'에 구독완료`);
@@ -238,6 +245,7 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   };
 
   return {
+    started,
     start, // 전체 Realtime 시스템 시작 및 구독 등록
     stop: unsubscribeFromAllChannels, // 전체 중지용 (선택)
     addChannel, // 개별 채널 추가
