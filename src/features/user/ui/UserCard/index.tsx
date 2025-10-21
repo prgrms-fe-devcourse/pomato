@@ -70,7 +70,7 @@ export default function UserCard({
 
     const { data, error } = await supabase.auth.getUser();
     if (error) {
-      console.error("❌ 유저 정보를 가져오지 못했습니다:", error.message);
+      console.error("유저 정보를 가져오지 못했습니다:", error.message);
       return;
     }
 
