@@ -8,7 +8,8 @@ import supabase from "@utils/supabase";
 
 export const usePresenceActiveUsers = () => {
   const { addChannel, started } = useRealtimeHandler();
-  const { setActiveUsers, addActiveUsers, removeActiveUsers } = useActiveUsersStore();
+  const { setActiveUsers } = useActiveUsersStore();
+
   useEffect(() => {
     if (!started) return;
     const setupPresence = async () => {
@@ -33,24 +34,7 @@ export const usePresenceActiveUsers = () => {
           channel.on("presence", { event: "sync" }, () => {
             const state = channel.presenceState();
             const users = Object.entries(state).map(([id]) => ({ id }));
-            const isConnected = !!state[user.id];
-
             setActiveUsers(users);
-            if (isConnected) {
-              void onFromActiveUser();
-            }
-          });
-
-          // presence 채널 다른 사용자 참여 => 추가 활성 사용자 저장
-          channel.on("presence", { event: "join" }, ({ newPresences }) => {
-            const users = Object.entries(newPresences).map(([id]) => ({ id }));
-            addActiveUsers(users);
-          });
-
-          // presence 채널 다른 사용자 이탈 => 이탈 사용자 제거
-          channel.on("presence", { event: "leave" }, ({ leftPresences }) => {
-            const users = Object.entries(leftPresences).map(([id]) => ({ id }));
-            removeActiveUsers(users);
           });
 
           return channel;
@@ -61,6 +45,7 @@ export const usePresenceActiveUsers = () => {
           onSubscribe: (channel) => {
             void (async () => {
               await channel.track({ id: user.id });
+              await onFromActiveUser();
             })();
             return channel;
           },
@@ -85,7 +70,5 @@ export const usePresenceActiveUsers = () => {
         if (typeof unsubscribe === "function") unsubscribe();
       });
     };
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [started]);
+  }, [addChannel, setActiveUsers, started]);
 };
