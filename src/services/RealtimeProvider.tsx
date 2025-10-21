@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 
+import { usePostgreActiveUser } from "@features/user/hook/usePostgreActiveUser";
 import { usePresenceActiveUsers } from "@features/user/hook/usePresenceActiveUsers";
 import { useRealtimeHandler } from "@hooks/useRealtimeHandler";
 
@@ -16,6 +17,7 @@ export default function RealtimeProvider({ children }: RealtimeProviderProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  usePostgreActiveUser();
   usePresenceActiveUsers();
   // main에 위치한 함께하는 인원 컴포넌트를 위해 시작 이후 바로 채널 구독
   return <>{children}</>;

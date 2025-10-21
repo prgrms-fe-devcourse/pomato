@@ -5,7 +5,7 @@ import { PostgreActiveUserTopic } from "@features/user/type/activeUsers.type";
 import { useRealtimeHandler } from "@hooks/useRealtimeHandler";
 import supabase from "@utils/supabase";
 
-export const usePosgreActiveUser = () => {
+export const usePostgreActiveUser = () => {
   const { addChannel, started } = useRealtimeHandler();
   const { setActiveUsers } = useActiveUsersStore();
 
