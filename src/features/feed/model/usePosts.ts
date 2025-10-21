@@ -76,10 +76,10 @@ export function usePosts() {
         prev.map((p) =>
           p.id === postId
             ? {
-                ...p,
-                liked: !p.liked,
-                likes: p.likes + (p.liked ? -1 : 1),
-              }
+              ...p,
+              liked: !p.liked,
+              likes: p.likes + (p.liked ? -1 : 1),
+            }
             : p,
         ),
       );
@@ -94,10 +94,10 @@ export function usePosts() {
             prev.map((p) =>
               p.id === postId
                 ? {
-                    ...p,
-                    liked: wasLiked,
-                    likes: p.likes + (wasLiked ? 1 : -1),
-                  }
+                  ...p,
+                  liked: wasLiked,
+                  likes: p.likes + (wasLiked ? 1 : -1),
+                }
                 : p,
             ),
           );
@@ -109,10 +109,10 @@ export function usePosts() {
           prev.map((p) =>
             p.id === postId
               ? {
-                  ...p,
-                  liked: wasLiked,
-                  likes: p.likes + (wasLiked ? 1 : -1),
-                }
+                ...p,
+                liked: wasLiked,
+                likes: p.likes + (wasLiked ? 1 : -1),
+              }
               : p,
           ),
         );
@@ -130,23 +130,23 @@ export function usePosts() {
           prev.map((p) =>
             p.id === postId
               ? {
-                  ...p,
-                  comments: [
-                    ...(p.comments ?? []),
-                    {
-                      id: newComment.id,
-                      post_id: postId,
-                      author: {
-                        id: newComment.author.id,
-                        username: newComment.author.username,
-                        display_name: newComment.author.display_name || "",
-                        avatar: newComment.author.avatar,
-                      },
-                      content: newComment.content,
-                      createdAt: newComment.createdAt.toISOString(),
+                ...p,
+                comments: [
+                  ...(p.comments ?? []),
+                  {
+                    id: newComment.id,
+                    post_id: postId,
+                    author: {
+                      id: newComment.author.id,
+                      username: newComment.author.username,
+                      display_name: newComment.author.display_name || "",
+                      avatar: newComment.author.avatar,
                     },
-                  ],
-                }
+                    content: newComment.content,
+                    createdAt: newComment.createdAt.toISOString(),
+                  },
+                ],
+              }
               : p,
           ),
         );
