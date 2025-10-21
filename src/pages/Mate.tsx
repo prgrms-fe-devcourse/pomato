@@ -8,7 +8,6 @@ import UserList from "@features/user/ui/UserList";
 
 export default function Mate() {
   const users = useLoaderData<ProfilesTable["Row"][]>();
-  console.log(users);
   return (
     <div className="flex flex-col gap-[12px] p-[16px]">
       <UserHeader />
