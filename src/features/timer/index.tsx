@@ -1,14 +1,29 @@
-import { Play, RotateCcw, SkipForward, Users } from "lucide-react";
+import { Users } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import Button from "@components/Button";
 import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
 
+import ControlButton from "./ui/ControlButton";
 import { dot } from "./variants";
 
 const SESSION_STATUS_TEXT = ["FOCUS", "BREAK", "LONG BREAK"];
 
 export default function Timer() {
   const { activeUsers } = useActiveUsersStore();
+  const [isRunning, setIsRunning] = useState(false);
+  const handleTogglePlay = () => setIsRunning((prev) => !prev);
+
+  useEffect(() => {
+    if (!isRunning) return;
+
+    const timer = setInterval(() => {
+      console.log("timer");
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isRunning]);
+
   return (
     <section className="flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center gap-5 overflow-auto group-has-[section[aria-label='Panel']]:max-[800px]:hidden">
       <div className="flex flex-col items-center justify-center gap-8">
@@ -45,36 +60,7 @@ export default function Timer() {
           <span className="cursor-default">25:00</span>
         </div>
       </div>
-      <div className="flex items-center gap-3" aria-label="타이머 컨트롤 버튼">
-        <Button
-          type="button"
-          shape="circle"
-          intent="reveal"
-          composition="iconOnly"
-          aria-label="타이머 초기화"
-        >
-          <RotateCcw />
-        </Button>
-        <Button
-          type="button"
-          shape="circle"
-          intent="ghost"
-          composition="iconOnly"
-          className="h-12 w-12 [&_svg]:size-5"
-          aria-label="타이머 시작"
-        >
-          <Play />
-        </Button>
-        <Button
-          type="button"
-          shape="circle"
-          intent="reveal"
-          composition="iconOnly"
-          aria-label="타이머 스킵"
-        >
-          <SkipForward />
-        </Button>
-      </div>
+      <ControlButton isRunning={isRunning} onToggle={handleTogglePlay} />
       <p>
         <Button
           type="button"
