@@ -4,27 +4,18 @@ import { useLoaderData } from "react-router";
 
 import EmptyState from "@components/Empty";
 import Input from "@components/Input";
+import { useCurrentUser } from "@features/feed/hooks/useCurrentUser";
 import type { PostWithComments } from "@features/feed/model/tables";
 import { usePosts } from "@features/feed/model/usePosts";
 import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
-import supabase from "@utils/supabase";
 
 export default function Feed() {
   const { posts, setPosts, addPost, toggleLike, addComment } = usePosts();
   const [query, setQuery] = useState("");
+  const { user: currentUser } = useCurrentUser();
 
   const post_data = useLoaderData<PostWithComments[]>();
-
-  const [isLogin, setIsLogin] = useState<boolean>();
-
-  useEffect(() => {
-    // 로그인 체크 여부
-    void (async () => {
-      const { data } = await supabase.auth.getUser();
-      if (data) setIsLogin(!!data.user);
-    })();
-  }, []);
 
   useEffect(() => {
     if (post_data) {
@@ -37,14 +28,15 @@ export default function Feed() {
   const filteredPosts = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return posts;
-    return posts.filter((p) =>
-      (p.comments ?? []).some((c) => (c.content ?? "").toLowerCase().includes(q)),
-    );
+    return posts.filter((p) => p.content.toLowerCase().includes(q));
   }, [posts, query]);
+
+  // 로그인 상태 확인
+  const isLoggedIn = !!currentUser;
 
   return (
     <div className="flex h-screen flex-col gap-[12px] p-[16px] select-none">
-      {isLogin ? (
+      {isLoggedIn ? (
         // 글쓰기 영역 + 구분선
         <FeedHeader
           onCreatePost={(content, imageUrl) => {
@@ -67,7 +59,7 @@ export default function Feed() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           Icon={{ Component: Search, align: "right" }}
-          placeholder="댓글에서 검색할 키워드를 입력하세요..."
+          placeholder="게시글 내용에서 검색할 키워드를 입력하세요..."
         />
       )}
 
