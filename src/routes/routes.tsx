@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 
 import { authLoader } from "@features/auth/model/authLoader";
 import { dmLoader, messageLoader } from "@features/dm/model/loader";
@@ -25,6 +25,10 @@ export const router = createBrowserRouter([
     errorElement: <GlobalError />,
     loader: authLoader,
     children: [
+      {
+        index: true,
+        element: <Navigate to="mate" replace />,
+      },
       {
         path: "mate",
         Component: Mate,
