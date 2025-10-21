@@ -6,7 +6,7 @@ import Avatar from "@components/Avatar";
 import Button from "@components/Button";
 import Input from "@components/Input";
 import { useCurrentUser } from "@features/feed/hooks/useCurrentUser";
-import type { CommentWithAuthor } from "@features/feed/model/tables";
+import type { CommentWithAuthor } from "@features/feed/types/feed.types";
 
 type CommentPanelProps = {
   comments: CommentWithAuthor[];

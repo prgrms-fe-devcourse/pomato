@@ -4,7 +4,7 @@ import { createComment } from "@features/feed/api/comment";
 import { uploadPostImage } from "@features/feed/api/image";
 import { addLike, removeLike } from "@features/feed/api/like";
 import { createPost, deletePost } from "@features/feed/api/post";
-import type { PostWithComments } from "@features/feed/model/tables";
+import type { PostWithComments } from "@features/feed/types/feed.types";
 import supabase from "@utils/supabase";
 
 export function usePosts() {

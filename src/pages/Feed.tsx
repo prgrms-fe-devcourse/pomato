@@ -5,8 +5,8 @@ import { useLoaderData } from "react-router";
 import EmptyState from "@components/Empty";
 import Input from "@components/Input";
 import { useCurrentUser } from "@features/feed/hooks/useCurrentUser";
-import type { PostWithComments } from "@features/feed/model/tables";
 import { usePosts } from "@features/feed/model/usePosts";
+import type { PostWithComments } from "@features/feed/types/feed.types";
 import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
 
