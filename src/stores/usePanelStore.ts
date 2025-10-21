@@ -42,3 +42,6 @@ export const usePanelStore = create<PanelState>()(
     { name: "PanelStore" },
   ),
 );
+
+export const usePanelTitle = () => usePanelStore((state) => state.title);
+export const useIsPanelOpen = () => usePanelStore((state) => state.isOpen);
