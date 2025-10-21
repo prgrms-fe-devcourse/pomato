@@ -4,21 +4,21 @@ import type {
 } from "@features/dm/types/conversation.type";
 import supabase from "@utils/supabase";
 
-export const getChatRoomIdByUser = async ({
-  _user_a: userAId,
-  _user_b: userBId,
-}: DmConversationFunction["Args"]): Promise<DmConversationFunction["Returns"]> => {
-  const { data, error } = await supabase.rpc<
+export const getChatRoomIdByUser = async (
+  userA: string,
+  userB: string,
+): Promise<DmConversationFunction["Returns"]> => {
+  const rpcResult = await supabase.rpc<"get_or_create_dm_conversation", DmConversationFunction>(
     "get_or_create_dm_conversation",
-    DmConversationFunction
-  >("get_or_create_dm_conversation", {
-    _user_a: userAId,
-    _user_b: userBId,
-  });
+    {
+      _user_a: userA,
+      _user_b: userB,
+    },
+  );
 
-  if (error) throw error;
+  if ("error" in rpcResult && rpcResult.error) throw rpcResult.error;
 
-  return data;
+  return rpcResult.data;
 };
 
 export type GetMyChatRoomIdsReturn = {
