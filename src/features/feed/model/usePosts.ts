@@ -30,6 +30,7 @@ export function usePosts() {
 
           if (!userId) {
             setIsUploading(false);
+            await deletePost(newPost.id); // 업로드 실패 시 등록된 게시글 삭제
             return;
           }
           const { data: updateData, error: updateError } = await supabase
@@ -89,8 +90,7 @@ export function usePosts() {
       );
 
       try {
-        let success = false;
-        success = await (wasLiked ? removeLike(postId) : addLike(postId));
+        const success = await (wasLiked ? removeLike(postId) : addLike(postId));
 
         // API 호출 실패 시 원래 상태로 되돌리기
         if (!success) {

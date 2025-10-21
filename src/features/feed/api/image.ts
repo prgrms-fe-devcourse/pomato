@@ -7,7 +7,7 @@ export async function uploadPostImage(file: File, postId: string): Promise<strin
     }
 
     const fileExt = file.name.split(".").pop();
-    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+    const fileName = `${crypto.randomUUID()}.${fileExt}`;
     const filePath = `${postId}/${fileName}`;
 
     // Supabase Storage에 업로드
