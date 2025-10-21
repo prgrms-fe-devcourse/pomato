@@ -1,5 +1,5 @@
 import { Pen } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import Button from "@components/Button";
 import PostComposer from "@features/feed/ui/PostComposer";
@@ -12,11 +12,23 @@ export default function WritePost({
   isUploading?: boolean;
 }) {
   const [open, setOpen] = useState(false);
-  return open ? (
+  const [resetKey, setResetKey] = useState(0);
+  const prevUploadingRef = useRef(false);
+
+  useEffect(() => {
+    const wasUploading = prevUploadingRef.current;
+    if (wasUploading && !isUploading) {
+      setOpen(false);
+      setResetKey((prev) => prev + 1);
+    }
+    prevUploadingRef.current = isUploading;
+  }, [isUploading]);
+
+  return open || isUploading ? (
     <PostComposer
+      key={resetKey}
       onPost={(content, image) => {
         onCreatePost(content, image?.file);
-        setOpen(false);
       }}
       onImageUpload={() => {}}
       placeholder="무슨 생각을 하고 있나요?"

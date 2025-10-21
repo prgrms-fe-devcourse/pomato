@@ -8,8 +8,7 @@ import {
   mapProfilesByUserId,
   rowToPost,
 } from "@features/feed/model/mappers";
-import type { CommentRow, PostRow, ProfileRow } from "@features/feed/model/tables";
-import type { Post } from "@features/feed/types/post.type";
+import type { CommentRow, PostRow, ProfileRow, Post } from "@features/feed/model/tables";
 import supabase from "@utils/supabase";
 
 // /** 게시글 목록 + 댓글 + 각 작성자 프로필 조회까지 */

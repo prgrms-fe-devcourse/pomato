@@ -126,18 +126,11 @@ export default function PostComposer({
     if (disabled || !content.trim()) return;
 
     onPost(content, image || undefined);
-    handleClearData();
   }
 
   useEffect(() => {
-    // unmount
     return () => revokePreview(image?.image_url);
   }, [image?.image_url]);
-
-  function handleClearData() {
-    setContent("");
-    setImage(null);
-  }
 
   return (
     <div

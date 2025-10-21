@@ -1,4 +1,4 @@
-import type { Post } from "@features/feed/types/post.type";
+import type { Post } from "@features/feed/model/tables";
 
 // 더미데이터
 export const dummyPosts: Post[] = [

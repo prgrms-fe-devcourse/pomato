@@ -1,5 +1,11 @@
-import type { PostRow, CommentRow, ProfileRow } from "@features/feed/model/tables";
-import type { Post, Comment, Author } from "@features/feed/types/post.type";
+import type {
+  PostRow,
+  CommentRow,
+  ProfileRow,
+  Post,
+  Comment,
+  Author,
+} from "@features/feed/model/tables";
 
 export const isPostRow = (v: unknown): v is PostRow =>
   !!v && typeof v === "object" && "id" in v && "user_id" in v && "created_at" in v;
