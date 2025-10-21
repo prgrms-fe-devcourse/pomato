@@ -19,7 +19,7 @@ export default function WritePost({
           author: {
             username: "테스터01",
             display_name: "테스터01",
-            avatar_url: "https://picsum.photos/seed/me/60",
+            avatar: "https://picsum.photos/seed/me/60",
             id: "@elecharu",
           },
           content: content,

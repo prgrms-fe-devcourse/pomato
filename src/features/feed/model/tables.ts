@@ -15,7 +15,7 @@ export type CommentWithAuthor = {
     id: string;
     username: string;
     display_name: string;
-    avatar_url?: string;
+    avatar?: string;
   };
   content: string;
   createdAt: string;
@@ -27,7 +27,7 @@ export type PostWithComments = {
     id: string;
     username: string;
     display_name: string;
-    avatar_url?: string;
+    avatar?: string;
   };
   content: string;
   image_url?: string;

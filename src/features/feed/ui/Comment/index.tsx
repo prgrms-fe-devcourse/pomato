@@ -42,17 +42,13 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
           <li key={c.id}>
             <div className="flex gap-3 py-2">
               {/* 아바타 */}
-              {c.author.avatar_url ? (
-                <Avatar src={c.author.avatar_url} size="s" />
-              ) : (
-                <Avatar size="s" />
-              )}
+              {c.author.avatar ? <Avatar src={c.author.avatar} size="s" /> : <Avatar size="s" />}
 
               {/* Comments 영역 */}
               <div className="min-w-0 flex-1">
                 <div className="rounded-lg bg-white/5 p-3 dark:bg-black/10">
                   <div className="mb-1.5 flex items-center justify-start gap-2">
-                    <span className="label-text-s-semibold text-wh">{c.author.username}</span>
+                    <span className="label-text-s-semibold text-wh">{c.author.display_name}</span>
                     <span className="label-text-xs text-wh/60">
                       {formatTimeShort(new Date(c.createdAt))}
                     </span>
