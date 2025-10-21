@@ -10,7 +10,7 @@ export const usePostgreActiveUser = () => {
   const { setActiveUsers } = useActiveUsersStore();
 
   useEffect(() => {
-    if (!started) return () => {};
+    if (!started) return;
     const fetchData = async () => {
       const { data, error } = await supabase.from("active_users").select("id");
       if (!error && data) {

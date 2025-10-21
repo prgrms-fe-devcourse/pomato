@@ -218,7 +218,6 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
   const handleVisibilityChange = () => {
     const inactiveTabTimeoutSeconds = useRealtimeStore.getState().inactiveTabTimeoutSeconds;
     const inactiveTabTimer = useRealtimeStore.getState().inactiveTabTimer;
-    console.log("안보임");
     if (document.hidden) {
       if (!inactiveTabTimer) {
         setInactiveTabTimer(
