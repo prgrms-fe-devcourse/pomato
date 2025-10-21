@@ -1,29 +1,32 @@
 import { NavLink } from "react-router";
+import { twMerge } from "tailwind-merge";
 
-import Button from "@components/Button";
-import { NAV_TYPE, type NavType } from "@layout/nav/type";
+import { NAV_ITEMS, type NavItem } from "./types";
 
 export default function Nav() {
   return (
-    <nav className="border-wh/15 dark:border-wh/8 flex h-[60px] items-center justify-around rounded-[8px] border-1 px-[16px]">
-      {NAV_TYPE.map(({ path, Icon, label }: NavType) => {
-        return (
+    <nav className="border-wh/12 flex h-12 border-y md:h-15">
+      <ol className="flex w-full">
+        {NAV_ITEMS.map(({ path, Icon, label }: NavItem) => (
           <NavLink
             key={"panel:nav:" + path}
             to={path}
             className={({ isActive }) =>
-              isActive
-                ? "active [&_button]:bg-wh/20 [&_button]:border-wh/12 [&_button]:dark:bg-bl/40 [&_button]:dark:border-wh/8 [&_button]:text-wh [&_button]:border-1"
-                : ""
+              twMerge(
+                "flex flex-1 items-center justify-center gap-1 select-none",
+                "label-text-s sm:label-text-m",
+                "border-b-2 transition-colors duration-150",
+                isActive ? "border-wh text-wh" : "text-wh/60 hover:text-wh/90 border-transparent",
+              )
             }
           >
-            <Button intent="subtle">
-              <Icon />
-              {label}
-            </Button>
+            <li className="flex items-center gap-1">
+              <Icon className="size-5" />
+              <span className="hidden md:inline">{label}</span>
+            </li>
           </NavLink>
-        );
-      })}
+        ))}
+      </ol>
     </nav>
   );
 }
