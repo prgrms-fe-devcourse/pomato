@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
-import { PostgreActiveUserTopic } from "@features/user/type/activeUsers.type";
+import { PostgreActiveUserTopic } from "@features/user/types/activeUsers.type";
 import { useRealtimeHandler } from "@hooks/useRealtimeHandler";
 import supabase from "@utils/supabase";
 

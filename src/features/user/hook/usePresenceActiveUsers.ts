@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { offFromActiveUser, onFromActiveUser } from "@features/user/api/activeUser";
-import { PresenceActiveUsersTopic } from "@features/user/type/activeUsers.type";
+import { PresenceActiveUsersTopic } from "@features/user/types/activeUsers.type";
 import { useRealtimeHandler } from "@hooks/useRealtimeHandler";
 import supabase from "@utils/supabase";
 
