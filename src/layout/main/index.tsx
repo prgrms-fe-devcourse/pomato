@@ -11,7 +11,7 @@ export default function Main({ children }: { children: React.ReactNode }) {
   }, [isDark]);
 
   return (
-    <main className="group bg-gradient relative flex min-h-dvh w-full items-stretch gap-4 p-4">
+    <main className="group bg-gradient relative flex h-[100dvh] min-h-0 w-full items-stretch gap-4 overflow-hidden p-4">
       <Button
         onClick={() => setIsDark((prev) => !prev)}
         composition="iconOnly"

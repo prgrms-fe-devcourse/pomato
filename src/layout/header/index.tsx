@@ -35,7 +35,7 @@ export default function Header({ onClose }: HeaderProps) {
   }, [pathname, setTitle]);
 
   return (
-    <header className="flex h-12 items-center justify-between pr-2 pl-4 md:h-15 md:pr-2.5 md:pl-4.5">
+    <header className="sticky top-0 z-20 flex h-12 shrink-0 items-center justify-between pr-2 pl-4 md:h-15 md:pr-2.5 md:pl-4.5">
       <div className="flex min-w-0 items-baseline">
         <h2 className="label-text-m truncate">{panelTitle}</h2>
       </div>

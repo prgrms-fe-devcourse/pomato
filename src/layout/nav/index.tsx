@@ -9,7 +9,7 @@ export default function Nav() {
   const setTitle = usePanelStore((state) => state.setTitle);
 
   return (
-    <nav className="border-wh/12 flex h-12 border-y md:h-15">
+    <nav className="border-wh/12 flex h-12 shrink-0 border-y md:h-15">
       <ol className="flex w-full">
         {NAV_ITEMS.map(({ path, Icon, label }: NavItem) => (
           <NavLink
