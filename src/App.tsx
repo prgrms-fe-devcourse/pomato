@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 
 import { getProfile } from "@features/auth/api/profile";
-import { useAuthStore } from "@features/auth/model/useAuthStore";
 import Timer from "@features/timer";
 import Main from "@layout/main";
 import Panel from "@layout/panel";
+import { useAuthStore } from "@stores/useAuthStore";
 import supabase from "@utils/supabase";
 
 export default function App() {

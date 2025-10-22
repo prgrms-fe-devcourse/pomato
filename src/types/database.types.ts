@@ -27,28 +27,43 @@ export type Database = {
         Row: {
           created_at: string;
           id: string;
-          last_read_at_a: string | null;
-          last_read_at_b: string | null;
+          last_read_message_id_a: string | null;
+          last_read_message_id_b: string | null;
           user_a: string;
           user_b: string;
         };
         Insert: {
           created_at?: string;
           id?: string;
-          last_read_at_a?: string | null;
-          last_read_at_b?: string | null;
+          last_read_message_id_a?: string | null;
+          last_read_message_id_b?: string | null;
           user_a: string;
           user_b: string;
         };
         Update: {
           created_at?: string;
           id?: string;
-          last_read_at_a?: string | null;
-          last_read_at_b?: string | null;
+          last_read_message_id_a?: string | null;
+          last_read_message_id_b?: string | null;
           user_a?: string;
           user_b?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "dm_conversations_last_read_a_fkey";
+            columns: ["last_read_message_id_a"];
+            isOneToOne: false;
+            referencedRelation: "dm_messages";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "dm_conversations_last_read_b_fkey";
+            columns: ["last_read_message_id_b"];
+            isOneToOne: false;
+            referencedRelation: "dm_messages";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       dm_messages: {
         Row: {
@@ -56,6 +71,8 @@ export type Database = {
           conversation_id: string;
           created_at: string;
           id: string;
+          is_read: boolean | null;
+          read_at: string | null;
           sender_id: string;
         };
         Insert: {
@@ -63,6 +80,8 @@ export type Database = {
           conversation_id: string;
           created_at?: string;
           id?: string;
+          is_read?: boolean | null;
+          read_at?: string | null;
           sender_id: string;
         };
         Update: {
@@ -70,6 +89,8 @@ export type Database = {
           conversation_id?: string;
           created_at?: string;
           id?: string;
+          is_read?: boolean | null;
+          read_at?: string | null;
           sender_id?: string;
         };
         Relationships: [
@@ -112,23 +133,23 @@ export type Database = {
       pomodoro_sessions: {
         Row: {
           completed_at: string;
-          created_at: string;
-          duration_minutes: number;
           id: string;
+          session_duration_min: number;
+          started_at: string;
           user_id: string;
         };
         Insert: {
           completed_at?: string;
-          created_at?: string;
-          duration_minutes: number;
           id?: string;
+          session_duration_min: number;
+          started_at?: string;
           user_id: string;
         };
         Update: {
           completed_at?: string;
-          created_at?: string;
-          duration_minutes?: number;
           id?: string;
+          session_duration_min?: number;
+          started_at?: string;
           user_id?: string;
         };
         Relationships: [];
@@ -228,10 +249,10 @@ export type Database = {
         Row: {
           avatar_url: string | null;
           bio: string | null;
+          completed_sessions: number | null;
           created_at: string;
           display_name: string;
-          focus_time: number | null;
-          sessions: number | null;
+          total_focus_minutes: number | null;
           updated_at: string;
           user_id: string;
           username: string;
@@ -239,10 +260,10 @@ export type Database = {
         Insert: {
           avatar_url?: string | null;
           bio?: string | null;
+          completed_sessions?: number | null;
           created_at?: string;
           display_name: string;
-          focus_time?: number | null;
-          sessions?: number | null;
+          total_focus_minutes?: number | null;
           updated_at?: string;
           user_id?: string;
           username: string;
@@ -250,10 +271,10 @@ export type Database = {
         Update: {
           avatar_url?: string | null;
           bio?: string | null;
+          completed_sessions?: number | null;
           created_at?: string;
           display_name?: string;
-          focus_time?: number | null;
-          sessions?: number | null;
+          total_focus_minutes?: number | null;
           updated_at?: string;
           user_id?: string;
           username?: string;
@@ -269,10 +290,20 @@ export type Database = {
         Args: { _user_a: string; _user_b: string };
         Returns: string;
       };
-      toggle_like: {
-        Args: { p_post_id: string };
-        Returns: boolean;
+      get_unread_messages: {
+        Args: { p_conversation_id: string };
+        Returns: {
+          content: string;
+          created_at: string;
+          id: string;
+          sender_id: string;
+        }[];
       };
+      mark_dm_read: {
+        Args: { p_conversation_id: string; p_message_id: string };
+        Returns: undefined;
+      };
+      toggle_like: { Args: { p_post_id: string }; Returns: boolean };
     };
     Enums: {
       notification_type: "like" | "comment" | "dm" | "system";

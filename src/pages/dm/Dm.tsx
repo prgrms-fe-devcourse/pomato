@@ -3,9 +3,9 @@ import { useLoaderData } from "react-router";
 
 import EmptyState from "@components/Empty";
 import Input from "@components/Input";
-import { useUserId } from "@features/auth/model/useAuthStore";
 import type { GetMyChatRoomIdsReturn } from "@features/dm/api/room";
 import ChatList from "@features/dm/ui/ChatList";
+import { useUserId } from "@stores/useAuthStore";
 
 export default function Dm() {
   const { rooms } = useLoaderData<GetMyChatRoomIdsReturn>();

@@ -1,11 +1,11 @@
 import { useLoaderData } from "react-router";
 
-import { useUserId } from "@features/auth/model/useAuthStore";
 import type { MessageLoaderReturn } from "@features/dm/model/loader";
 import ChatHeader from "@features/dm/ui/ChatHeader";
 import ChatInput from "@features/dm/ui/ChatInput";
 import ChatMessages from "@features/dm/ui/ChatMessages";
 import { getOtherUser } from "@features/user/util/user";
+import { useUserId } from "@stores/useAuthStore";
 
 export default function Chat() {
   const id = useUserId();

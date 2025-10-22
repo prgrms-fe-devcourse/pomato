@@ -1,6 +1,5 @@
+import type { ProfileRow } from "@type/auth.types";
 import supabase from "@utils/supabase";
-
-import type { ProfileRow } from "../types/auth.types";
 
 export const getProfile = async (id: string): Promise<ProfileRow | null> => {
   const { data: profile, error } = await supabase

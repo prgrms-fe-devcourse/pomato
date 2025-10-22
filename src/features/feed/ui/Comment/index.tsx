@@ -5,8 +5,8 @@ import { twMerge } from "tailwind-merge";
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
 import Input from "@components/Input";
-import { useProfile } from "@features/auth/model/useAuthStore";
 import type { CommentWithAuthor } from "@features/feed/types/feed.types";
+import { useProfile } from "@stores/useAuthStore";
 
 type CommentPanelProps = {
   comments: CommentWithAuthor[];
