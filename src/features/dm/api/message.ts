@@ -23,6 +23,23 @@ export const persistMessage = async ({ content, conversation_id }: DmMessagesTab
   return data;
 };
 
+export const insertMessage = async (
+  message: DmMessagesTable["Insert"],
+): Promise<DmMessagesTable["Row"] | null> => {
+  const { data, error } = await supabase
+    .from("dm_messages")
+    .insert(message)
+    .select<"*", DmMessagesTable["Row"]>("*")
+    .single();
+
+  if (error) {
+    console.error("Failed to insert message:", error);
+    return null;
+  }
+
+  return data;
+};
+
 export const getMessages = async (conversationId: string): Promise<DmMessagesTable["Row"][]> => {
   const { data, error } = await supabase
     .from("dm_messages")
