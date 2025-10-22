@@ -21,9 +21,12 @@ type TimerStore = TimerStoreState & TimerStoreActions;
 export const useTimerStore = create<TimerStore>()(
   devtools(
     immer((set) => ({
-      focusMin: 25,
-      breakMin: 5,
-      longBreakMin: 15,
+      // focusMin: 25,
+      // breakMin: 5,
+      // longBreakMin: 15,
+      focusMin: 1,
+      breakMin: 1,
+      longBreakMin: 1,
       totalSession: 4,
 
       setFocusMin: (min) =>

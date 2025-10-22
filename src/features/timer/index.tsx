@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
+import { useTimerStore } from "./model/useTimerStore";
 import ActiveUsersButton from "./ui/ActiveUsersButton";
 import ControlButton from "./ui/ControlButton";
 import ProgressBar from "./ui/ProgressBar";
-import { useTimerStore } from "./useTimerStore";
 import { dot } from "./variants";
 
 export default function Timer() {
