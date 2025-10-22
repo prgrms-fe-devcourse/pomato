@@ -46,6 +46,10 @@ export default function PostCard({
 }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
 
+  // Post 이미지 로딩 관련
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
+
   // 본인이 작성한 게시글인지 확인
   const isOwnPost = currentUserId && author.id === currentUserId;
 
@@ -84,12 +88,14 @@ export default function PostCard({
       <div className="paragraph-text-m text-wh flex flex-col gap-[12px]" aria-label="post content">
         <p className="paragraph-text-medium">{content}</p>
 
-        {image_url && (
+        {image_url && !imageError && (
           <div className="max-w-full overflow-hidden">
             <img
               src={image_url}
-              alt=""
               className="border-wh/10 h-auto w-full rounded-[12px] border-1 object-contain"
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageError(true)}
+              style={{ display: imageLoaded ? "block" : "none" }}
               aria-hidden
             />
           </div>
