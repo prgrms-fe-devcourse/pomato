@@ -11,22 +11,17 @@ export type Database = {
       active_users: {
         Row: {
           id: string;
+          last_active_at: string;
         };
         Insert: {
           id?: string;
+          last_active_at?: string;
         };
         Update: {
           id?: string;
+          last_active_at?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: "active_users_id_fkey";
-            columns: ["id"];
-            isOneToOne: true;
-            referencedRelation: "profiles";
-            referencedColumns: ["user_id"];
-          },
-        ];
+        Relationships: [];
       };
       dm_conversations: {
         Row: {
@@ -114,6 +109,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      pomodoro_sessions: {
+        Row: {
+          completed_at: string;
+          created_at: string;
+          duration_minutes: number;
+          id: string;
+          user_id: string;
+        };
+        Insert: {
+          completed_at?: string;
+          created_at?: string;
+          duration_minutes: number;
+          id?: string;
+          user_id: string;
+        };
+        Update: {
+          completed_at?: string;
+          created_at?: string;
+          duration_minutes?: number;
+          id?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
       post_comments: {
         Row: {
           content: string;
@@ -148,26 +167,26 @@ export type Database = {
       };
       post_likes: {
         Row: {
+          created_at: string | null;
           id: string;
           post_id: string;
           user_id: string;
-          created_at: string;
         };
         Insert: {
+          created_at?: string | null;
           id?: string;
           post_id: string;
           user_id: string;
-          created_at?: string;
         };
         Update: {
+          created_at?: string | null;
           id?: string;
           post_id?: string;
           user_id?: string;
-          created_at?: string;
         };
         Relationships: [
           {
-            foreignKeyName: "post_likes_post_id_fkey";
+            foreignKeyName: "likes_post_id_fkey";
             columns: ["post_id"];
             isOneToOne: false;
             referencedRelation: "posts";
@@ -177,24 +196,30 @@ export type Database = {
       };
       posts: {
         Row: {
+          comments_count: number | null;
           content: string;
           created_at: string;
           id: string;
           image_url: string | null;
+          likes_count: number | null;
           user_id: string;
         };
         Insert: {
+          comments_count?: number | null;
           content: string;
           created_at?: string;
           id?: string;
           image_url?: string | null;
+          likes_count?: number | null;
           user_id: string;
         };
         Update: {
+          comments_count?: number | null;
           content?: string;
           created_at?: string;
           id?: string;
           image_url?: string | null;
+          likes_count?: number | null;
           user_id?: string;
         };
         Relationships: [];
@@ -205,6 +230,8 @@ export type Database = {
           bio: string | null;
           created_at: string;
           display_name: string;
+          focus_time: number | null;
+          sessions: number | null;
           updated_at: string;
           user_id: string;
           username: string;
@@ -214,6 +241,8 @@ export type Database = {
           bio?: string | null;
           created_at?: string;
           display_name: string;
+          focus_time?: number | null;
+          sessions?: number | null;
           updated_at?: string;
           user_id?: string;
           username: string;
@@ -223,6 +252,8 @@ export type Database = {
           bio?: string | null;
           created_at?: string;
           display_name?: string;
+          focus_time?: number | null;
+          sessions?: number | null;
           updated_at?: string;
           user_id?: string;
           username?: string;
@@ -238,9 +269,13 @@ export type Database = {
         Args: { _user_a: string; _user_b: string };
         Returns: string;
       };
+      toggle_like: {
+        Args: { p_post_id: string };
+        Returns: boolean;
+      };
     };
     Enums: {
-      notification_type: "like" | "comment" | "dm";
+      notification_type: "like" | "comment" | "dm" | "system";
     };
     // never 타입 에러 시 CompositeTypes를 Record<string, never>로 변경해주세요
     CompositeTypes: Record<string, never>;
@@ -365,7 +400,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      notification_type: ["like", "comment", "dm"],
+      notification_type: ["like", "comment", "dm", "system"],
     },
   },
 } as const;
