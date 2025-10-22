@@ -106,7 +106,88 @@ export async function createPost(content: string, image_url?: string): Promise<P
     .eq("user_id", userId)
     .single();
 
-  return rowToPost(data, [], profile ?? undefined);
+  // Database.types.ts 변화에 따른 임시 조치 (추후 수정 필요)
+  return rowToPost(
+    { ...data, comments_count: 0, likes_count: 0 },
+    [],
+    profile ?? undefined,
+    new Map(),
+    0,
+    false,
+  );
+}
+
+// 게시글 수정
+export async function updatePost(
+  id: string,
+  content: string,
+  image_url?: string,
+): Promise<Post | null> {
+  const { data: auth } = await supabase.auth.getUser();
+  const userId = auth?.user?.id;
+  if (!userId) return null;
+
+  try {
+    // 소유자 확인 및 기존 이미지 URL 가져오기
+    const { data: post, error: fetchError } = await supabase
+      .from("posts")
+      .select("user_id, image_url")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !post || post.user_id !== userId) {
+      return null;
+    }
+
+    // 기존 이미지가 있고 새로운 이미지로 변경되거나 이미지를 제거하는 경우
+    // image_url이 null이거나 기존 이미지와 다른 경우에만 기존 이미지 삭제
+    if (
+      post.image_url &&
+      image_url !== undefined &&
+      (image_url === null || post.image_url !== image_url)
+    ) {
+      await deletePostImage(post.image_url);
+    }
+
+    // 게시글 업데이트 (이미지가 변경되지 않았을 경우 image_url 필드를 업데이트하지 않음)
+    const updateData: { content: string; image_url?: string | null } = { content };
+
+    // image_url이 undefined가 아닌 경우에만 image_url 필드 업데이트
+    if (image_url !== undefined) {
+      updateData.image_url = image_url;
+    }
+
+    const { data, error } = await supabase
+      .from("posts")
+      .update(updateData)
+      .eq("id", id)
+      .eq("user_id", userId)
+      .select("id,user_id,content,image_url,created_at")
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+
+    // 프로필 정보 가져오기
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    // Database.types.ts 변화에 따른 임시 조치 (추후 수정 필요)
+    return rowToPost(
+      { ...data, comments_count: 0, likes_count: 0 },
+      [],
+      profile ?? undefined,
+      new Map(),
+      0,
+      false,
+    );
+  } catch {
+    return null;
+  }
 }
 
 // 삭제(소유자만)

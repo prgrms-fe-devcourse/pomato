@@ -31,6 +31,7 @@ export default function WritePost({
         onCreatePost(content, image?.file);
       }}
       onImageUpload={() => {}}
+      onCancel={() => setOpen(false)}
       placeholder="무슨 생각을 하고 있나요?"
       isUploading={isUploading}
     />

@@ -54,6 +54,7 @@ function revokePreview(url?: string) {
 type PostComposerProps = {
   onPost: (content: string, image?: LocalImage) => void;
   onImageUpload: (files: FileList) => void;
+  onCancel?: () => void;
   disabled?: boolean;
   placeholder?: string;
   className?: string;
@@ -63,6 +64,7 @@ type PostComposerProps = {
 export default function PostComposer({
   onPost,
   onImageUpload,
+  onCancel,
   disabled = false,
   placeholder = "Sign in to post",
   className,
@@ -154,7 +156,7 @@ export default function PostComposer({
           onFocus={handleFocus} // 포커스 확인 여부 영역
           onBlur={handleBlur} // 포커스 해제 영역
           placeholder={placeholder}
-          disabled={disabled}
+          disabled={disabled || isUploading} // 이미지 업로드 중 disabled 처리
           className={twMerge(
             "block w-full rounded-[8px] border px-4 py-3 outline-none",
             "h-[100px] resize-none overflow-y-auto",
@@ -250,31 +252,53 @@ export default function PostComposer({
           />
         </div>
 
-        {/* 게시물 작성 버튼 */}
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            handlePost?.();
-          }}
-          intent="primary"
-          size="md"
-          type="submit"
-          disabled={!canPost}
-          aria-label="게시물 업로드"
-          className={twMerge(
-            "gap-[6px] rounded-[8px] px-4 select-none",
-            // 활성화 상태 (기존 Button 컴포넌트 Primary 값과 색상이 불일치하여 추가작업 진행)
-            canPost && ["border-[#3B82F6] bg-[#2563EB]", "dark:border-[#2563EB] dark:bg-[#2563EB]"],
-            // 비활성화 상태 (기존 Button 컴포넌트 Primary 값과 색상이 불일치하여 추가작업 진행)
-            !canPost && [
-              "border-[#3B82F6] bg-[#3B82F6] opacity-50",
-              "opacity-50 dark:border-[#3B82F6] dark:bg-[#3B82F6]",
-              "cursor-not-allowed",
-            ],
+        {/* 액션 버튼들 */}
+        <div className="flex gap-2">
+          {/* 취소 버튼 */}
+          {onCancel && (
+            <Button
+              onClick={onCancel}
+              intent="reveal"
+              size="md"
+              disabled={isUploading}
+              className={twMerge(
+                "gap-[6px] rounded-[8px] px-4 select-none",
+                "bg-wh/15 dark:bg-bl/25 opacity-100",
+              )}
+            >
+              <span className="label-text-s">Cancel</span>
+            </Button>
           )}
-        >
-          <span className="label-text-s">{isUploading ? "업로드 중..." : "Post"}</span>
-        </Button>
+
+          {/* 게시물 작성 버튼 */}
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePost?.();
+            }}
+            intent="primary"
+            size="md"
+            type="submit"
+            disabled={!canPost}
+            aria-label="게시물 업로드"
+            className={twMerge(
+              "gap-[6px] rounded-[8px] px-4 select-none",
+              // 활성화 상태 (기존 Button 컴포넌트 Primary 값과 색상이 불일치하여 추가작업 진행)
+              canPost && [
+                "border-[#3B82F6] bg-[#2563EB]",
+                "dark:border-[#2563EB] dark:bg-[#2563EB]",
+              ],
+              // 비활성화 상태 (기존 Button 컴포넌트 Primary 값과 색상이 불일치하여 추가작업 진행)
+              !canPost && [
+                "border-[#3B82F6] bg-[#3B82F6] opacity-50",
+                "opacity-50 dark:border-[#3B82F6] dark:bg-[#3B82F6]",
+                "cursor-not-allowed",
+              ],
+            )}
+          >
+            <span className="label-text-s">{isUploading ? "업로드 중..." : "Post"}</span>
+          </Button>
+        </div>
       </div>
     </div>
   );
