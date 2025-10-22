@@ -71,7 +71,7 @@ export default function ChatCard({
     };
 
     void fetchPartner();
-  }, [setProfile, userId]);
+  }, [userId]);
   return (
     <div
       className={twMerge(
