@@ -11,7 +11,8 @@ import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
 
 export default function Feed() {
-  const { posts, setPosts, addPost, toggleLike, addComment, removePost, isUploading } = usePosts();
+  const { posts, setPosts, addPost, toggleLike, addComment, removePost, editPost, isUploading } =
+    usePosts();
   const [query, setQuery] = useState("");
   const userId = useUserId();
 
@@ -85,6 +86,9 @@ export default function Feed() {
             }}
             onDelete={(id) => {
               void removePost(id);
+            }}
+            onEdit={async (id, content, imageFile) => {
+              await editPost(id, content, imageFile);
             }}
             currentUserId={userId}
           />

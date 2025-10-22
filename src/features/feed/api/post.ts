@@ -106,7 +106,74 @@ export async function createPost(content: string, image_url?: string): Promise<P
     .eq("user_id", userId)
     .single();
 
-  return rowToPost(data, [], profile ?? undefined);
+  // Database.types.ts 변화에 따른 임시 조치 (추후 수정 필요)
+  return rowToPost(
+    { ...data, comments_count: 0, likes_count: 0 },
+    [],
+    profile ?? undefined,
+    new Map(),
+    0,
+    false,
+  );
+}
+
+// 게시글 수정
+export async function updatePost(
+  id: string,
+  content: string,
+  image_url?: string,
+): Promise<Post | null> {
+  const { data: auth } = await supabase.auth.getUser();
+  const userId = auth?.user?.id;
+  if (!userId) return null;
+
+  try {
+    // 소유자 확인
+    const { data: post, error: fetchError } = await supabase
+      .from("posts")
+      .select("user_id")
+      .eq("id", id)
+      .single();
+
+    if (fetchError || !post || post.user_id !== userId) {
+      return null;
+    }
+
+    // 게시글 업데이트
+    const { data, error } = await supabase
+      .from("posts")
+      .update({
+        content,
+        image_url: image_url ?? null,
+      })
+      .eq("id", id)
+      .eq("user_id", userId)
+      .select("id,user_id,content,image_url,created_at")
+      .single();
+
+    if (error || !data) {
+      return null;
+    }
+
+    // 프로필 정보 가져오기
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    // Database.types.ts 변화에 따른 임시 조치 (추후 수정 필요)
+    return rowToPost(
+      { ...data, comments_count: 0, likes_count: 0 },
+      [],
+      profile ?? undefined,
+      new Map(),
+      0,
+      false,
+    );
+  } catch {
+    return null;
+  }
 }
 
 // 삭제(소유자만)

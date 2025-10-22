@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import { createComment } from "@features/feed/api/comment";
 import { uploadPostImage } from "@features/feed/api/image";
 import { addLike, removeLike } from "@features/feed/api/like";
-import { createPost, deletePost } from "@features/feed/api/post";
+import { createPost, deletePost, updatePost } from "@features/feed/api/post";
 import type { PostWithComments } from "@features/feed/types/feed.types";
 import supabase from "@utils/supabase";
 
@@ -171,5 +171,38 @@ export function usePosts() {
     }
   }, []);
 
-  return { posts, setPosts, addPost, toggleLike, addComment, removePost, isUploading };
+  const editPost = useCallback(async (postId: string, content: string, imageFile?: File) => {
+    try {
+      let finalImageUrl: string | undefined;
+
+      if (imageFile) {
+        const imageUrl = await uploadPostImage(imageFile, postId);
+        if (imageUrl) {
+          finalImageUrl = imageUrl;
+        }
+      }
+
+      const updatedPost = await updatePost(postId, content, finalImageUrl);
+      if (updatedPost) {
+        setPosts((prev = []) =>
+          prev.map((p) =>
+            p.id === postId
+              ? {
+                  ...p,
+                  content: updatedPost.content,
+                  image_url: updatedPost.image_url,
+                }
+              : p,
+          ),
+        );
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error("게시글 수정 중 오류:", error);
+      return false;
+    }
+  }, []);
+
+  return { posts, setPosts, addPost, toggleLike, addComment, removePost, editPost, isUploading };
 }

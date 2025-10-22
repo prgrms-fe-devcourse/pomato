@@ -8,10 +8,18 @@ type PostListProps = {
   onToggleLike: (postId: string) => void;
   onAddComment: (postId: string, text: string) => void;
   onDelete?: (postId: string) => void;
+  onEdit?: (postId: string, content: string, imageFile?: File) => Promise<void>;
   currentUserId?: string;
 };
 
-function PostList({ posts, onToggleLike, onAddComment, onDelete, currentUserId }: PostListProps) {
+function PostList({
+  posts,
+  onToggleLike,
+  onAddComment,
+  onDelete,
+  onEdit,
+  currentUserId,
+}: PostListProps) {
   const items = useMemo(
     () =>
       posts.map((p) => (
@@ -33,10 +41,11 @@ function PostList({ posts, onToggleLike, onAddComment, onDelete, currentUserId }
           onToggleLike={onToggleLike}
           onAddComment={onAddComment}
           onDelete={onDelete}
+          onEdit={onEdit}
           currentUserId={currentUserId}
         />
       )),
-    [posts, onToggleLike, onAddComment, onDelete, currentUserId],
+    [posts, onToggleLike, onAddComment, onDelete, onEdit, currentUserId],
   );
 
   return <section className="flex flex-col gap-3">{items}</section>;
