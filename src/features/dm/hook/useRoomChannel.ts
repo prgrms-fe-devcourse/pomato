@@ -45,13 +45,11 @@ export const useRoomChannel = (
         });
       }
 
-      console.log("채널 연결");
       channelRef.current = channel;
       return channel;
     });
 
     return () => {
-      console.log("채널 종료");
       removeChannel();
       channelRef.current = null;
     };
