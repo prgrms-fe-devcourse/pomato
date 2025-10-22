@@ -24,7 +24,7 @@ export default function ChatHeader({ partnerId }: ChatHeaderType) {
     };
 
     void fetchPartner();
-  }, [setProfile, partnerId]);
+  }, [partnerId]);
 
   return (
     <div className="border-wh/15 flex h-[64px] items-center justify-between border-b-1 px-[16px]">
