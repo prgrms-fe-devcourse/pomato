@@ -7,9 +7,18 @@ export default function ChatMessages() {
   const id = useUserId();
   return (
     <div className="flex-1 px-[16px]">
-      {messages.map((message) => {
+      {messages.map((message, index) => {
         return (
-          <ChatBubble key={message.id} text={message.content} isMine={id === message.sender_id} />
+          <ChatBubble
+            key={message.id}
+            text={message.content}
+            isMine={id === message.sender_id}
+            time={message.created_at}
+            isRead={
+              (id === message.sender_id && index === messages.length - 1 && message.is_read) ??
+              false
+            }
+          />
         );
       })}
     </div>
