@@ -1,18 +1,24 @@
+import { useEffect, useState } from "react";
+
+import { useTimerStore } from "./model/useTimerStore";
 import ActiveUsersButton from "./ui/ActiveUsersButton";
 import ControlButton from "./ui/ControlButton";
+import ProgressBar from "./ui/ProgressBar";
 
 export default function Timer() {
-  // const { currentTimerStatus, totalSession } = useTimerStore();
-  // const [elapsedSec, setElapsedSec] = useState(0);
+  const { currentTimerStatus } = useTimerStore();
+  const [elapsedSec, setElapsedSec] = useState(0);
   // const startAt = useRef<number | null>(null);
 
-  // useEffect(() => {
-  //   if (currentTimerStatus !== "RUNNING") return;
+  useEffect(() => {
+    if (currentTimerStatus !== "RUNNING") return;
 
-  //   const timer = setInterval(() => {}, 1000);
+    const timer = setInterval(() => {
+      setElapsedSec((state) => state + 1);
+    }, 1000);
 
-  //   return () => clearInterval(timer);
-  // }, [currentTimerStatus]);
+    return () => clearInterval(timer);
+  }, [elapsedSec, currentTimerStatus]);
 
   return (
     <section className="flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center gap-5 overflow-auto group-has-[section[aria-label='Panel']]:max-[800px]:hidden">
@@ -39,8 +45,8 @@ export default function Timer() {
           </ol>
         </div>
       </div>
-      <ProgressBar focusSec={focusMin * 60} remainingSec={remainingSec} />
       */}
+      <ProgressBar elapsedSec={elapsedSec} />
       <ControlButton />
       <ActiveUsersButton />
     </section>
