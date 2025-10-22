@@ -2,11 +2,16 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
+import type { Phase, TimerStatus } from "../types/timer.types";
+
 type TimerStoreState = {
   focusMin: number;
   breakMin: number;
   longBreakMin: number;
   totalSession: number;
+  currentPhase: Phase;
+  currentTimerStatus: TimerStatus;
+  currentSession: number;
 };
 
 type TimerStoreActions = {
@@ -14,6 +19,12 @@ type TimerStoreActions = {
   setBreakMin: (min: number) => void;
   setLongBreakMin: (min: number) => void;
   setTotalSession: (count: number) => void;
+  start: () => void;
+  pause: () => void;
+  resume: () => void;
+  reset: () => void;
+  skip: () => void;
+  // completePhase: () => void;
 };
 
 type TimerStore = TimerStoreState & TimerStoreActions;
@@ -28,6 +39,9 @@ export const useTimerStore = create<TimerStore>()(
       breakMin: 1,
       longBreakMin: 1,
       totalSession: 4,
+      currentPhase: "FOCUS",
+      currentTimerStatus: "IDLE",
+      currentSession: 0,
 
       setFocusMin: (min) =>
         set((state) => {
@@ -45,6 +59,28 @@ export const useTimerStore = create<TimerStore>()(
         set((state) => {
           state.totalSession = Math.max(1, count);
         }),
+      start: () =>
+        set((state) => {
+          state.currentTimerStatus = "RUNNING";
+        }),
+      pause: () =>
+        set((state) => {
+          state.currentTimerStatus = "PAUSED";
+        }),
+      resume: () =>
+        set((state) => {
+          state.currentTimerStatus = "RUNNING";
+        }),
+      reset: () =>
+        set((state) => {
+          state.currentPhase = "FOCUS";
+          state.currentTimerStatus = "IDLE";
+        }),
+      skip: () =>
+        set((state) => {
+          state.currentSession += 1;
+        }),
+      // completePhase: () => set((state) => {}),
     })),
   ),
 );

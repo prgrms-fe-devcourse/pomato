@@ -1,13 +1,13 @@
 import { toMMSS } from "@utils/formatTime";
 
 export default function ProgressBar({
-  focusMin,
+  focusSec,
   remainingSec,
 }: {
-  focusMin: number;
+  focusSec: number;
   remainingSec: number;
 }) {
-  const progressPercent = (remainingSec / focusMin) * 100;
+  const progressPercent = (remainingSec / focusSec) * 100;
   return (
     <div className="flex items-center justify-center gap-2 text-xs">
       <span className="cursor-default tabular-nums">{toMMSS(remainingSec)}</span>
@@ -17,7 +17,7 @@ export default function ProgressBar({
           style={{ width: `${progressPercent}%` }}
         ></div>
       </div>
-      <span className="cursor-default tabular-nums">{toMMSS(focusMin)}</span>
+      <span className="cursor-default tabular-nums">{toMMSS(focusSec)}</span>
     </div>
   );
 }
