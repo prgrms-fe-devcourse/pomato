@@ -1,18 +1,6 @@
 import { rowToComment } from "@features/feed/model/mappers";
-import type { CommentTable } from "@features/feed/types/comment.type";
-import type { Comment } from "@features/feed/types/post.type";
+import type { Comment } from "@features/feed/types/feed.types";
 import supabase from "@utils/supabase";
-
-export const getComment = async (post_id: string) => {
-  const { data, error } = await supabase
-    .from("post_comments")
-    .select<"*", CommentTable>("*")
-    .eq("post_id", post_id)
-    .order("created_at", { ascending: true });
-
-  if (error || !Array.isArray(data)) return [];
-  return data;
-};
 
 // 댓글 생성
 export async function createComment(postId: string, content: string): Promise<Comment | null> {

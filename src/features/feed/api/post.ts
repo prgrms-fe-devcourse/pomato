@@ -1,3 +1,5 @@
+import { deletePostImage } from "@features/feed/api/image";
+import { getLikesForPosts } from "@features/feed/api/like";
 import {
   groupBy,
   isCommentRow,
@@ -6,13 +8,11 @@ import {
   mapProfilesByUserId,
   rowToPost,
 } from "@features/feed/model/mappers";
-import type { CommentRow, PostRow, ProfileRow } from "@features/feed/model/tables";
-import type { Post } from "@features/feed/types/post.type";
+import type { CommentRow, PostRow, ProfileRow, Post } from "@features/feed/types/feed.types";
 import supabase from "@utils/supabase";
 
-// /** 게시글 목록 + 댓글 + 각 작성자 프로필까지 조립 */
+// /** 게시글 목록 + 댓글 + 각 작성자 프로필 조회까지 */
 export async function listPosts(): Promise<Post[]> {
-  // 1) posts
   const postsRes = await supabase
     .from("posts")
     .select("id,user_id,content,image_url,created_at")
@@ -61,15 +61,21 @@ export async function listPosts(): Promise<Post[]> {
     (c) => c.post_id,
   );
 
-  // 6) compose domain
-  const posts: Post[] = postRows.map((row) =>
-    rowToPost(
+  // 6) get likes for all posts
+  const likesData = await getLikesForPosts(postIds);
+
+  // 7) compose domain
+  const posts: Post[] = postRows.map((row) => {
+    const likeInfo = likesData[row.id] || { count: 0, liked: false };
+    return rowToPost(
       row,
       commentsByPostId[row.id] ?? [],
       profileByUserId.get(row.user_id),
       profileByUserId,
-    ),
-  );
+      likeInfo.count,
+      likeInfo.liked,
+    );
+  });
 
   return posts;
 }
@@ -91,7 +97,6 @@ export async function createPost(content: string, image_url?: string): Promise<P
     .single();
 
   if (error || !data) {
-    console.error("게시글 생성 실패:", error?.message);
     return null;
   }
 
@@ -101,7 +106,6 @@ export async function createPost(content: string, image_url?: string): Promise<P
     .eq("user_id", userId)
     .single();
 
-  // data는 PostRowLike 형태를 만족하므로 그대로 전달
   return rowToPost(data, [], profile ?? undefined);
 }
 
@@ -111,11 +115,33 @@ export async function deletePost(id: string): Promise<boolean> {
   const userId = auth?.user?.id;
   if (!userId) return false;
 
-  const { error } = await supabase.from("posts").delete().eq("id", id).eq("user_id", userId);
+  try {
+    const { data: post, error: fetchError } = await supabase
+      .from("posts")
+      .select("user_id, image_url")
+      .eq("id", id)
+      .single();
 
-  if (error) {
-    console.error(error.message);
+    if (fetchError || !post) {
+      return false;
+    }
+
+    if (post.user_id !== userId) {
+      return false;
+    }
+
+    if (post.image_url) {
+      await deletePostImage(post.image_url);
+    }
+
+    const { error } = await supabase.from("posts").delete().eq("id", id).eq("user_id", userId);
+
+    if (error) {
+      return false;
+    }
+
+    return true;
+  } catch {
     return false;
   }
-  return true;
 }

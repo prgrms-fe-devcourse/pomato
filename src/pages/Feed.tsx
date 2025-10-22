@@ -4,27 +4,18 @@ import { useLoaderData } from "react-router";
 
 import EmptyState from "@components/Empty";
 import Input from "@components/Input";
-import type { PostWithComments } from "@features/feed/model/tables";
+import { useUserId, useIsLoggedIn } from "@features/auth/model/useAuthStore";
 import { usePosts } from "@features/feed/model/usePosts";
+import type { PostWithComments } from "@features/feed/types/feed.types";
 import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
-import supabase from "@utils/supabase";
 
 export default function Feed() {
-  const { posts, setPosts, addPost, toggleLike, addComment } = usePosts();
+  const { posts, setPosts, addPost, toggleLike, addComment, removePost, isUploading } = usePosts();
   const [query, setQuery] = useState("");
+  const userId = useUserId();
 
   const post_data = useLoaderData<PostWithComments[]>();
-
-  const [isLogin, setIsLogin] = useState<boolean>();
-
-  useEffect(() => {
-    // 로그인 체크 여부
-    void (async () => {
-      const { data } = await supabase.auth.getUser();
-      if (data) setIsLogin(!!data.user);
-    })();
-  }, []);
 
   useEffect(() => {
     if (post_data) {
@@ -42,14 +33,18 @@ export default function Feed() {
     );
   }, [posts, query]);
 
+  // 로그인 상태 확인
+  const isLoggedIn = !!useIsLoggedIn;
+
   return (
     <div className="flex h-screen flex-col gap-[12px] p-[16px] select-none">
-      {isLogin ? (
+      {isLoggedIn ? (
         // 글쓰기 영역 + 구분선
         <FeedHeader
-          onCreatePost={(content, imageUrl) => {
-            void addPost(content, imageUrl);
+          onCreatePost={(content, imageFile) => {
+            void addPost(content, imageFile);
           }}
+          isUploading={isUploading}
         />
       ) : (
         <EmptyState
@@ -67,7 +62,7 @@ export default function Feed() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           Icon={{ Component: Search, align: "right" }}
-          placeholder="댓글에서 검색할 키워드를 입력하세요..."
+          placeholder="게시글 내용에서 검색할 키워드를 입력하세요..."
         />
       )}
 
@@ -90,6 +85,10 @@ export default function Feed() {
             onAddComment={(id, text) => {
               void addComment(id, text);
             }}
+            onDelete={(id) => {
+              void removePost(id);
+            }}
+            currentUserId={userId}
           />
         ) : (
           // 검색 결과가 없는 경우

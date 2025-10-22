@@ -1,5 +1,11 @@
-import type { PostRow, CommentRow, ProfileRow } from "@features/feed/model/tables";
-import type { Post, Comment, Author } from "@features/feed/types/post.type";
+import type {
+  PostRow,
+  CommentRow,
+  ProfileRow,
+  Post,
+  Comment,
+  Author,
+} from "@features/feed/types/feed.types";
 
 export const isPostRow = (v: unknown): v is PostRow =>
   !!v && typeof v === "object" && "id" in v && "user_id" in v && "created_at" in v;
@@ -59,6 +65,8 @@ export function rowToPost(
   comments: readonly CommentRow[],
   postAuthorProfile?: ProfileRow,
   commentProfilesByUserId?: Map<string, ProfileRow>,
+  likes: number = 0,
+  liked: boolean = false,
 ): Post {
   const mappedComments: Comment[] = comments.map((c) =>
     rowToComment(c, commentProfilesByUserId?.get(c.user_id)),
@@ -70,8 +78,8 @@ export function rowToPost(
     content: row.content ?? "",
     image_url: row.image_url ?? undefined,
     createdAt: new Date(row.created_at),
-    likes: 0,
-    liked: false,
+    likes,
+    liked,
     comments: mappedComments,
   };
 }

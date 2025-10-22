@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Dropdown from "@components/Dropdown";
-import type { CommentWithAuthor } from "@features/feed/model/tables";
+import type { CommentWithAuthor } from "@features/feed/types/feed.types";
 import CommentPanel from "@features/feed/ui/Comment";
 
 type DropdownItem = {
@@ -14,11 +14,6 @@ type DropdownItem = {
   onSelect: () => void;
   isRed?: boolean;
 };
-
-const menu: DropdownItem[] = [
-  { key: "edit", label: "수정", icon: SquarePen, onSelect: () => console.log("수정") },
-  { key: "delete", label: "삭제", icon: Trash, isRed: true, onSelect: () => console.log("삭제") },
-];
 
 export type PostCardProps = {
   id: string;
@@ -31,6 +26,8 @@ export type PostCardProps = {
   comments: CommentWithAuthor[];
   onToggleLike: (id: string) => void;
   onAddComment: (id: string, text: string) => void;
+  onDelete?: (id: string) => void;
+  currentUserId?: string;
 };
 
 export default function PostCard({
@@ -44,8 +41,21 @@ export default function PostCard({
   comments,
   onToggleLike,
   onAddComment,
+  onDelete,
+  currentUserId,
 }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
+
+  // 본인이 작성한 게시글인지 확인
+  const isOwnPost = currentUserId && author.id === currentUserId;
+
+  // 메뉴 아이템 생성 (본인 게시글에만 표시)
+  const menuItems: DropdownItem[] = isOwnPost
+    ? [
+        { key: "edit", label: "수정", icon: SquarePen, onSelect: () => console.log("수정") },
+        { key: "delete", label: "삭제", icon: Trash, isRed: true, onSelect: () => onDelete?.(id) },
+      ]
+    : [];
 
   return (
     <div
@@ -67,7 +77,7 @@ export default function PostCard({
             </span>
           </div>
         </div>
-        <Dropdown className="top-[-10px]" items={menu} />
+        {isOwnPost && <Dropdown className="top-[-10px]" items={menuItems} />}
       </div>
 
       {/* 본문 */}
