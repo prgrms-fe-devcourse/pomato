@@ -20,7 +20,7 @@ export default function Dm() {
 
   return (
     <div className="flex flex-col gap-[12px] p-[16px]">
-      <ChatList userId={id} rooms={[]} />
+      <ChatList userId={id} />
     </div>
   );
 }
