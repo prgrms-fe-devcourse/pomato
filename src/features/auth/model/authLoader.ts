@@ -1,4 +1,5 @@
-import { useAuthStore } from "./useAuthStore";
+import { useAuthStore } from "@stores/useAuthStore";
+
 import { getProfile } from "../api/profile";
 import { getSession } from "../api/session";
 

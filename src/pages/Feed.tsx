@@ -4,11 +4,11 @@ import { useLoaderData } from "react-router";
 
 import EmptyState from "@components/Empty";
 import Input from "@components/Input";
-import { useUserId, useIsLoggedIn } from "@features/auth/model/useAuthStore";
 import { usePosts } from "@features/feed/model/usePosts";
 import type { PostWithComments } from "@features/feed/types/feed.types";
 import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
+import { useUserId, useIsLoggedIn } from "@stores/useAuthStore";
 
 export default function Feed() {
   const { posts, setPosts, addPost, toggleLike, addComment, removePost, editPost, isUploading } =

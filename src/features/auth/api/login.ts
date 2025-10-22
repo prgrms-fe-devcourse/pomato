@@ -1,6 +1,5 @@
+import type { OAuthProvider } from "@type/auth.types";
 import supabase from "@utils/supabase";
-
-import type { OAuthProvider } from "../types/auth.types";
 
 export const loginWithOAuth = async (provider: OAuthProvider) => {
   const { error } = await supabase.auth.signInWithOAuth({
