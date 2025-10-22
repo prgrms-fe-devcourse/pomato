@@ -128,15 +128,20 @@ export async function updatePost(
   if (!userId) return null;
 
   try {
-    // 소유자 확인
+    // 소유자 확인 및 기존 이미지 URL 가져오기
     const { data: post, error: fetchError } = await supabase
       .from("posts")
-      .select("user_id")
+      .select("user_id, image_url")
       .eq("id", id)
       .single();
 
     if (fetchError || !post || post.user_id !== userId) {
       return null;
+    }
+
+    // 기존 이미지가 있고 새로운 이미지로 변경되거나 이미지를 제거하는 경우
+    if (post.image_url && post.image_url !== image_url) {
+      await deletePostImage(post.image_url);
     }
 
     // 게시글 업데이트

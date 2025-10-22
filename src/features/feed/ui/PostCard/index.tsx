@@ -236,7 +236,7 @@ export default function PostCard({
               )}
 
               {/* 이미지 업로드 및 편집 액션 버튼 */}
-              <div className="flex items-center justify-between gap-3">
+              <div className="mt-2 flex items-center justify-between gap-3">
                 {/* 이미지 업로드 버튼 (왼쪽) */}
                 <div>
                   {!editImage && (
