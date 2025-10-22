@@ -79,8 +79,8 @@ export const useRealtimeHandler = <T extends SupabaseClient>() => {
     if (!topic.startsWith("realtime:")) {
       topic = `realtime:${topic}`;
     }
-    removeChannels(topic);
     unsubscribeFromChannel(topic);
+    removeChannels(topic);
   };
 
   const subscribeToChannel = async (
