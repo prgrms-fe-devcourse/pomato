@@ -3,33 +3,50 @@ import { devtools } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 type TimerStoreState = {
-  config: {
-    focusMin: number;
-    breakMin: number;
-    longBreakMin: number;
-    totalSession: number;
-  };
+  focusMin: number;
+  breakMin: number;
+  longBreakMin: number;
+  totalSession: number;
 };
 
-type TimeStoreActions = {
-  setConfig: (config: TimerStoreState) => void;
+type TimerStoreActions = {
+  setFocusMin: (min: number) => void;
+  setBreakMin: (min: number) => void;
+  setLongBreakMin: (min: number) => void;
+  setTotalSession: (count: number) => void;
 };
 
-type TimeStore = TimerStoreState & TimeStoreActions;
+type TimerStore = TimerStoreState & TimerStoreActions;
 
-export const useTimerStore = create<TimeStore>()(
+export const useTimerStore = create<TimerStore>()(
   devtools(
     immer((set) => ({
-      config: {
-        focusMin: 25,
-        breakMin: 5,
-        longBreakMin: 15,
-        totalSession: 4,
-      },
-      setConfig: ({ config }) =>
+      focusMin: 25,
+      breakMin: 5,
+      longBreakMin: 15,
+      totalSession: 4,
+
+      setFocusMin: (min) =>
         set((state) => {
-          state.config = config;
+          state.focusMin = Math.max(0, min);
+        }),
+      setBreakMin: (min) =>
+        set((state) => {
+          state.breakMin = Math.max(0, min);
+        }),
+      setLongBreakMin: (min) =>
+        set((state) => {
+          state.longBreakMin = Math.max(0, min);
+        }),
+      setTotalSession: (count) =>
+        set((state) => {
+          state.totalSession = Math.max(1, count);
         }),
     })),
   ),
 );
+
+export const useFocusMin = () => useTimerStore((state) => state.focusMin);
+export const useBreakMin = () => useTimerStore((state) => state.breakMin);
+export const useLongBreakMin = () => useTimerStore((state) => state.longBreakMin);
+export const useTotalSession = () => useTimerStore((state) => state.totalSession);
