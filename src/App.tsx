@@ -10,23 +10,26 @@ import supabase from "@utils/supabase";
 export default function App() {
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (
-        event === "INITIAL_SESSION" ||
-        event === "TOKEN_REFRESHED" ||
-        event === "PASSWORD_RECOVERY"
-      )
-        return;
+      // 초기 세션은 Loader에서 처리하기 때문에 return
+      // 비밀번호 변경은 프로필에서 수집하지 않는 정보이기 때문에 return
+      if (event === "INITIAL_SESSION" || event === "PASSWORD_RECOVERY") return;
 
-      const store = useAuthStore.getState();
+      const authStore = useAuthStore.getState();
       const uid = session?.user?.id ?? null;
 
       if (event === "SIGNED_OUT" || !uid) {
-        store.resetAuth();
+        authStore.resetAuth();
         return;
       }
 
-      const profile = await getProfile(uid);
-      store.setAuth(session, profile);
+      if (event === "TOKEN_REFRESHED") {
+        authStore.setAuth(session, authStore.profile);
+      }
+
+      if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+        const profile = await getProfile(uid);
+        authStore.setAuth(session, profile);
+      }
     });
 
     return () => {

@@ -11,7 +11,7 @@ export const loginWithOAuth = async (provider: OAuthProvider) => {
   });
 
   if (error) {
-    console.log("간편 로그인 오류:", error);
+    console.error("간편 로그인 오류:", error);
     throw new Error("간편 로그인 오류");
   }
 };
