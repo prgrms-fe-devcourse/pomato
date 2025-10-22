@@ -201,7 +201,7 @@ export default function PostCard({
             <div className="flex flex-col gap-2">
               {/* 기존 이미지 표시 */}
               {image_url && !editImage && (
-                <div className="relative">
+                <div className="border-wh/20 dark:border-wh/15 relative mx-auto flex max-h-[300px] w-full items-center justify-center overflow-hidden rounded-[8px] border-[1px]">
                   <img
                     src={image_url}
                     alt="기존 이미지"
@@ -212,7 +212,7 @@ export default function PostCard({
 
               {/* 새 이미지 미리보기 */}
               {editImage && (
-                <div className="relative">
+                <div className="border-wh/20 dark:border-wh/15 relative mx-auto flex max-h-[300px] w-full items-center justify-center overflow-hidden rounded-[8px] border-[1px]">
                   <img
                     src={editImage.image_url}
                     alt="편집할 이미지"
