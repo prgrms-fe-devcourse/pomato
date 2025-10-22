@@ -5,13 +5,17 @@ import { immer } from "zustand/middleware/immer";
 
 import type { Profile } from "../types/auth.types";
 
-type AuthStore = {
+type AuthState = {
   session: Session | null;
   profile: Profile | null;
+};
 
+type AuthAction = {
   setAuth: (session: Session | null, profile: Profile | null) => void;
   resetAuth: () => void;
 };
+
+type AuthStore = AuthState & AuthAction;
 
 export const useAuthStore = create<AuthStore>()(
   devtools(
