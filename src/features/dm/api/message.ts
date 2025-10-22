@@ -50,3 +50,33 @@ export const getMessages = async (conversationId: string): Promise<DmMessagesTab
   if (error) return [];
   return data;
 };
+
+export const markMessageAsRead = async (
+  conversationId: string,
+  messageId: string,
+): Promise<void> => {
+  const { error } = await supabase.rpc("mark_dm_read", {
+    p_conversation_id: conversationId,
+    p_message_id: messageId,
+  });
+
+  if (error) {
+    console.error("읽음 처리 실패:", error.message);
+    throw error;
+  }
+
+  console.log("읽음 처리 성공:", conversationId, messageId);
+};
+
+export const getUnreadMessages = async (conversationId: string) => {
+  const { data, error } = await supabase.rpc("get_unread_messages", {
+    p_conversation_id: conversationId,
+  });
+
+  if (error) {
+    console.error("Failed to fetch unread messages:", error);
+    return [];
+  }
+
+  return data ?? [];
+};
