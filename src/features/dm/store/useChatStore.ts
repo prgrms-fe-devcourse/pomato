@@ -8,11 +8,15 @@ type ChatState<T> = {
   addMessage: (message: T) => void;
 };
 
-export const useChatStore = create<ChatState<DmMessagesTable["Row"]>>()((set, get) => ({
+export const useChatStore = create<ChatState<DmMessagesTable["Row"]>>()((set) => ({
   messages: [],
   setMessages: (messages: DmMessagesTable["Row"][]) => set({ messages: messages }),
   addMessage: (message) => {
-    const prev = get().messages;
-    set({ messages: [...prev, message] });
+    set((state) => {
+      const exists = state.messages.some((m) => m.id === message.id);
+      if (exists) return state; // 이미 존재하면 변경하지 않음
+
+      return { messages: [...state.messages, message] };
+    });
   },
 }));
