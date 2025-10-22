@@ -1,15 +1,16 @@
-import type { DmMessagesTable } from "@features/dm/types/messages.type";
+import { useUserId } from "@features/auth/model/useAuthStore";
+import { useChatStore } from "@features/dm/store/useChatStore";
 import ChatBubble from "@features/dm/ui/ChatBubble";
 
-export type ChatMessagesProps = {
-  messages: DmMessagesTable["Row"][];
-};
-
-export default function ChatMessages({ messages = [] }: ChatMessagesProps) {
+export default function ChatMessages() {
+  const messages = useChatStore((state) => state.messages);
+  const id = useUserId();
   return (
     <div className="flex-1 px-[16px]">
       {messages.map((message) => {
-        return <ChatBubble key={message.id} text={message.content} />;
+        return (
+          <ChatBubble key={message.id} text={message.content} isMine={id === message.sender_id} />
+        );
       })}
     </div>
   );
