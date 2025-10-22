@@ -1,9 +1,9 @@
-import { Check, X, Heart, Mail, MessageCircle } from "lucide-react";
+import { Check, X, Heart, Mail, MessageCircle, Settings, type LucideIcon } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
-
+import type { NotificationType } from "@features/notification/types/notification.type";
 /**
  * NotificationItem
  *
@@ -20,7 +20,7 @@ import Button from "@components/Button";
  *
  * @example
  * ```tsx
- * <NotificationItem
+ * <AlarmCard
  *   avatar="https://picsum.photos/80"
  *   type="comment"
  *   name="Sarah Kim"
@@ -28,7 +28,7 @@ import Button from "@components/Button";
  *   occurredTime="2h"
  * />
  *
- * <NotificationItem
+ * <AlarmCard
  *   avatar="SK" // 이니셜 텍스트도 가능
  *   type="like"
  *   name="Jordan Taylor"
@@ -38,15 +38,14 @@ import Button from "@components/Button";
  * ```
  */
 
-type NotificationType = "like" | "message" | "comment";
-
-const typeIconMap = {
+const TypeIconMap: Record<NotificationType, LucideIcon> = {
   comment: MessageCircle,
-  message: Mail,
+  dm: Mail,
   like: Heart,
+  system: Settings,
 } as const;
 
-type NotificationItemProps = {
+type AlarmCardProps = {
   avatar?: string;
   type?: NotificationType;
   name: string;
@@ -54,20 +53,21 @@ type NotificationItemProps = {
   className?: string;
 };
 
-const TITLE_SUFFIX = {
+const TITLE_SUFFIX: Record<NotificationType, string> = {
   like: "님이 좋아요를 남겼습니다",
-  message: "님이 메세지를 보냈습니다",
+  dm: "님이 메세지를 보냈습니다",
   comment: "님이 댓글을 남겼습니다",
+  system: "",
 } as const;
 
-export default function NotificationItem({
+export default function AlarmCard({
   avatar,
   type = "like",
   name = "홍길동",
   comment = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
   className,
-}: NotificationItemProps) {
-  const TypeIcon = typeIconMap[type];
+}: AlarmCardProps) {
+  const TypeIcon = TypeIconMap[type];
 
   const hasImage = typeof avatar === "string";
 
