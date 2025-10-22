@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
 import Input from "@components/Input";
-import { useCurrentUser } from "@features/feed/hooks/useCurrentUser";
+import { useProfile } from "@features/auth/model/useAuthStore";
 import type { CommentWithAuthor } from "@features/feed/types/feed.types";
 
 type CommentPanelProps = {
@@ -17,7 +17,8 @@ type CommentPanelProps = {
 export default function Comment({ comments, onSubmit, className }: CommentPanelProps) {
   const [value, setValue] = useState("");
   const [items, setItems] = useState<CommentWithAuthor[]>([]);
-  const { user: currentUser } = useCurrentUser();
+
+  const userProfile = useProfile();
 
   useEffect(() => {
     setItems(comments);
@@ -65,7 +66,7 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
 
       {/* 입력창 — 한 줄 배치 */}
       <div className="flex items-center gap-3">
-        <Avatar src={currentUser?.avatar_url || undefined} size="s" />
+        <Avatar src={userProfile?.avatar_url || undefined} size="s" />
         <Input
           value={value}
           onChange={(e) => setValue(e.target.value)}

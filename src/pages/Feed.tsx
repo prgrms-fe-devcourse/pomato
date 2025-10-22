@@ -4,7 +4,7 @@ import { useLoaderData } from "react-router";
 
 import EmptyState from "@components/Empty";
 import Input from "@components/Input";
-import { useCurrentUser } from "@features/feed/hooks/useCurrentUser";
+import { useUserId, useIsLoggedIn } from "@features/auth/model/useAuthStore";
 import { usePosts } from "@features/feed/model/usePosts";
 import type { PostWithComments } from "@features/feed/types/feed.types";
 import FeedHeader from "@features/feed/ui/FeedHeader";
@@ -13,7 +13,7 @@ import PostList from "@features/feed/ui/PostList";
 export default function Feed() {
   const { posts, setPosts, addPost, toggleLike, addComment, removePost, isUploading } = usePosts();
   const [query, setQuery] = useState("");
-  const { user: currentUser } = useCurrentUser();
+  const userId = useUserId();
 
   const post_data = useLoaderData<PostWithComments[]>();
 
@@ -34,7 +34,7 @@ export default function Feed() {
   }, [posts, query]);
 
   // 로그인 상태 확인
-  const isLoggedIn = !!currentUser;
+  const isLoggedIn = !!useIsLoggedIn;
 
   return (
     <div className="flex h-screen flex-col gap-[12px] p-[16px] select-none">
@@ -88,7 +88,7 @@ export default function Feed() {
             onDelete={(id) => {
               void removePost(id);
             }}
-            currentUserId={currentUser?.user_id}
+            currentUserId={userId}
           />
         ) : (
           // 검색 결과가 없는 경우
