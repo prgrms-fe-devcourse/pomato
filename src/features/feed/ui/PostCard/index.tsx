@@ -312,11 +312,11 @@ export default function PostCard({
               <div className="max-w-full overflow-hidden">
                 <img
                   src={image_url}
+                  alt="Post image"
                   className="border-wh/10 h-auto w-full rounded-[12px] border-1 object-contain"
                   onLoad={() => setImageLoaded(true)}
                   onError={() => setImageError(true)}
                   style={{ display: imageLoaded ? "block" : "none" }}
-                  aria-hidden
                 />
               </div>
             )}
