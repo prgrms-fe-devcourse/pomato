@@ -2,19 +2,20 @@ import { useEffect, useState } from "react";
 
 import ControlButton from "./ui/ControlButton";
 import ProgressBar from "./ui/ProgressBar";
+import { useTimerStore } from "./useTimerStore";
 import { dot } from "./variants";
 
 export default function Timer() {
   const [isRunning, setIsRunning] = useState(false);
-  // const [remainingTime, setRemainingTime] = useState(0);
   const handleTogglePlay = () => setIsRunning((prev) => !prev);
+  const { focusMin } = useTimerStore();
+  const [remainingSec, setRemainingSec] = useState(0);
 
   useEffect(() => {
     if (!isRunning) return;
-    // setRemainingTime(25);
 
     const timer = setInterval(() => {
-      console.log("timer");
+      setRemainingSec((state) => (state += 1));
     }, 1000);
 
     return () => clearInterval(timer);
@@ -44,7 +45,7 @@ export default function Timer() {
           </ol>
         </div>
       </div>
-      <ProgressBar />
+      <ProgressBar focusMin={focusMin * 60} remainingSec={remainingSec} />
       <ControlButton isRunning={isRunning} onToggle={handleTogglePlay} />
     </section>
   );
