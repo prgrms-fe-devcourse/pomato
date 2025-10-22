@@ -1,7 +1,8 @@
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef } from "react";
 
-import { insertMessage } from "@features/dm/api/message";
+import { insertMessage, markMessageAsRead } from "@features/dm/api/message";
+import { enterRooms } from "@features/dm/api/room";
 import type { DmMessagesTable } from "@features/dm/types/messages.type";
 import { useRealtimeHandler } from "@hooks/useRealtimeHandler";
 
@@ -28,26 +29,35 @@ export const useRoomChannel = (
 
   useEffect(() => {
     if (!started) return;
-    const removeChannel = addChannel((supabaseClient) => {
-      const channel = supabaseClient.channel(conversationId, {
-        config: {
-          broadcast: {
-            self: true,
-            ack: true,
+    const removeChannel = addChannel(
+      (supabaseClient) => {
+        const channel = supabaseClient.channel(conversationId, {
+          config: {
+            broadcast: {
+              self: true,
+              ack: true,
+            },
           },
-        },
-      });
-
-      if (!channel.bindings.broadcast) {
-        channel.on("broadcast", { event: "message" }, (payload) => {
-          const data = payload.payload as DmMessagesTable["Row"];
-          onMessage(data);
         });
-      }
 
-      channelRef.current = channel;
-      return channel;
-    });
+        if (!channel.bindings.broadcast) {
+          channel.on("broadcast", { event: "message" }, (payload) => {
+            const data = payload.payload as DmMessagesTable["Row"];
+            void markMessageAsRead(conversationId, data.id);
+            onMessage(data);
+          });
+        }
+
+        channelRef.current = channel;
+        return channel;
+      },
+      true,
+      {
+        onSubscribe: () => {
+          void enterRooms(conversationId);
+        },
+      },
+    );
 
     return () => {
       removeChannel();
