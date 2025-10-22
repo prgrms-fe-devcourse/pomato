@@ -1,25 +1,56 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { useTimerStore } from "./model/useTimerStore";
+import { useTimerStore, useTotalSeconds } from "./model/useTimerStore";
 import ActiveUsersButton from "./ui/ActiveUsersButton";
 import ControlButton from "./ui/ControlButton";
 import ProgressBar from "./ui/ProgressBar";
 import SessionDot from "./ui/SessionDot";
 
 export default function Timer() {
-  const { currentTimerStatus, currentPhase, totalSession, currentSession } = useTimerStore();
+  const { currentTimerStatus, currentPhase, totalSession, currentSession, completePhase } =
+    useTimerStore();
+  const totalSeconds = useTotalSeconds();
   const [elapsedSec, setElapsedSec] = useState(0);
-  // const startAt = useRef<number | null>(null);
+  const startAt = useRef<number>(0);
 
   useEffect(() => {
-    if (currentTimerStatus !== "RUNNING") return;
+    setElapsedSec(0);
+    startAt.current = 0;
+  }, [currentPhase]);
+
+  useEffect(() => {
+    if (currentTimerStatus === "IDLE") {
+      setElapsedSec(0);
+      startAt.current = 0;
+      return;
+    }
+
+    if (currentTimerStatus !== "RUNNING") {
+      // PAUSED 등
+      startAt.current = 0;
+      return;
+    }
+
+    if (startAt.current === 0) {
+      startAt.current = Date.now() - elapsedSec * 1000;
+    }
 
     const timer = setInterval(() => {
-      setElapsedSec((state) => state + 1);
+      const nowTimer = Math.floor((Date.now() - startAt.current) / 1000);
+
+      if (nowTimer >= totalSeconds) {
+        clearInterval(timer);
+        startAt.current = 0;
+        setElapsedSec(totalSeconds);
+        completePhase();
+      } else {
+        setElapsedSec(nowTimer);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [elapsedSec, currentTimerStatus]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTimerStatus, completePhase, totalSeconds]);
 
   return (
     <section className="flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center gap-5 overflow-auto group-has-[section[aria-label='Panel']]:max-[800px]:hidden">
@@ -36,7 +67,9 @@ export default function Timer() {
                 status={
                   index < currentSession
                     ? "completed"
-                    : index === currentSession && currentTimerStatus === "RUNNING"
+                    : currentPhase === "FOCUS" &&
+                        currentTimerStatus === "RUNNING" &&
+                        index === currentSession
                       ? "active"
                       : "default"
                 }

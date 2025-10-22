@@ -9,6 +9,7 @@ type TimerStoreState = {
   breakMin: number;
   longBreakMin: number;
   totalSession: number;
+
   currentPhase: Phase;
   currentTimerStatus: TimerStatus;
   currentSession: number;
@@ -19,12 +20,13 @@ type TimerStoreActions = {
   setBreakMin: (min: number) => void;
   setLongBreakMin: (min: number) => void;
   setTotalSession: (count: number) => void;
+
   start: () => void;
   pause: () => void;
   resume: () => void;
   reset: () => void;
   skip: () => void;
-  // completePhase: () => void;
+  completePhase: () => void;
 };
 
 type TimerStore = TimerStoreState & TimerStoreActions;
@@ -32,28 +34,26 @@ type TimerStore = TimerStoreState & TimerStoreActions;
 export const useTimerStore = create<TimerStore>()(
   devtools(
     immer((set) => ({
-      // focusMin: 25,
-      // breakMin: 5,
-      // longBreakMin: 15,
-      focusMin: 1,
-      breakMin: 1,
-      longBreakMin: 1,
+      focusMin: 25,
+      breakMin: 5,
+      longBreakMin: 15,
       totalSession: 4,
+
       currentPhase: "FOCUS",
       currentTimerStatus: "IDLE",
       currentSession: 0,
 
       setFocusMin: (min) =>
         set((state) => {
-          state.focusMin = Math.max(0, min);
+          state.focusMin = Math.max(1, min);
         }),
       setBreakMin: (min) =>
         set((state) => {
-          state.breakMin = Math.max(0, min);
+          state.breakMin = Math.max(1, min);
         }),
       setLongBreakMin: (min) =>
         set((state) => {
-          state.longBreakMin = Math.max(0, min);
+          state.longBreakMin = Math.max(1, min);
         }),
       setTotalSession: (count) =>
         set((state) => {
@@ -73,19 +73,71 @@ export const useTimerStore = create<TimerStore>()(
         }),
       reset: () =>
         set((state) => {
-          state.currentPhase = "FOCUS";
           state.currentTimerStatus = "IDLE";
         }),
       skip: () =>
         set((state) => {
-          state.currentSession += 1;
+          state.currentTimerStatus = "PAUSED";
+          switch (state.currentPhase) {
+            case "FOCUS": {
+              state.currentSession = state.currentSession + 1;
+              const isLast = state.currentSession === state.totalSession;
+              state.currentPhase = isLast ? "LONG BREAK" : "BREAK";
+              break;
+            }
+            case "BREAK": {
+              state.currentPhase = "FOCUS";
+              break;
+            }
+            case "LONG BREAK": {
+              state.currentPhase = "FOCUS";
+              state.currentSession = 0;
+              break;
+            }
+          }
         }),
-      // completePhase: () => set((state) => {}),
+      completePhase: () =>
+        set((state) => {
+          state.currentTimerStatus = "PAUSED";
+          switch (state.currentPhase) {
+            case "FOCUS": {
+              state.currentSession = state.currentSession + 1;
+              const isLast = state.currentSession === state.totalSession;
+              state.currentPhase = isLast ? "LONG BREAK" : "BREAK";
+              break;
+              break;
+            }
+            case "BREAK": {
+              state.currentPhase = "FOCUS";
+              break;
+            }
+            case "LONG BREAK": {
+              state.currentPhase = "FOCUS";
+              state.currentSession = 0;
+              break;
+            }
+          }
+        }),
     })),
+    { name: "TimeStore" },
   ),
 );
 
-export const useFocusMin = () => useTimerStore((state) => state.focusMin);
-export const useBreakMin = () => useTimerStore((state) => state.breakMin);
-export const useLongBreakMin = () => useTimerStore((state) => state.longBreakMin);
-export const useTotalSession = () => useTimerStore((state) => state.totalSession);
+export const useTotalSeconds = () => {
+  return useTimerStore((state) => {
+    switch (state.currentPhase) {
+      case "FOCUS": {
+        return state.focusMin * 60;
+      }
+      case "BREAK": {
+        return state.breakMin * 60;
+      }
+      case "LONG BREAK": {
+        return state.longBreakMin * 60;
+      }
+      default: {
+        return 0;
+      }
+    }
+  });
+};
