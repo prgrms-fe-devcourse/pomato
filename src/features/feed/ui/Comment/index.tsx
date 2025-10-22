@@ -45,7 +45,7 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
           <li key={c.id}>
             <div className="flex gap-3 py-2">
               {/* 아바타 */}
-              <Avatar src={c.author.avatar || undefined} size="s" />
+              <Avatar src={c.author.avatar_url || undefined} size="s" />
 
               {/* Comments 영역 */}
               <div className="min-w-0 flex-1">
@@ -53,7 +53,7 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
                   <div className="mb-1.5 flex items-center justify-start gap-2">
                     <span className="label-text-s-semibold text-wh">{c.author.display_name}</span>
                     <span className="label-text-xs text-wh/60">
-                      {formatTimeShort(new Date(c.createdAt))}
+                      {formatTimeShort(new Date(c.created_at))}
                     </span>
                   </div>
                   <p className="paragraph-text-s text-wh/85 mt-0.5 break-words">{c.content}</p>
