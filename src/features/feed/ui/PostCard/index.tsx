@@ -91,7 +91,9 @@ export default function PostCard({
 
     setIsUploading(true);
     try {
-      await onEdit?.(id, editContent, editImage?.file);
+      // 이미지가 변경되지 않았을 경우 기존 이미지 URL을 유지
+      const imageFile = editImage?.file;
+      await onEdit?.(id, editContent, imageFile);
       setIsEditing(false);
       setEditImage(null);
     } finally {
