@@ -3,12 +3,14 @@ import { useLoaderData } from "react-router";
 
 import EmptyState from "@components/Empty";
 import Input from "@components/Input";
+import { useUserId } from "@features/auth/model/useAuthStore";
 import type { GetMyChatRoomIdsReturn } from "@features/dm/api/room";
 import ChatList from "@features/dm/ui/ChatList";
 
 export default function Dm() {
-  const { isLogin, rooms } = useLoaderData<GetMyChatRoomIdsReturn>();
-  if (!isLogin)
+  const { rooms } = useLoaderData<GetMyChatRoomIdsReturn>();
+  const id = useUserId();
+  if (!id)
     return (
       <div className="flex flex-1 overflow-hidden p-[16px]">
         <EmptyState
@@ -33,7 +35,7 @@ export default function Dm() {
   return (
     <div className="flex flex-col gap-[12px] p-[16px]">
       <Input Icon={{ Component: Search, align: "right" }} placeholder="검색어를 입력하세요..." />
-      <ChatList rooms={rooms} />
+      <ChatList rooms={rooms} userId={id} />
     </div>
   );
 }

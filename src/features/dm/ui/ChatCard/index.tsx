@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
+import { getProfile } from "@features/auth/api/profile";
+import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
+import type { ProfilesTable } from "@features/user/types/user.type";
 
 /**
  * @component
@@ -42,28 +46,32 @@ import Avatar from "@components/Avatar";
  * @returns {JSX.Element} 채팅 목록 항목을 나타내는 div 엘리먼트
  */
 
-type UserStatusType = "online" | "offline";
-
 type ChatCardProps = {
-  avatar?: string;
-  type?: UserStatusType;
-  name: string;
+  userId: string;
   message: string;
   unreadCount?: number;
   className?: string;
 };
 
 export default function ChatCard({
-  avatar,
-  type = "offline",
-  name = "홍길동",
   message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
   unreadCount = 99,
   className,
+  userId,
 }: ChatCardProps) {
+  const [profile, setProfile] = useState<ProfilesTable["Row"]>();
+  const activeUsers = useActiveUsersStore((state) => state.activeUsers);
   const hasUnread = typeof unreadCount === "number" && unreadCount > 0;
-  const hasImage = typeof avatar === "string";
 
+  useEffect(() => {
+    const fetchPartner = async () => {
+      const data = await getProfile(userId);
+      if (data === null) throw new Error("사용자를 찾을 수 없습니다");
+      setProfile(data);
+    };
+
+    void fetchPartner();
+  }, [userId]);
   return (
     <div
       className={twMerge(
@@ -80,14 +88,18 @@ export default function ChatCard({
       {/* 왼쪽: 아바타 + 상태 */}
       <div className="relative mt-1 mr-[16px] h-[52px] w-[52px]">
         {/* 아바타 영역 */}
-        {hasImage ? <Avatar src={avatar} status={type} /> : <Avatar status={type} />}
+
+        <Avatar
+          src={profile?.avatar_url ?? undefined}
+          status={activeUsers.some((user) => user.id === userId) ? "online" : "offline"}
+        />
       </div>
 
       {/* 본문 */}
       <div className="min-w-0 flex-1 pr-[72px]">
         <div className="flex items-center">
           <span className="flex-1">
-            <span className="label-text-m-semibold text-wh">{name}</span>
+            <span className="label-text-m-semibold text-wh">{profile?.display_name ?? ""}</span>
           </span>
         </div>
         <p className="paragraph-text-s text-wh/75 mt-1 overflow-hidden text-ellipsis whitespace-nowrap">
