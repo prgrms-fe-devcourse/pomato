@@ -1,5 +1,5 @@
+import { dot } from "../styles/variants";
 import type { SessionDotState } from "../types/timer.types";
-import { dot } from "../variants";
 
 type SessionDotProps = {
   status?: SessionDotState;

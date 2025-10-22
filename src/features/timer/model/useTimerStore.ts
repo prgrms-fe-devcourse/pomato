@@ -105,7 +105,6 @@ export const useTimerStore = create<TimerStore>()(
               const isLast = state.currentSession === state.totalSession;
               state.currentPhase = isLast ? "LONG BREAK" : "BREAK";
               break;
-              break;
             }
             case "BREAK": {
               state.currentPhase = "FOCUS";

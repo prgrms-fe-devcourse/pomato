@@ -63,7 +63,7 @@ export default function Timer() {
           <ol className="flex items-center gap-2" aria-label="세션 진행 단계">
             {Array.from({ length: totalSession }).map((_, index) => (
               <SessionDot
-                key={index}
+                key={`${totalSession}-${index}`}
                 status={
                   index < currentSession
                     ? "completed"
