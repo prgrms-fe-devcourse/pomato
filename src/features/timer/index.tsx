@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import ActiveUsersButton from "./ui/ActiveUsersButton";
 import ControlButton from "./ui/ControlButton";
 import ProgressBar from "./ui/ProgressBar";
 import { useTimerStore } from "./useTimerStore";
@@ -47,6 +48,7 @@ export default function Timer() {
       </div>
       <ProgressBar focusMin={focusMin * 60} remainingSec={remainingSec} />
       <ControlButton isRunning={isRunning} onToggle={handleTogglePlay} />
+      <ActiveUsersButton />
     </section>
   );
 }
