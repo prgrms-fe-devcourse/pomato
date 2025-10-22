@@ -27,28 +27,43 @@ export type Database = {
         Row: {
           created_at: string;
           id: string;
-          last_read_at_a: string | null;
-          last_read_at_b: string | null;
+          last_read_message_id_a: string | null;
+          last_read_message_id_b: string | null;
           user_a: string;
           user_b: string;
         };
         Insert: {
           created_at?: string;
           id?: string;
-          last_read_at_a?: string | null;
-          last_read_at_b?: string | null;
+          last_read_message_id_a?: string | null;
+          last_read_message_id_b?: string | null;
           user_a: string;
           user_b: string;
         };
         Update: {
           created_at?: string;
           id?: string;
-          last_read_at_a?: string | null;
-          last_read_at_b?: string | null;
+          last_read_message_id_a?: string | null;
+          last_read_message_id_b?: string | null;
           user_a?: string;
           user_b?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "dm_conversations_last_read_a_fkey";
+            columns: ["last_read_message_id_a"];
+            isOneToOne: false;
+            referencedRelation: "dm_messages";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "dm_conversations_last_read_b_fkey";
+            columns: ["last_read_message_id_b"];
+            isOneToOne: false;
+            referencedRelation: "dm_messages";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       dm_messages: {
         Row: {
@@ -56,6 +71,8 @@ export type Database = {
           conversation_id: string;
           created_at: string;
           id: string;
+          is_read: boolean | null;
+          read_at: string | null;
           sender_id: string;
         };
         Insert: {
@@ -63,6 +80,8 @@ export type Database = {
           conversation_id: string;
           created_at?: string;
           id?: string;
+          is_read?: boolean | null;
+          read_at?: string | null;
           sender_id: string;
         };
         Update: {
@@ -70,6 +89,8 @@ export type Database = {
           conversation_id?: string;
           created_at?: string;
           id?: string;
+          is_read?: boolean | null;
+          read_at?: string | null;
           sender_id?: string;
         };
         Relationships: [
@@ -268,6 +289,19 @@ export type Database = {
       get_or_create_dm_conversation: {
         Args: { _user_a: string; _user_b: string };
         Returns: string;
+      };
+      get_unread_messages: {
+        Args: { p_conversation_id: string };
+        Returns: {
+          content: string;
+          created_at: string;
+          id: string;
+          sender_id: string;
+        }[];
+      };
+      mark_dm_read: {
+        Args: { p_conversation_id: string; p_message_id: string };
+        Returns: undefined;
       };
       toggle_like: {
         Args: { p_post_id: string };
