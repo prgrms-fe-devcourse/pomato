@@ -45,7 +45,7 @@ export default function Feed() {
   const isLoggedIn = useIsLoggedIn();
 
   return (
-    <div className="flex h-screen flex-col gap-[12px] p-[16px] select-none">
+    <div className="flex min-h-0 flex-1 flex-col gap-[12px] overflow-hidden p-[16px] select-none">
       {isLoggedIn ? (
         // 글쓰기 영역 + 구분선
         <FeedHeader
