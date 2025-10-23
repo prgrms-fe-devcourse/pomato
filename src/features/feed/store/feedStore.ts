@@ -4,7 +4,7 @@ import { devtools } from "zustand/middleware";
 import { createComment } from "@features/feed/api/comment";
 import { uploadPostImage } from "@features/feed/api/image";
 import { toggleLike } from "@features/feed/api/like";
-import { createPost, deletePost, updatePost, listPosts } from "@features/feed/api/post";
+import { createPost, deletePost, updatePost } from "@features/feed/api/post";
 import type { PostWithComments } from "@features/feed/types/feed.types";
 import supabase from "@utils/supabase";
 
@@ -16,7 +16,6 @@ interface FeedState {
   likingPosts: Set<string>;
 
   // 액션들
-  fetchPosts: () => Promise<void>;
   addPost: (content: string, imageFile?: File) => Promise<void>;
   toggleLike: (postId: string) => Promise<void>;
   addComment: (postId: string, text: string) => Promise<void>;
@@ -33,24 +32,6 @@ export const useFeedStore = create<FeedState>()(
       isLoading: false,
       isUploading: false,
       likingPosts: new Set(),
-
-      // 게시글 목록 가져오기
-      fetchPosts: async () => {
-        set({ isLoading: true });
-        try {
-          const result = await listPosts();
-          const posts: PostWithComments[] = result.map((post) => ({
-            ...post,
-            liked: post.liked ?? false,
-            comments: post.comments ?? [],
-          }));
-          set({ posts });
-        } catch (error) {
-          console.error("게시글 목록 조회 실패:", error);
-        } finally {
-          set({ isLoading: false });
-        }
-      },
 
       // 게시글 작성
       addPost: async (content: string, imageFile?: File) => {

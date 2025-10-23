@@ -1,8 +1,10 @@
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { Search, SearchX, FileText, Heart } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 import EmptyState from "@components/Empty";
 import Input from "@components/Input";
+import { getPostList } from "@features/feed/api/post";
 import { useFeedStore } from "@features/feed/store/feedStore";
 import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
@@ -11,11 +13,9 @@ import ClassicBarSpinner from "@utils/classicBarSpinner";
 
 export default function Feed() {
   const {
-    posts,
-    isLoading,
+    posts: storePosts,
     isUploading,
     likingPosts,
-    fetchPosts,
     addPost,
     toggleLike,
     addComment,
@@ -24,11 +24,72 @@ export default function Feed() {
   } = useFeedStore();
   const [query, setQuery] = useState("");
   const userId = useUserId();
+  const queryClient = useQueryClient();
 
-  // 컴포넌트 마운트 시 게시글 목록 가져오기
+  // 로그인 상태 확인
+  const isLoggedIn = useIsLoggedIn();
+
+  // useInfiniteQuery를 사용한 무한 스크롤
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
+    queryKey: ["posts"],
+    queryFn: ({ pageParam = 0 }) => {
+      return getPostList(pageParam, 5); // 5개만 렌더링 되도록 설정
+    },
+    getNextPageParam: (lastPage) => {
+      // hasNextPage가 false이면 undefined를 반환하여 더 이상 로드하지 않음
+      return lastPage.hasNextPage ? lastPage.nextCursor : undefined;
+    },
+    initialPageParam: 0,
+    // 한 번에 하나의 페이지만 로드하도록 설정
+    refetchOnWindowFocus: false,
+    staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
+  });
+
+  // 모든 페이지의 게시글을 하나의 배열로 합치기
+  const queryPosts = useMemo(() => {
+    return (
+      data?.pages.flatMap((page) =>
+        page.posts.map((post) => ({
+          ...post,
+          liked: post.liked ?? false,
+          comments: post.comments ?? [],
+        })),
+      ) ?? []
+    );
+  }, [data]);
+
+  // Zustand 스토어와 TanStack Query 양방향 동기화
   useEffect(() => {
-    void fetchPosts();
-  }, [fetchPosts]);
+    if (queryPosts.length > 0) {
+      // TanStack Query에서 가져온 데이터를 Zustand 스토어에 동기화
+      const { setPosts } = useFeedStore.getState();
+      setPosts(queryPosts);
+    }
+  }, [queryPosts]);
+
+  // Zustand 스토어의 변경사항을 TanStack Query 캐시에 동기화
+  useEffect(() => {
+    if (storePosts.length > 0 && data) {
+      // 변경된 게시글들을 찾아서 캐시 업데이트
+      // 업데이트 작업 안할 경우 로컬과 서버 데이터가 불일치하는 현상 있었음
+      const updatedPages = data.pages.map((page) => ({
+        ...page,
+        posts: page.posts.map((cachedPost) => {
+          const storePost = storePosts.find((sp) => sp.id === cachedPost.id);
+          return storePost ?? cachedPost;
+        }),
+      }));
+
+      // 캐시 업데이트
+      queryClient.setQueryData(["posts"], {
+        pageParams: data.pageParams,
+        pages: updatedPages,
+      });
+    }
+  }, [storePosts, data, queryClient]);
+
+  // Zustand 스토어의 posts를 우선 사용 (낙관적 업데이트 반영)
+  const posts = storePosts.length > 0 ? storePosts : queryPosts;
 
   const filteredPosts = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -36,8 +97,23 @@ export default function Feed() {
     return posts.filter((p) => p.content.toLowerCase().includes(q));
   }, [posts, query]);
 
-  // 로그인 상태 확인
-  const isLoggedIn = useIsLoggedIn();
+  // 스크롤 기반 무한 스크롤
+  useEffect(() => {
+    const scrollContainer = document.querySelector(".pc-scroll");
+    if (!scrollContainer) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = scrollContainer;
+      const isNearBottom = scrollTop + clientHeight >= scrollHeight - 100;
+
+      if (isNearBottom && hasNextPage && !isFetchingNextPage) {
+        void fetchNextPage();
+      }
+    };
+
+    scrollContainer.addEventListener("scroll", handleScroll, { passive: true });
+    return () => scrollContainer.removeEventListener("scroll", handleScroll);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <section className="flex min-h-0 flex-1 flex-col gap-[12px] overflow-hidden p-[16px] select-none">
@@ -85,27 +161,36 @@ export default function Feed() {
           />
         ) : filteredPosts.length > 0 ? (
           // 피드가 있는 경우
-          <PostList
-            posts={filteredPosts}
-            onToggleLike={(id) => {
-              if (!isLoggedIn) return; // 비 로그인 사용자 막기 위한 안전장치
-              void toggleLike(id);
-            }}
-            likingPosts={likingPosts}
-            onAddComment={(id, text) => {
-              if (!isLoggedIn) return; // 비 로그인 사용자 막기 위한 안전장치
-              void addComment(id, text);
-            }}
-            onDelete={(id) => {
-              if (!isLoggedIn) return; // 비 로그인 사용자 막기 위한 안전장치
-              void removePost(id);
-            }}
-            onEdit={async (id, content, imageFile) => {
-              if (!isLoggedIn) return; // 비 로그인 사용자 막기 위한 안전장치
-              await editPost(id, content, imageFile);
-            }}
-            currentUserId={userId}
-          />
+          <>
+            <PostList
+              posts={filteredPosts}
+              onToggleLike={(id) => {
+                if (!isLoggedIn) return;
+                void toggleLike(id);
+              }}
+              likingPosts={likingPosts}
+              onAddComment={(id, text) => {
+                if (!isLoggedIn) return;
+                void addComment(id, text);
+              }}
+              onDelete={(id) => {
+                if (!isLoggedIn) return;
+                void removePost(id);
+              }}
+              onEdit={async (id, content, imageFile) => {
+                if (!isLoggedIn) return;
+                await editPost(id, content, imageFile);
+              }}
+              currentUserId={userId}
+            />
+
+            {/* 무한 스크롤 로딩 인디케이터 */}
+            {isFetchingNextPage && (
+              <div className="flex justify-center py-4">
+                <ClassicBarSpinner />
+              </div>
+            )}
+          </>
         ) : (
           // 검색 결과가 없는 경우
           <EmptyState
