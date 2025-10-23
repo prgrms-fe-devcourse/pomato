@@ -1,11 +1,26 @@
-import { Check, X, Heart, Mail, MessageCircle, Settings, type LucideIcon } from "lucide-react";
+import {
+  /*Check*, */ X,
+  Heart,
+  Mail,
+  MessageCircle,
+  type LucideIcon,
+  Settings,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
-import type { NotificationType } from "@features/notification/types/notification.type";
+import { removeNotification } from "@features/notification/api/notification";
+import type {
+  NotificationCommentJsonbType,
+  NotificationType,
+} from "@features/notification/types/notification.type";
+import { getUserById } from "@features/user/api/user";
+import type { ProfilesTable } from "@features/user/types/user.type";
+
 /**
- * NotificationItem
+ * NotificationCard
  *
  * 스크린샷의 알림 카드 스타일을 단일 컴포넌트로 구현
  *
@@ -20,7 +35,7 @@ import type { NotificationType } from "@features/notification/types/notification
  *
  * @example
  * ```tsx
- * <AlarmCard
+ * <NotificationCard
  *   avatar="https://picsum.photos/80"
  *   type="comment"
  *   name="Sarah Kim"
@@ -28,7 +43,7 @@ import type { NotificationType } from "@features/notification/types/notification
  *   occurredTime="2h"
  * />
  *
- * <AlarmCard
+ * <NotificationCard
  *   avatar="SK" // 이니셜 텍스트도 가능
  *   type="like"
  *   name="Jordan Taylor"
@@ -38,18 +53,17 @@ import type { NotificationType } from "@features/notification/types/notification
  * ```
  */
 
-const TypeIconMap: Record<NotificationType, LucideIcon> = {
+const typeIconMap: Record<NotificationType, LucideIcon> = {
   comment: MessageCircle,
   dm: Mail,
   like: Heart,
   system: Settings,
 } as const;
 
-type AlarmCardProps = {
-  avatar?: string;
-  type?: NotificationType;
-  name: string;
-  comment: string;
+type NotificationItemProps = {
+  notificationId: string;
+  type: NotificationType;
+  payload: NotificationCommentJsonbType;
   className?: string;
 };
 
@@ -60,16 +74,26 @@ const TITLE_SUFFIX: Record<NotificationType, string> = {
   system: "",
 } as const;
 
-export default function AlarmCard({
-  avatar,
+export default function NotificationCard({
+  notificationId,
   type = "like",
-  name = "홍길동",
-  comment = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+  payload,
   className,
-}: AlarmCardProps) {
-  const TypeIcon = TypeIconMap[type];
+}: NotificationItemProps) {
+  const TypeIcon = typeIconMap[type];
+  const [senderProfile, setSenderProfile] = useState<ProfilesTable["Row"] | null>(null);
 
-  const hasImage = typeof avatar === "string";
+  const handleClose = () => {
+    void removeNotification(notificationId);
+  };
+
+  useEffect(() => {
+    const fetchSenderProfile = async () => {
+      const data = await getUserById(payload.user_id);
+      setSenderProfile(data);
+    };
+    void fetchSenderProfile();
+  }, [payload.user_id]);
 
   return (
     <div
@@ -85,8 +109,7 @@ export default function AlarmCard({
     >
       <div className="flex w-full items-start gap-[16px]">
         {/* 아바타 영역 */}
-        {hasImage ? <Avatar src={avatar} size={"s"} /> : <Avatar size={"s"} />}
-
+        <Avatar src={senderProfile?.avatar_url ?? undefined} size={"s"} />
         {/* Content */}
         <div className="relative flex-1">
           <div className="relative flex min-h-[28px] w-full items-center">
@@ -96,7 +119,9 @@ export default function AlarmCard({
                 className="text-wh/60 mr-1 h-[14px] w-[14px] flex-shrink-0"
                 aria-hidden="true"
               />
-              <span className="label-text-s-semibold text-wh mr-[2px] truncate">{name}</span>
+              <span className="label-text-s-semibold text-wh mr-[2px] truncate">
+                {senderProfile?.display_name}
+              </span>
               <span className="label-text-s text-wh/65 flex-shrink-0">{TITLE_SUFFIX[type]}</span>
             </span>
 
@@ -116,7 +141,7 @@ export default function AlarmCard({
               <div className={twMerge("hidden items-center gap-[6px]", "group-hover:flex")}>
                 {/* 확인 */}
 
-                <Button
+                {/*<Button
                   onClick={(e) => {
                     e.stopPropagation();
                     // 확인 버튼 클릭 시 실행할 함수 선언
@@ -129,13 +154,14 @@ export default function AlarmCard({
                   composition={"iconOnly"}
                 >
                   <Check className="text-wh/85 h-4 w-4" aria-hidden />
-                </Button>
+                </Button>*/}
 
                 {/* 닫기 */}
 
                 <Button
                   onClick={(e) => {
                     e.stopPropagation();
+                    handleClose();
                     // 닫기 버튼 클릭 시 실행할 함수 선언
                   }}
                   className={twMerge(
@@ -153,11 +179,8 @@ export default function AlarmCard({
           </div>
 
           {/* 본문 */}
-          {comment && (
-            <p className="paragraph-text-s text-wh/85 mt-1" title={comment}>
-              {comment}
-            </p>
-          )}
+
+          <p className="paragraph-text-s text-wh/85 mt-1"></p>
         </div>
       </div>
     </div>
