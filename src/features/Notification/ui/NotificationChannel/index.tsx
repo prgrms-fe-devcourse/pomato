@@ -7,7 +7,7 @@ type NotificationChannelProps = {
   children: React.ReactNode;
 };
 
-export const NotificationChannel = ({ userId, children }: NotificationChannelProps) => {
+export const NotificationProvider = ({ userId, children }: NotificationChannelProps) => {
   useNotification(userId);
   return <>{children}</>;
 };

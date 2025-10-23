@@ -1,7 +1,7 @@
 import { Bell } from "lucide-react";
 
 import EmptyState from "@components/Empty";
-import { NotificationChannel } from "@features/notification/ui/NotificationChannel";
+import { NotificationProvider } from "@features/notification/ui/NotificationChannel";
 import NotificationList from "@features/notification/ui/NotificationList";
 import { useUserId } from "@stores/useAuthStore";
 
@@ -22,9 +22,9 @@ export default function Notification() {
 
   return (
     <div className="h-full w-full p-[16px]">
-      <NotificationChannel userId={id}>
+      <NotificationProvider userId={id}>
         <NotificationList />
-      </NotificationChannel>
+      </NotificationProvider>
     </div>
   );
 }
