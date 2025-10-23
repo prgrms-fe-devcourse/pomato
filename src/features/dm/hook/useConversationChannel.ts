@@ -74,7 +74,7 @@ export const useConversationChannel = (userId: string) => {
         }
         return channel;
       },
-      true,
+      false,
       {
         onSubscribe: () => {
           void setMyChatRooms(setRooms);
