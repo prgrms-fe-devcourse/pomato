@@ -1,15 +1,16 @@
 import type { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef } from "react";
 
-import { insertMessage, markMessageAsRead } from "@features/dm/api/message";
+import { fetchMessages, insertMessage, markMessageAsRead } from "@features/dm/api/message";
 import { enterRooms } from "@features/dm/api/room";
+import { useChatStore } from "@features/dm/store/useChatStore";
 import type { DmMessagesTable } from "@features/dm/types/messages.type";
 import { useRealtimeHandler } from "@hooks/useRealtimeHandler";
 
-export const useRoomChannel = (
-  conversationId: string,
-  onMessage: (message: DmMessagesTable["Row"]) => void,
-) => {
+export const useRoomChannel = (conversationId: string) => {
+  const addMessage = useChatStore((state) => state.addMessage);
+  const setMessages = useChatStore((state) => state.setMessages);
+
   const { addChannel, started } = useRealtimeHandler();
   const channelRef = useRef<RealtimeChannel | null>(null);
 
@@ -44,17 +45,18 @@ export const useRoomChannel = (
           channel.on("broadcast", { event: "message" }, (payload) => {
             const data = payload.payload as DmMessagesTable["Row"];
             void markMessageAsRead(conversationId, data.id);
-            onMessage(data);
+            addMessage(data);
           });
         }
 
         channelRef.current = channel;
         return channel;
       },
-      true,
+      false,
       {
         onSubscribe: () => {
           void enterRooms(conversationId);
+          void fetchMessages(conversationId, setMessages);
         },
       },
     );
@@ -63,7 +65,7 @@ export const useRoomChannel = (
       removeChannel();
       channelRef.current = null;
     };
-  }, [started, addChannel, conversationId, onMessage]);
+  }, [started, addChannel, conversationId, addMessage, setMessages]);
 
   return {
     sendMessages,

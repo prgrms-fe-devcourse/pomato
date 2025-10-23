@@ -10,13 +10,13 @@ export const getChatRoomIdByUser = async (
   userA: string,
   userB: string,
 ): Promise<DmConversationFunction["Returns"]> => {
-  const rpcResult = await supabase.rpc<"get_or_create_dm_conversation", DmConversationFunction>(
+  const rpcResult = await supabase.rpc<
     "get_or_create_dm_conversation",
-    {
-      _user_a: userA,
-      _user_b: userB,
-    },
-  );
+    DmConversationFunction["Args"]
+  >("get_or_create_dm_conversation", {
+    _user_a: userA,
+    _user_b: userB,
+  });
 
   if ("error" in rpcResult && rpcResult.error) throw rpcResult.error;
 
@@ -73,13 +73,13 @@ export const setMyChatRooms = async (
         .eq("conversation_id", room.id)
         .order("created_at", { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
       const unreadMessages = await getUnreadMessages(room.id);
       const unreadCount = unreadMessages.length;
 
       const lastUnreadMessage = unreadMessages[0] ?? null;
       const lastMessageTime = lastUnreadMessage?.created_at ?? "";
-      console.log(unreadMessages);
+
       return {
         ...room,
         message: lastMsg?.content ?? "",

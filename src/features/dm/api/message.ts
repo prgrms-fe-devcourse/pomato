@@ -51,6 +51,20 @@ export const getMessages = async (conversationId: string): Promise<DmMessagesTab
   return data;
 };
 
+export const fetchMessages = async (
+  conversationId: string,
+  setMessages: (messages: DmMessagesTable["Row"][]) => void,
+) => {
+  const { data, error } = await supabase
+    .from("dm_messages")
+    .select<"*", DmMessagesTable["Row"]>("*")
+    .eq("conversation_id", conversationId)
+    .order("created_at", { ascending: true });
+
+  if (error) setMessages([]);
+  else setMessages(data);
+};
+
 export const markMessageAsRead = async (
   conversationId: string,
   messageId: string,
@@ -64,8 +78,6 @@ export const markMessageAsRead = async (
     console.error("읽음 처리 실패:", error.message);
     throw error;
   }
-
-  console.log("읽음 처리 성공:", conversationId, messageId);
 };
 
 export const getUnreadMessages = async (conversationId: string) => {
