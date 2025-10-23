@@ -2,7 +2,7 @@ import { cva } from "class-variance-authority";
 
 export const inputContainerVariants = cva(
   [
-    "flex h-[40px] min-w-[260px] items-center gap-[14px] overflow-hidden rounded-[8px] border px-[16px]",
+    "flex h-10 min-w-[260px] items-center gap-3.5 overflow-hidden rounded-lg border px-4",
     "text-wh focus-within:bg-wh/25 focus-within:dark:bg-bl/40 transition-colors focus-within:shadow-[0_0_0_2px_rgba(250,250,250,0.12)]",
   ],
   {

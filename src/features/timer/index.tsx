@@ -49,7 +49,7 @@ export default function Timer() {
 
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTimerStatus, completePhase, totalSeconds]);
+  }, [currentTimerStatus, currentPhase, completePhase, totalSeconds]);
 
   return (
     <section className="flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center gap-5 overflow-auto group-has-[section[aria-label='Panel']]:max-[800px]:hidden">

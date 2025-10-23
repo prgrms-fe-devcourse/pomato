@@ -5,14 +5,14 @@ import Input from "@components/Input";
 
 export default function SignupStatic() {
   return (
-    <section className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 overflow-y-auto px-4 py-8 sm:gap-6 sm:px-6 sm:py-10 md:gap-8 md:px-8 md:py-12">
+    <section className="pc-scroll flex min-h-0 flex-1 flex-col items-center justify-center gap-5 overflow-y-auto px-4 py-8 sm:gap-6 sm:px-6 sm:py-10 md:gap-8 md:px-8 md:py-12">
       <header className="flex flex-col items-center justify-center gap-4 sm:gap-5">
         <div className="bg-wh/15 dark:bg-bl/20 flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-16 md:h-18 md:w-18">
           <User width={28} height={28} className="sm:h-8 sm:w-8" />
         </div>
         <div className="flex flex-col items-center gap-1.5 sm:gap-2">
           <h3 className="heading-text-xs sm:heading-text-s md:heading-text-m text-center">
-            환영합니다
+            환영해요
           </h3>
           <p className="label-text-xs sm:label-text-s text-center opacity-90">
             회원가입 후 함께 집중을 시작해요

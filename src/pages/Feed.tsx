@@ -40,7 +40,7 @@ export default function Feed() {
   const isLoggedIn = useIsLoggedIn();
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col gap-[12px] overflow-hidden p-[16px] select-none">
+    <section className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden p-4 select-none">
       {isLoggedIn ? (
         // 글쓰기 영역 + 구분선
         <FeedHeader
@@ -54,7 +54,7 @@ export default function Feed() {
           title="다른 사용자들의 집중 여정을 구경해보세요!"
           description="게시물 작성은 로그인 후 이용 가능합니다"
           Icon={Heart}
-          className="h-[8rem] rounded-[12px] p-4"
+          className="h-32 rounded-xl p-4"
           iconStyle="h-7 w-7"
         />
       )}

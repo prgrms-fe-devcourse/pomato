@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider } from "react-router";
 
 import { router } from "@routes/routes.tsx";
-import "./styles/global.css";
 import RealtimeProvider from "@services/RealtimeProvider";
+import "./styles/global.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
