@@ -4,7 +4,7 @@ import UserList from "@features/user/ui/UserList";
 
 export default function Mate() {
   return (
-    <div className="flex flex-1 flex-col gap-[12px] p-[16px]">
+    <div className="flex flex-1 flex-col gap-3 p-4">
       <UserHeader />
       <UserInput />
       <UserList />

@@ -1,11 +1,9 @@
-import { User, Mail, Lock } from "lucide-react";
-import { Link } from "react-router";
+import { User } from "lucide-react";
 
 import github from "@assets/auth/github.svg";
 import google from "@assets/auth/google.svg";
 import kakao from "@assets/auth/kakao.svg";
 import Button from "@components/Button";
-import Input from "@components/Input";
 import { loginWithOAuth } from "@features/auth/api/login";
 
 export default function Login() {
@@ -18,7 +16,7 @@ export default function Login() {
 
         <div className="flex flex-col items-center gap-1.5 sm:gap-2">
           <h3 className="heading-text-xs sm:heading-text-s md:heading-text-m text-center">
-            다시 만나 반가워요
+            반가워요
           </h3>
           <p className="label-text-xs sm:label-text-s text-center opacity-90">
             로그인하고 집중을 이어가세요
@@ -26,7 +24,7 @@ export default function Login() {
         </div>
       </header>
 
-      <form className="flex w-full max-w-[320px] flex-col justify-center gap-3.5 sm:max-w-md sm:gap-4">
+      {/* <form className="flex w-full max-w-[320px] flex-col justify-center gap-3.5 sm:max-w-md sm:gap-4">
         <div className="space-y-1.5">
           <label htmlFor="email" className="label-text-xs">
             이메일
@@ -54,7 +52,7 @@ export default function Login() {
         <Button type="submit" intent="primary" className="h-10 w-full sm:h-11">
           로그인
         </Button>
-      </form>
+      </form> */}
 
       <div className="flex w-full max-w-[320px] items-center gap-2 px-2 sm:max-w-md sm:px-4">
         <hr className="border-wh/60 dark:border-wh/40 flex-1 border-t" />
@@ -92,12 +90,12 @@ export default function Login() {
         </Button>
       </div>
 
-      <p className="label-text-xs sm:label-text-s flex gap-1 opacity-90">
+      {/* <p className="label-text-xs sm:label-text-s flex gap-1 opacity-90">
         아직 계정이 없으신가요?
         <Link to="/signup" className="font-bold hover:underline">
           회원가입
         </Link>
-      </p>
+      </p> */}
     </section>
   );
 }

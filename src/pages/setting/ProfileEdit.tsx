@@ -1,18 +1,103 @@
 import { User, AtSign } from "lucide-react";
+import { useEffect, useState, type FormEventHandler } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
 import Input from "@components/Input";
+import { Toast } from "@components/Toast";
+import { getProfile } from "@features/auth/api/profile";
 import { useIsMobile } from "@hooks/useIsMobile";
+import { useUserId } from "@stores/useAuthStore";
+import type { Profile } from "@type/auth.types";
+import supabase from "@utils/supabase";
+
+type ToastType = { message: string; intent: "info" | "success" | "warning" | "error" };
 
 export default function ProfileEdit() {
   const isMobile = useIsMobile();
+  const userId = useUserId();
+  const [isLoading, setIsLoading] = useState(false);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [toast, setToast] = useState<ToastType | null>(null);
+  const showToast = (intent: ToastType["intent"], message: string) => setToast({ message, intent });
+
+  const updateProfile = async (
+    uid: string,
+    updateData: Partial<Profile>,
+  ): Promise<Profile | null> => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({
+        display_name: updateData.display_name,
+        username: updateData.username,
+        bio: updateData.bio,
+      })
+      .eq("user_id", uid)
+      .select()
+      .single();
+
+    if (error) {
+      showToast("error", "저장에 실패했어요");
+      return null;
+    }
+
+    showToast("success", "저장에 성공했어요");
+    return data;
+  };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!userId) return;
+      const p = await getProfile(userId);
+      setProfile(p);
+    };
+    void fetchProfile();
+  }, [userId]);
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    if (isLoading) return;
+
+    setIsLoading(true);
+
+    (async () => {
+      try {
+        const formData = new FormData(event.currentTarget);
+        const display_name = formData.get("display_name");
+        const username = formData.get("username");
+        const bio = formData.get("bio");
+
+        const updateData: Partial<Profile> = {
+          display_name: typeof display_name === "string" ? display_name : "",
+          username: typeof username === "string" ? username : "",
+          bio: typeof bio === "string" ? bio : "",
+        };
+
+        if (!userId) {
+          showToast("error", "메이트 님의 정보를 찾지 못했어요");
+          return;
+        }
+
+        const newProfile = await updateProfile(userId, updateData);
+        if (newProfile) setProfile(newProfile);
+      } catch {
+        showToast("error", "저장 중 오류가 발생했습니다.");
+      } finally {
+        setIsLoading(false);
+      }
+    })();
+  };
+
   return (
-    <section className="scroll-y-auto pc-scroll flex min-h-0 flex-1 flex-col items-center justify-center gap-6 overflow-y-auto px-4 py-8 sm:gap-8 sm:px-6 sm:py-10 md:gap-10 md:px-8 md:py-12">
+    <section className="pc-scroll flex min-h-0 flex-1 flex-col items-center justify-center gap-6 overflow-y-auto px-4 py-8 sm:gap-8 sm:px-6 sm:py-10 md:gap-10 md:px-8 md:py-12">
       <header className="flex flex-col items-center justify-center gap-4 sm:gap-5">
         <div className="relative">
-          <Avatar status="edit" size={isMobile ? "l" : "xl"} />
+          <Avatar
+            src={profile?.avatar_url ?? undefined}
+            status="edit"
+            size={isMobile ? "l" : "xl"}
+          />
         </div>
 
         <div className="flex flex-col items-center gap-1.5 sm:gap-2">
@@ -26,10 +111,8 @@ export default function ProfileEdit() {
       </header>
 
       <form
-        action="#"
-        method="post"
+        onSubmit={handleSubmit}
         className="flex w-full max-w-xl flex-col justify-center gap-4 sm:gap-5"
-        noValidate
       >
         <div className="space-y-1.5">
           <label htmlFor="displayName" className="label-text-xs">
@@ -37,11 +120,11 @@ export default function ProfileEdit() {
           </label>
           <Input
             id="displayName"
-            name="displayName"
+            name="display_name"
             type="text"
             placeholder="이름을 입력해주세요"
             Icon={{ Component: User, align: "left" }}
-            defaultValue=""
+            defaultValue={profile?.display_name}
           />
         </div>
 
@@ -55,7 +138,7 @@ export default function ProfileEdit() {
             type="text"
             placeholder="아이디를 입력해주세요"
             Icon={{ Component: AtSign, align: "left" }}
-            defaultValue=""
+            defaultValue={profile?.username}
           />
           <p className="label-text-xs pl-1 opacity-70">
             영문 소문자, 숫자, 밑줄(_) 조합을 권장해요.
@@ -83,26 +166,29 @@ export default function ProfileEdit() {
                 "disabled:bg-wh/10 disabled:border-wh/10 disabled:dark:bg-bl/20 disabled:dark:border-wh/8 disabled:text-wh/50 disabled:placeholder:text-wh/50 disabled:cursor-not-allowed disabled:opacity-60",
                 "pc-scroll outline-none [-webkit-tap-highlight-color:transparent] focus-visible:ring-0",
               )}
-              defaultValue=""
+              defaultValue={profile?.bio ?? ""}
             />
-          </div>
-          <div className="flex items-center justify-between">
-            {/* <p className="label-text-xs opacity-70">최대 200자</p>
-            <span className="label-text-xs opacity-70" aria-live="polite">
-              길이 카운터는 이후 제어형으로 전환 시 연결
-            </span> */}
           </div>
         </div>
 
         <div className="mt-2 flex gap-3 sm:gap-4">
-          <Button intent="ghost" className="h-10 flex-1 sm:h-11">
+          <Button intent="ghost" className="h-10 flex-1 sm:h-11" disabled={isLoading}>
             취소
           </Button>
-          <Button intent="primary" className="h-10 flex-1 sm:h-11">
-            저장
+          <Button
+            type="submit"
+            intent="primary"
+            className="h-10 flex-1 sm:h-11"
+            disabled={isLoading}
+          >
+            {isLoading ? "저장 중..." : "저장"}
           </Button>
         </div>
       </form>
+
+      {toast && (
+        <Toast message={toast.message} intent={toast.intent} onClose={() => setToast(null)} />
+      )}
     </section>
   );
 }

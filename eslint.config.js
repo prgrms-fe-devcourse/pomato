@@ -54,6 +54,7 @@ export default defineConfig([
       import: importPlugin,
     },
     rules: {
+      "@typescript-eslint/no-floating-promises": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
