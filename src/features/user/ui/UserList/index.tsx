@@ -1,16 +1,26 @@
 import { Users } from "lucide-react";
+import { useEffect } from "react";
 
 import EmptyState from "@components/Empty";
+import { getAllUsersWithoutSelf } from "@features/user/api/user";
 import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
-import type { ProfilesTable } from "@features/user/types/user.type";
+import { useUserStore } from "@features/user/store/useUserStore";
 import UserCard from "@features/user/ui/UserCard";
+import { useUserId } from "@stores/useAuthStore";
 
-export type UserListProps = {
-  users: ProfilesTable["Row"][];
-};
-
-export default function UserList({ users }: UserListProps) {
+export default function UserList() {
   const activeUsers = useActiveUsersStore((state) => state.activeUsers);
+  const users = useUserStore((state) => state.users);
+  const setUsers = useUserStore((state) => state.setUsers);
+  const userId = useUserId();
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const data = await getAllUsersWithoutSelf(userId);
+      setUsers(data);
+    };
+    void fetchUsers();
+  }, [setUsers, userId]);
 
   if (users.length === 0)
     return (
