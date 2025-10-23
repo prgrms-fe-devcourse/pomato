@@ -11,18 +11,18 @@ export const getAllUsers = async (): Promise<ProfilesTable["Row"][]> => {
   return data;
 };
 
-export const getAllUsersWithoutSelf = async (): Promise<ProfilesTable["Row"][]> => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export const getAllUsersWithoutSelf = async (
+  userId: string | undefined,
+): Promise<ProfilesTable["Row"][]> => {
   const { data, error } = await supabase.from("profiles").select<"*", ProfilesTable["Row"]>("*");
 
   if (error) {
     console.error("Error fetching profiles:", error);
     return [];
   }
-  if (!user) return data;
-  return data.filter((value) => value.user_id !== user.id);
+
+  if (!userId) return data;
+  return data.filter((value) => value.user_id !== userId);
 };
 
 export const getUserById = async (userId: string): Promise<ProfilesTable["Row"] | null> => {
