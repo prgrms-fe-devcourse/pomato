@@ -94,12 +94,7 @@ export function rowToPost(
   );
 
   return {
-    id: row.id,
-    content: row.content,
-    image_url: row.image_url,
-    created_at: row.created_at,
-    likes_count: row.likes_count,
-    comments_count: row.comments_count,
+    ...row,
     author: pickAuthorFromProfile(row.user_id, postAuthorProfile),
     likes,
     liked,

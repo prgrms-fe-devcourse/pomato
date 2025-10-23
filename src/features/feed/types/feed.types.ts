@@ -18,7 +18,6 @@ export type LikeInsert = Database["public"]["Tables"]["post_likes"]["Insert"];
 
 export type Author = Pick<ProfileRow, "user_id" | "username" | "display_name" | "avatar_url"> & {
   id: string; // user_id를 id로 매핑
-  avatar_url?: string | null;
 };
 
 export type Comment = Pick<CommentRow, "id" | "post_id" | "content" | "created_at"> & {
