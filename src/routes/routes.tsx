@@ -1,6 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router";
 
-import { authLoader } from "@features/auth/model/authLoader";
 import { messageLoader } from "@features/dm/model/loader";
 import Login from "@pages/auth/Login";
 import Signup from "@pages/auth/Signup";
@@ -21,7 +20,6 @@ export const router = createBrowserRouter([
     path: "/",
     Component: App,
     errorElement: <GlobalError />,
-    loader: authLoader,
     children: [
       {
         index: true,
