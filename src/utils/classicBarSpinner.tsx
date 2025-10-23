@@ -3,7 +3,7 @@ import { useId, useMemo } from "react";
 export default function ClassicBarSpinner() {
   // 고유 키프레임 이름(콜론 제거: React useId 특성)
   const id = useId();
-  const anim = `classic-bar-${id}`.replaceAll(":", "");
+  const anim = `classic-bar-${id}`.replaceAll(/[^a-zA-Z0-9_-]/g, "_");
 
   // 고정 값(요구: props 없음)
   const size = 64; // 전체 크기(px)

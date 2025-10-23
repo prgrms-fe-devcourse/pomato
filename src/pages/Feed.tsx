@@ -72,14 +72,7 @@ export default function Feed() {
       {/* Post List 영역 */}
       <div className="pc-scroll min-h-0 flex-1 overflow-y-auto">
         {isLoading ? (
-          // 로딩 중
-          // <EmptyState
-          //   title="게시물을 불러오는 중..."
-          //   description="잠시만 기다려주세요"
-          //   Icon={FileText}
-          // />
-
-          // 예전에 사용하던 Spinner 효과
+          // Spinner 효과
           <div className="flex h-full items-center justify-center py-4 text-center">
             <ClassicBarSpinner />
           </div>
