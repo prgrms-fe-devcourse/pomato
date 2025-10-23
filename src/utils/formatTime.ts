@@ -13,3 +13,20 @@ export const toMMSS = (sec: number) => {
   const s = sec % 60;
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 };
+
+export const toHHMM = (isoString: string): string => {
+  const date = new Date(isoString);
+
+  const localDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+
+  let hours = localDate.getUTCHours();
+  const minutes = localDate.getUTCMinutes();
+
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12;
+  hours = hours === 0 ? 12 : hours; // 0시는 12시로 표시
+
+  const paddedMinutes = minutes.toString().padStart(2, "0");
+
+  return `${hours}:${paddedMinutes} ${ampm}`;
+};
