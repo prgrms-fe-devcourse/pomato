@@ -36,6 +36,7 @@ export type PostCardProps = {
   onDelete?: (id: string) => void;
   onEdit?: (id: string, content: string, imageFile?: File) => Promise<void>;
   currentUserId?: string;
+  isLiking?: boolean;
 };
 
 export default function PostCard({
@@ -52,6 +53,7 @@ export default function PostCard({
   onDelete,
   onEdit,
   currentUserId,
+  isLiking = false,
 }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
 
@@ -339,6 +341,7 @@ export default function PostCard({
               "text-wh/65 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]",
               "hover:bg-pink-500/10 hover:text-pink-500",
               liked && "text-pink-500",
+              isLiking && "text-pink-500",
             )}
           >
             <Heart

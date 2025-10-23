@@ -11,8 +11,17 @@ import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
 
 export default function Feed() {
-  const { posts, setPosts, addPost, toggleLike, addComment, removePost, editPost, isUploading } =
-    usePosts();
+  const {
+    posts,
+    setPosts,
+    addPost,
+    toggleLike,
+    addComment,
+    removePost,
+    editPost,
+    isUploading,
+    likingPosts,
+  } = usePosts();
   const [query, setQuery] = useState("");
   const userId = useUserId();
 
@@ -33,7 +42,7 @@ export default function Feed() {
   }, [posts, query]);
 
   // 로그인 상태 확인
-  const isLoggedIn = !!useIsLoggedIn;
+  const isLoggedIn = useIsLoggedIn();
 
   return (
     <div className="flex h-screen flex-col gap-[12px] p-[16px] select-none">
@@ -81,6 +90,7 @@ export default function Feed() {
             onToggleLike={(id) => {
               void toggleLike(id);
             }}
+            likingPosts={likingPosts}
             onAddComment={(id, text) => {
               void addComment(id, text);
             }}
