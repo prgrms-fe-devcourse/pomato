@@ -1,16 +1,24 @@
 import { Users } from "lucide-react";
+import { useEffect } from "react";
 
 import EmptyState from "@components/Empty";
-import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
-import type { ProfilesTable } from "@features/user/types/user.type";
-import UserCard from "@features/user/ui/UserCard";
+import { getAllUsersWithoutSelf } from "@features/user/api/user";
+import { useUserStore } from "@features/user/store/useUserStore";
+import UserSort from "@features/user/ui/UserSort";
+import { useUserId } from "@stores/useAuthStore";
 
-export type UserListProps = {
-  users: ProfilesTable["Row"][];
-};
+export default function UserList() {
+  const users = useUserStore((state) => state.users);
+  const setUsers = useUserStore((state) => state.setUsers);
+  const userId = useUserId();
 
-export default function UserList({ users }: UserListProps) {
-  const activeUsers = useActiveUsersStore((state) => state.activeUsers);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const data = await getAllUsersWithoutSelf(userId);
+      setUsers(data);
+    };
+    void fetchUsers();
+  }, [setUsers, userId]);
 
   if (users.length === 0)
     return (
@@ -23,24 +31,5 @@ export default function UserList({ users }: UserListProps) {
       </section>
     );
 
-  const enrichedUsers = users.map((user) => ({
-    ...user,
-    isOnline: activeUsers.some((au) => au.id === user.user_id),
-  }));
-  return (
-    <ul className="flex flex-1 flex-col gap-[4px]">
-      {enrichedUsers.map((user) => {
-        return (
-          <UserCard
-            key={user.user_id}
-            name={user.display_name}
-            avatar={user.avatar_url}
-            bio={user.bio}
-            userId={user.user_id}
-            type={user.isOnline ? "online" : "offline"}
-          />
-        );
-      })}
-    </ul>
-  );
+  return <UserSort users={users} />;
 }

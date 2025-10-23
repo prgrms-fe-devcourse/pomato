@@ -2,7 +2,6 @@ import { createBrowserRouter, Navigate } from "react-router";
 
 import { authLoader } from "@features/auth/model/authLoader";
 import { messageLoader } from "@features/dm/model/loader";
-import { mateLoader } from "@features/user/model/loader";
 import Login from "@pages/auth/Login";
 import Signup from "@pages/auth/Signup";
 import Chart from "@pages/Chart";
@@ -31,7 +30,6 @@ export const router = createBrowserRouter([
       {
         path: "mate",
         Component: Mate,
-        loader: mateLoader,
       },
       {
         path: "feed",
