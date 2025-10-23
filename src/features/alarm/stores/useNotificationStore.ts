@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import type { NotificationTable } from "@features/notification/types/notification.type";
+import type { NotificationTable } from "@features/alarm/types/notification.type";
 
 type NotificationState = {
   notifications: NotificationTable["Row"][];

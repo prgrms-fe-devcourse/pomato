@@ -11,14 +11,14 @@ import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
-import { removeNotification } from "@features/notification/api/notification";
-import { useNotificationStore } from "@features/notification/stores/useNotificationStore";
+import { removeNotification } from "@features/alarm/api/notification";
+import { useNotificationStore } from "@features/alarm/stores/useNotificationStore";
 import type {
   NotificationCommentJsonbType,
   NotificationDmJsonbType,
   NotificationJsonbType,
   NotificationType,
-} from "@features/notification/types/notification.type";
+} from "@features/alarm/types/notification.type";
 import { getUserById } from "@features/user/api/user";
 import type { ProfilesTable } from "@features/user/types/user.type";
 

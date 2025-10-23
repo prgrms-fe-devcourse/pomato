@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { useNotification } from "@features/notification/hooks/useNotification";
+import { useNotification } from "@features/alarm/hooks/useNotification";
 
 type NotificationChannelProps = {
   userId: string;

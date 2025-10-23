@@ -1,9 +1,9 @@
 import { Bell } from "lucide-react";
 
 import EmptyState from "@components/Empty";
-import { useNotificationStore } from "@features/notification/stores/useNotificationStore";
-import type { NotificationJsonbType } from "@features/notification/types/notification.type";
-import NotificationCard from "@features/notification/ui/NotificationCard";
+import { useNotificationStore } from "@features/alarm/stores/useNotificationStore";
+import type { NotificationJsonbType } from "@features/alarm/types/notification.type";
+import NotificationCard from "@features/alarm/ui/NotificationCard";
 
 export default function NotificationList() {
   const notifications = useNotificationStore((state) => state.notifications);

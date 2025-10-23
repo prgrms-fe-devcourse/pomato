@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 
-import { getNotifications } from "@features/notification/api/notification";
-import { useNotificationStore } from "@features/notification/stores/useNotificationStore";
+import { getNotifications } from "@features/alarm/api/notification";
+import { useNotificationStore } from "@features/alarm/stores/useNotificationStore";
 import {
   NotificationChannel,
   type NotificationTable,
-} from "@features/notification/types/notification.type";
+} from "@features/alarm/types/notification.type";
 import { useRealtimeHandler } from "@hooks/useRealtimeHandler";
 
 export const useNotification = (userId: string) => {

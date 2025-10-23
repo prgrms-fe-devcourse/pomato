@@ -1,8 +1,8 @@
 import { Bell } from "lucide-react";
 
 import EmptyState from "@components/Empty";
-import { NotificationProvider } from "@features/notification/ui/NotificationChannel";
-import NotificationList from "@features/notification/ui/NotificationList";
+import { NotificationProvider } from "@features/alarm/ui/NotificationChannel";
+import NotificationList from "@features/alarm/ui/NotificationList";
 import { useUserId } from "@stores/useAuthStore";
 
 export default function Notification() {
