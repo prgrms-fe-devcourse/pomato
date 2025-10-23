@@ -1,6 +1,7 @@
 import { MessageCircle } from "lucide-react";
 
 import EmptyState from "@components/Empty";
+import ChatConversationProvider from "@features/dm/ui/ChatConversationProvider";
 import ChatList from "@features/dm/ui/ChatList";
 import { useUserId } from "@stores/useAuthStore";
 
@@ -8,7 +9,7 @@ export default function Dm() {
   const id = useUserId();
   if (!id)
     return (
-      <div className="flex flex-1 overflow-hidden p-[16px]">
+      <div className="flex flex-1 overflow-hidden">
         <EmptyState
           title="로그인이 필요합니다"
           description="메시지를 보내려면 로그인하세요"
@@ -19,8 +20,10 @@ export default function Dm() {
     );
 
   return (
-    <div className="flex flex-col gap-[12px] p-[16px]">
-      <ChatList userId={id} />
+    <div>
+      <ChatConversationProvider userId={id}>
+        <ChatList userId={id} />
+      </ChatConversationProvider>
     </div>
   );
 }
