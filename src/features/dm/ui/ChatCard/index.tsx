@@ -5,6 +5,7 @@ import Avatar from "@components/Avatar";
 import { getProfile } from "@features/auth/api/profile";
 import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
 import type { ProfilesTable } from "@features/user/types/user.type";
+import { toHHMM } from "@utils/formatTime";
 
 /**
  * @component
@@ -116,7 +117,7 @@ export default function ChatCard({
           hasUnread ? "justify-center" : "justify-start pt-[20px]",
         )}
       >
-        <span className="label-text-xs text-wh/70 pb-1">{lastMessageTime}</span>
+        <span className="label-text-xs text-wh/70 pb-1">{toHHMM(lastMessageTime)}</span>
 
         {hasUnread && (
           <span
