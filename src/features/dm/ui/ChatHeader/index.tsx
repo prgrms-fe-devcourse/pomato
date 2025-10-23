@@ -1,4 +1,4 @@
-import { ChevronLeft, MoreVertical } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -60,9 +60,9 @@ export default function ChatHeader({ conversationId, userId }: ChatHeaderType) {
           </span>
         </div>
       </div>
-      <button>
+      {/*<button>
         <MoreVertical width={24} height={24} />
-      </button>
+      </button>*/}
     </div>
   );
 }
