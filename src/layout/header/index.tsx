@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router";
 
 import Button from "@components/Button";
-import LoginButton from "@features/auth/ui/LoginButton";
+import LoginButton from "@features/auth/ui/AuthButton";
 import { useAuthStore, useIsLoggedIn } from "@stores/useAuthStore";
 import { usePanelStore, usePanelTitle } from "@stores/usePanelStore";
 import supabase from "@utils/supabase";
