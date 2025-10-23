@@ -4,9 +4,12 @@ import { RouterProvider } from "react-router";
 
 import { router } from "@routes/routes.tsx";
 import "./styles/global.css";
+import RealtimeProvider from "@services/RealtimeProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <RealtimeProvider>
+      <RouterProvider router={router} />
+    </RealtimeProvider>
   </StrictMode>,
 );
