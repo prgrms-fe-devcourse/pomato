@@ -1,39 +1,34 @@
 import { Search, SearchX, FileText, Heart } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useLoaderData } from "react-router";
 
 import EmptyState from "@components/Empty";
 import Input from "@components/Input";
-import { usePosts } from "@features/feed/model/usePosts";
-import type { PostWithComments } from "@features/feed/types/feed.types";
+import { useFeedStore } from "@features/feed/store/feedStore";
 import FeedHeader from "@features/feed/ui/FeedHeader";
 import PostList from "@features/feed/ui/PostList";
 import { useUserId, useIsLoggedIn } from "@stores/useAuthStore";
+import ClassicBarSpinner from "@utils/classicBarSpinner";
 
 export default function Feed() {
   const {
     posts,
-    setPosts,
+    isLoading,
+    isUploading,
+    likingPosts,
+    fetchPosts,
     addPost,
     toggleLike,
     addComment,
     removePost,
     editPost,
-    isUploading,
-    likingPosts,
-  } = usePosts();
+  } = useFeedStore();
   const [query, setQuery] = useState("");
   const userId = useUserId();
 
-  const post_data = useLoaderData<PostWithComments[]>();
-
+  // 컴포넌트 마운트 시 게시글 목록 가져오기
   useEffect(() => {
-    if (post_data) {
-      setPosts(post_data);
-      // setPosts([]); // Empty 테스트
-      console.log("데이터 출력", post_data);
-    }
-  }, [post_data, setPosts]);
+    void fetchPosts();
+  }, [fetchPosts]);
 
   const filteredPosts = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -76,7 +71,19 @@ export default function Feed() {
 
       {/* Post List 영역 */}
       <div className="pc-scroll min-h-0 flex-1 overflow-y-auto">
-        {posts.length === 0 ? (
+        {isLoading ? (
+          // 로딩 중
+          // <EmptyState
+          //   title="게시물을 불러오는 중..."
+          //   description="잠시만 기다려주세요"
+          //   Icon={FileText}
+          // />
+
+          // 예전에 사용하던 Spinner 효과
+          <div className="flex h-full items-center justify-center py-4 text-center">
+            <ClassicBarSpinner />
+          </div>
+        ) : posts.length === 0 ? (
           // 피드가 비어 있는 경우
           <EmptyState
             title="게시물이 없습니다"

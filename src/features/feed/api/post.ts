@@ -25,7 +25,7 @@ export async function listPosts(): Promise<Post[]> {
   }
   if (postRows.length === 0) return [];
 
-  // 2) comments for those posts
+  // 2) 게시글 댓글 조회
   const postIds = postRows.map((p) => p.id);
 
   const commentsRes = await supabase
@@ -38,12 +38,12 @@ export async function listPosts(): Promise<Post[]> {
     ? commentsRes.data.filter((row) => isCommentRow(row))
     : [];
 
-  // 3) gather ALL user_ids (post authors + comment authors)
+  // 3) 게시글 작성자와 댓글 작성자의 user_id 조회
   const authorIds = new Set<string>(postRows.map((p) => p.user_id));
   for (const c of commentRows) authorIds.add(c.user_id);
   const userIdList = [...authorIds];
 
-  // 4) fetch profiles for these user_ids
+  // 4) 게시글 작성자와 댓글 작성자의 프로필 조회
   const profilesRes = await supabase
     .from("profiles")
     .select("user_id,username,display_name,avatar_url")
@@ -55,16 +55,16 @@ export async function listPosts(): Promise<Post[]> {
 
   const profileByUserId = mapProfilesByUserId(profileRows);
 
-  // 5) group comments by post_id
+  // 5) 댓글을 post_id별로 그룹화
   const commentsByPostId = groupBy(
     commentRows.filter((c) => c && c.post_id !== undefined),
     (c) => c.post_id,
   );
 
-  // 6) get likes for all posts
+  // 6) 모든 게시글의 좋아요 개수와 현재 사용자의 좋아요 상태 조회
   const likesData = await getLikesForPosts(postIds);
 
-  // 7) compose domain
+  // 7) 도메인 객체 생성 (좋아요 버튼을 눌렀는지에 대한 여부 확인을 위해 객체 속성 추가)
   const posts: Post[] = postRows.map((row) => {
     const likeInfo = likesData[row.id] || { count: 0, liked: false };
     return rowToPost(
