@@ -11,11 +11,14 @@ import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
-import { removeNotification } from "@features/notification/api/notification";
+import { removeNotification } from "@features/alarm/api/notification";
+import { useNotificationStore } from "@features/alarm/stores/useNotificationStore";
 import type {
   NotificationCommentJsonbType,
+  NotificationDmJsonbType,
+  NotificationJsonbType,
   NotificationType,
-} from "@features/notification/types/notification.type";
+} from "@features/alarm/types/notification.type";
 import { getUserById } from "@features/user/api/user";
 import type { ProfilesTable } from "@features/user/types/user.type";
 
@@ -63,7 +66,7 @@ const typeIconMap: Record<NotificationType, LucideIcon> = {
 type NotificationItemProps = {
   notificationId: string;
   type: NotificationType;
-  payload: NotificationCommentJsonbType;
+  payload: NotificationJsonbType;
   className?: string;
 };
 
@@ -82,8 +85,12 @@ export default function NotificationCard({
 }: NotificationItemProps) {
   const TypeIcon = typeIconMap[type];
   const [senderProfile, setSenderProfile] = useState<ProfilesTable["Row"] | null>(null);
+  const [notify, setNotify] = useState<string>("");
+  const removeNotificationStore = useNotificationStore((state) => state.removeNotifications);
 
   const handleClose = () => {
+    removeNotificationStore(notificationId);
+    // 낙관적 업데이트
     void removeNotification(notificationId);
   };
 
@@ -94,6 +101,34 @@ export default function NotificationCard({
     };
     void fetchSenderProfile();
   }, [payload.user_id]);
+
+  useEffect(() => {
+    const handleNotify = () => {
+      switch (type) {
+        case "dm": {
+          const data = payload as NotificationDmJsonbType;
+          setNotify(data.content);
+          break;
+        }
+        case "comment": {
+          const data = payload as NotificationCommentJsonbType;
+          setNotify(data.content);
+          break;
+        }
+        case "like": {
+          setNotify(senderProfile?.display_name + "님이 좋아요를 눌렀습니다.");
+          break;
+        }
+        case "system": {
+          break;
+        }
+        default: {
+          break;
+        }
+      }
+    };
+    handleNotify();
+  }, [payload, type, senderProfile?.display_name]);
 
   return (
     <div
@@ -180,7 +215,7 @@ export default function NotificationCard({
 
           {/* 본문 */}
 
-          <p className="paragraph-text-s text-wh/85 mt-1"></p>
+          <p className="paragraph-text-s text-wh/85 mt-1">{notify}</p>
         </div>
       </div>
     </div>

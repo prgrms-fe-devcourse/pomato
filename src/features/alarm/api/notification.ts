@@ -1,4 +1,4 @@
-import type { NotificationTable } from "@features/notification/types/notification.type";
+import type { NotificationTable } from "@features/alarm/types/notification.type";
 import supabase from "@utils/supabase";
 
 export const getNotifications = async (
