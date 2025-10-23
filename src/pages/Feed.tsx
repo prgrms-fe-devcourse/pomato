@@ -88,16 +88,20 @@ export default function Feed() {
           <PostList
             posts={filteredPosts}
             onToggleLike={(id) => {
+              if (!isLoggedIn) return; // 비 로그인 사용자 막기 위한 안전장치
               void toggleLike(id);
             }}
             likingPosts={likingPosts}
             onAddComment={(id, text) => {
+              if (!isLoggedIn) return; // 비 로그인 사용자 막기 위한 안전장치
               void addComment(id, text);
             }}
             onDelete={(id) => {
+              if (!isLoggedIn) return; // 비 로그인 사용자 막기 위한 안전장치
               void removePost(id);
             }}
             onEdit={async (id, content, imageFile) => {
+              if (!isLoggedIn) return; // 비 로그인 사용자 막기 위한 안전장치
               await editPost(id, content, imageFile);
             }}
             currentUserId={userId}

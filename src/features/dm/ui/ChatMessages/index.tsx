@@ -1,6 +1,6 @@
-import { useUserId } from "@features/auth/model/useAuthStore";
 import { useChatStore } from "@features/dm/store/useChatStore";
 import ChatBubble from "@features/dm/ui/ChatBubble";
+import { useUserId } from "@stores/useAuthStore";
 
 export default function ChatMessages() {
   const messages = useChatStore((state) => state.messages);
