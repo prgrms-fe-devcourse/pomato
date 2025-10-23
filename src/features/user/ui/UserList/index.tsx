@@ -3,13 +3,11 @@ import { useEffect } from "react";
 
 import EmptyState from "@components/Empty";
 import { getAllUsersWithoutSelf } from "@features/user/api/user";
-import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
 import { useUserStore } from "@features/user/store/useUserStore";
-import UserCard from "@features/user/ui/UserCard";
+import UserSort from "@features/user/ui/UserSort";
 import { useUserId } from "@stores/useAuthStore";
 
 export default function UserList() {
-  const activeUsers = useActiveUsersStore((state) => state.activeUsers);
   const users = useUserStore((state) => state.users);
   const setUsers = useUserStore((state) => state.setUsers);
   const userId = useUserId();
@@ -33,24 +31,5 @@ export default function UserList() {
       </section>
     );
 
-  const enrichedUsers = users.map((user) => ({
-    ...user,
-    isOnline: activeUsers.some((au) => au.id === user.user_id),
-  }));
-  return (
-    <ul className="flex flex-1 flex-col gap-[4px]">
-      {enrichedUsers.map((user) => {
-        return (
-          <UserCard
-            key={user.user_id}
-            name={user.display_name}
-            avatar={user.avatar_url}
-            bio={user.bio}
-            userId={user.user_id}
-            type={user.isOnline ? "online" : "offline"}
-          />
-        );
-      })}
-    </ul>
-  );
+  return <UserSort users={users} />;
 }
