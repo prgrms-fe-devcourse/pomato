@@ -10,7 +10,7 @@ export default function Notification() {
 
   if (!id)
     return (
-      <div className="h-full w-full p-[16px]">
+      <div className="flex min-h-0 flex-1 flex-col p-[16px]">
         <EmptyState
           title="로그인이 필요합니다"
           description="소식을 확인하려면 로그인하세요"
@@ -21,7 +21,7 @@ export default function Notification() {
     );
 
   return (
-    <div className="h-full w-full p-[16px]">
+    <div className="flex min-h-0 flex-1 flex-col p-[16px]">
       <NotificationProvider userId={id}>
         <NotificationList />
       </NotificationProvider>

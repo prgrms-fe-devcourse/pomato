@@ -19,7 +19,7 @@ export default function NotificationList() {
     );
 
   return (
-    <div>
+    <div className="pc-scroll flex flex-1 flex-col overflow-y-auto">
       {notifications.map((notification) => {
         return (
           <NotificationCard
@@ -27,6 +27,7 @@ export default function NotificationList() {
             type={notification.type}
             payload={notification.payload as NotificationJsonbType}
             notificationId={notification.id}
+            createdAt={notification.created_at}
           />
         );
       })}

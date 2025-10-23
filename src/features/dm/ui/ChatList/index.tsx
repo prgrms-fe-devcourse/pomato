@@ -28,7 +28,7 @@ export default function ChatList({ userId }: ChatListProps) {
       </div>
     );
   return (
-    <ul className="flex flex-1 flex-col gap-[4px] overflow-y-scroll p-[16px]">
+    <ul className="pc-scroll flex flex-1 flex-col gap-[4px] overflow-y-scroll p-[16px]">
       {rooms.sort(roomSort).map((room) => {
         return (
           <li key={room.id} id={room.id} onClick={() => void navigate(`${room.id}`)}>

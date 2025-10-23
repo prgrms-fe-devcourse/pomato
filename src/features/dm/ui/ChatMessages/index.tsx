@@ -17,7 +17,7 @@ export default function ChatMessages() {
   }, [messages]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-[12px] overflow-y-auto p-[16px]">
+    <div className="pc-scroll flex min-h-0 flex-1 flex-col gap-[12px] overflow-y-auto p-[16px]">
       {messages.map((message, index) => (
         <ChatBubble
           key={message.id}
