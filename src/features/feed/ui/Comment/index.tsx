@@ -118,7 +118,7 @@ function formatTimeShort(d: Date): string {
   if (diffSec < DAY) return `${Math.floor(diffSec / HOUR)}시간 전`;
 
   const days = Math.floor(diffSec / DAY);
-  if (days < 30) return `${days}d`; // 1d, 2d, ...
+  if (days < 30) return `${days}일 전`; // 1d, 2d, ...
 
   const sameYear = d.getFullYear() === now.getFullYear();
   return d.toLocaleDateString(
