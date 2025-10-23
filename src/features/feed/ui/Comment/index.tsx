@@ -71,25 +71,26 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
       {isLoggedIn && (
         <>
           {/* 입력창 — 한 줄 배치 */}
-          <div className="flex items-center gap-3">
-            <Avatar src={userProfile?.avatar_url || undefined} size="s" />
+          <div className="flex w-full flex-nowrap items-center gap-3">
+            <Avatar src={userProfile?.avatar_url || undefined} size="s" className="shrink-0" />
+
             <Input
               value={value}
               onChange={(e) => setValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder="댓글을 입력하세요..."
-              containerStyle={twMerge("flex-1 border px-3 py-2")}
+              containerStyle={twMerge("min-w-0 flex-1", "flex w-full border px-3 py-2")}
               aria-label="댓글 입력"
             />
 
             <Button
-              size={"md"}
+              size="md"
               intent="primary"
               composition="iconOnly"
               onClick={handleSend}
               disabled={!value.trim()}
               className={twMerge(
-                "inline-flex h-11 w-11 items-center justify-center rounded-[10px] border px-2 py-2",
+                "border-wh/15 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border px-2 py-2",
                 !value.trim() && "cursor-not-allowed opacity-50",
               )}
               aria-label="댓글 보내기"
