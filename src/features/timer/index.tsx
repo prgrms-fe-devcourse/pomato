@@ -26,7 +26,6 @@ export default function Timer() {
     }
 
     if (currentTimerStatus !== "RUNNING") {
-      // PAUSED 등
       startAt.current = 0;
       return;
     }
