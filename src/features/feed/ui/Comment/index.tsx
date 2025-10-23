@@ -7,6 +7,7 @@ import Button from "@components/Button";
 import Input from "@components/Input";
 import type { CommentWithAuthor } from "@features/feed/types/feed.types";
 import { useProfile } from "@stores/useAuthStore";
+import { useIsLoggedIn } from "@stores/useAuthStore";
 
 type CommentPanelProps = {
   comments: CommentWithAuthor[];
@@ -30,6 +31,9 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
     onSubmit(text);
     setValue("");
   };
+
+  // 로그인 상태 확인
+  const isLoggedIn = useIsLoggedIn();
 
   return (
     <>
@@ -64,33 +68,38 @@ export default function Comment({ comments, onSubmit, className }: CommentPanelP
         ))}
       </ul>
 
-      {/* 입력창 — 한 줄 배치 */}
-      <div className="flex items-center gap-3">
-        <Avatar src={userProfile?.avatar_url || undefined} size="s" />
-        <Input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSend()}
-          placeholder="댓글을 입력하세요..."
-          containerStyle={twMerge("flex-1 border px-3 py-2")}
-          aria-label="댓글 입력"
-        />
+      {isLoggedIn && (
+        <>
+          {/* 입력창 — 한 줄 배치 */}
+          <div className="flex w-full flex-nowrap items-center gap-3">
+            <Avatar src={userProfile?.avatar_url || undefined} size="s" className="shrink-0" />
 
-        <Button
-          size={"md"}
-          intent="primary"
-          composition="iconOnly"
-          onClick={handleSend}
-          disabled={!value.trim()}
-          className={twMerge(
-            "inline-flex h-11 w-11 items-center justify-center rounded-[10px] border px-2 py-2",
-            !value.trim() && "cursor-not-allowed opacity-50",
-          )}
-          aria-label="댓글 보내기"
-        >
-          <Send className="h-4 w-4" aria-hidden />
-        </Button>
-      </div>
+            <Input
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              placeholder="댓글을 입력하세요..."
+              containerStyle={twMerge("min-w-0 flex-1", "flex w-full border px-3 py-2")}
+              aria-label="댓글 입력"
+            />
+
+            <Button
+              size="md"
+              intent="primary"
+              composition="iconOnly"
+              onClick={handleSend}
+              disabled={!value.trim()}
+              className={twMerge(
+                "border-wh/15 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border px-2 py-2",
+                !value.trim() && "cursor-not-allowed opacity-50",
+              )}
+              aria-label="댓글 보내기"
+            >
+              <Send className="h-4 w-4" aria-hidden />
+            </Button>
+          </div>
+        </>
+      )}
     </>
   );
 }

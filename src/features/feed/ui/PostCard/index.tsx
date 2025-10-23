@@ -7,6 +7,7 @@ import Button from "@components/Button";
 import Dropdown from "@components/Dropdown";
 import type { CommentWithAuthor } from "@features/feed/types/feed.types";
 import CommentPanel from "@features/feed/ui/Comment";
+import { useIsLoggedIn } from "@stores/useAuthStore";
 
 type DropdownItem = {
   key: string;
@@ -72,6 +73,9 @@ export default function PostCard({
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // 로그인 여부 확인
+  const isLoggedIn = useIsLoggedIn();
 
   // 편집 모드 시작
   const handleStartEdit = () => {
@@ -335,6 +339,7 @@ export default function PostCard({
           <button
             type="button"
             onClick={() => onToggleLike(id)}
+            disabled={!isLoggedIn}
             aria-pressed={liked}
             aria-label="post like button"
             className={twMerge(
