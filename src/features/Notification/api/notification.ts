@@ -26,6 +26,5 @@ export const removeNotification = async (notificationId: string) => {
     return false;
   }
 
-  console.log(`Notification ${notificationId} deleted successfully`);
   return true;
 };
