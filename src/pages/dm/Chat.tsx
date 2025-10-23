@@ -25,7 +25,7 @@ export default function Chat() {
   };
 
   return (
-    <div className="pc-scroll min-h-0 flex-1 overflow-y-auto">
+    <div className="flex min-h-0 flex-1 flex-col">
       <ChatHeader conversationId={params.id} userId={id} />
       <ChatMessages />
       <ChatInput sendMessage={handleSendMessage} />

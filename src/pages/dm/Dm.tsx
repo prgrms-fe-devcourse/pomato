@@ -20,7 +20,7 @@ export default function Dm() {
     );
 
   return (
-    <div>
+    <div className="flex min-h-0 flex-1 flex-col">
       <ChatConversationProvider userId={id}>
         <ChatList userId={id} />
       </ChatConversationProvider>
