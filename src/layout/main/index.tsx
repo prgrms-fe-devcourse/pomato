@@ -1,13 +1,10 @@
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useNavigation } from "react-router";
 
 import Button from "@components/Button";
 
 export default function Main({ children }: { children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false);
-  const nav = useNavigation();
-  console.log("NAV STATE", nav.state);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);

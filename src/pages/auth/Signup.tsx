@@ -5,7 +5,7 @@ import Input from "@components/Input";
 
 export default function SignupStatic() {
   return (
-    <section className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 overflow-hidden px-4 py-8 sm:gap-6 sm:px-6 sm:py-10 md:gap-8 md:px-8 md:py-12">
+    <section className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 overflow-y-auto px-4 py-8 sm:gap-6 sm:px-6 sm:py-10 md:gap-8 md:px-8 md:py-12">
       <header className="flex flex-col items-center justify-center gap-4 sm:gap-5">
         <div className="bg-wh/15 dark:bg-bl/20 flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-16 md:h-18 md:w-18">
           <User width={28} height={28} className="sm:h-8 sm:w-8" />
