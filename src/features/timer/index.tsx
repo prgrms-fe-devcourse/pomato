@@ -1,29 +1,56 @@
-import { Users } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import Button from "@components/Button";
-import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
-import { toMMSS } from "@utils/formatTime";
-
+import { useTimerStore, useTotalSeconds } from "./model/useTimerStore";
+import ActiveUsersButton from "./ui/ActiveUsersButton";
 import ControlButton from "./ui/ControlButton";
-import { dot } from "./variants";
+import ProgressBar from "./ui/ProgressBar";
+import SessionDot from "./ui/SessionDot";
 
 export default function Timer() {
-  const { activeUsers } = useActiveUsersStore();
-  const [isRunning, setIsRunning] = useState(false);
-  const [remainingTime, setRemainingTime] = useState(0);
-  const handleTogglePlay = () => setIsRunning((prev) => !prev);
+  const { currentTimerStatus, currentPhase, totalSession, currentSession, completePhase } =
+    useTimerStore();
+  const totalSeconds = useTotalSeconds();
+  const [elapsedSec, setElapsedSec] = useState(0);
+  const startAt = useRef<number>(0);
 
   useEffect(() => {
-    if (!isRunning) return;
-    setRemainingTime(25);
+    setElapsedSec(0);
+    startAt.current = 0;
+  }, [currentPhase]);
+
+  useEffect(() => {
+    if (currentTimerStatus === "IDLE") {
+      setElapsedSec(0);
+      startAt.current = 0;
+      return;
+    }
+
+    if (currentTimerStatus !== "RUNNING") {
+      // PAUSED 등
+      startAt.current = 0;
+      return;
+    }
+
+    if (startAt.current === 0) {
+      startAt.current = Date.now() - elapsedSec * 1000;
+    }
 
     const timer = setInterval(() => {
-      console.log("timer");
+      const nowTimer = Math.floor((Date.now() - startAt.current) / 1000);
+
+      if (nowTimer >= totalSeconds) {
+        clearInterval(timer);
+        startAt.current = 0;
+        setElapsedSec(totalSeconds);
+        completePhase();
+      } else {
+        setElapsedSec(nowTimer);
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isRunning]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentTimerStatus, completePhase, totalSeconds]);
 
   return (
     <section className="flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center gap-5 overflow-auto group-has-[section[aria-label='Panel']]:max-[800px]:hidden">
@@ -31,49 +58,29 @@ export default function Timer() {
         <img src="https://placehold.co/180x180" className="border-wh/20 rounded-xl border-2" />
         <div className="flex flex-col items-center gap-3">
           <header>
-            <h2 className="text-wh/70 text-sm tracking-widest">{"FOCUS"}</h2>
+            <h2 className="text-wh/70 text-sm tracking-widest">{currentPhase}</h2>
           </header>
           <ol className="flex items-center gap-2" aria-label="세션 진행 단계">
-            <li>
-              <div className={dot({ status: "completed" })} />
-            </li>
-            <li>
-              <div className={dot({ status: "active" })} />
-            </li>
-            <li>
-              <div className={dot({ status: "default" })} />
-            </li>
-            <li>
-              <div className={dot({ status: "default" })} />
-            </li>
+            {Array.from({ length: totalSession }).map((_, index) => (
+              <SessionDot
+                key={`${totalSession}-${index}`}
+                status={
+                  index < currentSession
+                    ? "completed"
+                    : currentPhase === "FOCUS" &&
+                        currentTimerStatus === "RUNNING" &&
+                        index === currentSession
+                      ? "active"
+                      : "default"
+                }
+              />
+            ))}
           </ol>
         </div>
       </div>
-      <div>
-        <div className="flex items-center justify-center gap-2 text-xs">
-          <span className="cursor-default">{toMMSS(remainingTime)}</span>
-          <div className="bg-wh/15 dark:bg-bl/10 relative h-1 w-50 flex-1 rounded-full">
-            <div
-              className="bg-wh dark:bg-bl/45 absolute h-1 rounded-full"
-              style={{ width: "42%" }}
-            ></div>
-          </div>
-          <span className="cursor-default">25:00</span>
-        </div>
-      </div>
-      <ControlButton isRunning={isRunning} onToggle={handleTogglePlay} />
-      <p>
-        <Button
-          type="button"
-          intent="ghost"
-          size="md"
-          shape="circle"
-          composition="iconText"
-          className="px-4"
-        >
-          <Users /> {activeUsers.length} 명이 함께 집중 중
-        </Button>
-      </p>
+      <ProgressBar elapsedSec={elapsedSec} />
+      <ControlButton />
+      <ActiveUsersButton />
     </section>
   );
 }
