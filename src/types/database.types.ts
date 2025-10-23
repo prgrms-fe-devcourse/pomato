@@ -133,23 +133,23 @@ export type Database = {
       pomodoro_sessions: {
         Row: {
           completed_at: string;
+          created_at: string;
+          duration_minutes: number;
           id: string;
-          session_duration_min: number;
-          started_at: string;
           user_id: string;
         };
         Insert: {
           completed_at?: string;
+          created_at?: string;
+          duration_minutes: number;
           id?: string;
-          session_duration_min: number;
-          started_at?: string;
           user_id: string;
         };
         Update: {
           completed_at?: string;
+          created_at?: string;
+          duration_minutes?: number;
           id?: string;
-          session_duration_min?: number;
-          started_at?: string;
           user_id?: string;
         };
         Relationships: [];
@@ -249,10 +249,10 @@ export type Database = {
         Row: {
           avatar_url: string | null;
           bio: string | null;
-          completed_sessions: number | null;
           created_at: string;
           display_name: string;
-          total_focus_minutes: number | null;
+          focus_time: number | null;
+          sessions: number | null;
           updated_at: string;
           user_id: string;
           username: string;
@@ -260,10 +260,10 @@ export type Database = {
         Insert: {
           avatar_url?: string | null;
           bio?: string | null;
-          completed_sessions?: number | null;
           created_at?: string;
           display_name: string;
-          total_focus_minutes?: number | null;
+          focus_time?: number | null;
+          sessions?: number | null;
           updated_at?: string;
           user_id?: string;
           username: string;
@@ -271,10 +271,10 @@ export type Database = {
         Update: {
           avatar_url?: string | null;
           bio?: string | null;
-          completed_sessions?: number | null;
           created_at?: string;
           display_name?: string;
-          total_focus_minutes?: number | null;
+          focus_time?: number | null;
+          sessions?: number | null;
           updated_at?: string;
           user_id?: string;
           username?: string;
@@ -303,7 +303,10 @@ export type Database = {
         Args: { p_conversation_id: string; p_message_id: string };
         Returns: undefined;
       };
-      toggle_like: { Args: { p_post_id: string }; Returns: boolean };
+      toggle_like: {
+        Args: { p_post_id: string };
+        Returns: boolean;
+      };
     };
     Enums: {
       notification_type: "like" | "comment" | "dm" | "system";

@@ -10,6 +10,7 @@ type PostListProps = {
   onDelete?: (postId: string) => void;
   onEdit?: (postId: string, content: string, imageFile?: File) => Promise<void>;
   currentUserId?: string;
+  likingPosts?: Set<string>;
 };
 
 function PostList({
@@ -19,6 +20,7 @@ function PostList({
   onDelete,
   onEdit,
   currentUserId,
+  likingPosts,
 }: PostListProps) {
   const items = useMemo(
     () =>
@@ -30,11 +32,11 @@ function PostList({
             id: p.author.id,
             username: p.author.username,
             display_name: p.author.display_name,
-            avatar: p.author.avatar || undefined,
+            avatar_url: p.author.avatar_url || undefined,
           }}
           content={p.content}
-          image_url={p.image_url}
-          createdAt={new Date(p.createdAt)}
+          image_url={p.image_url || undefined}
+          createdAt={new Date(p.created_at)}
           likes={p.likes}
           liked={p.liked}
           comments={p.comments}
@@ -43,9 +45,10 @@ function PostList({
           onDelete={onDelete}
           onEdit={onEdit}
           currentUserId={currentUserId}
+          isLiking={likingPosts?.has(p.id) || false}
         />
       )),
-    [posts, onToggleLike, onAddComment, onDelete, onEdit, currentUserId],
+    [posts, onToggleLike, onAddComment, onDelete, onEdit, currentUserId, likingPosts],
   );
 
   return <section className="flex flex-col gap-3">{items}</section>;

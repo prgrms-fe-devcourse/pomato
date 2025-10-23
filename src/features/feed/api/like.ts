@@ -1,93 +1,21 @@
 import supabase from "@utils/supabase";
 
-// 좋아요 추가
-export async function addLike(postId: string): Promise<boolean> {
-  const { data: auth } = await supabase.auth.getUser();
-  const userId = auth?.user?.id;
-  if (!userId) return false;
-
+// RPC 함수를 사용한 좋아요 토글 (원자적 처리)
+export async function toggleLike(postId: string): Promise<boolean> {
   try {
-    const { error } = await supabase.from("post_likes").insert({
-      post_id: postId,
-      user_id: userId,
+    const { data, error } = await supabase.rpc("toggle_like", {
+      p_post_id: postId,
     });
 
     if (error) {
-      console.error("좋아요 추가 실패:", error.message);
+      console.error("좋아요 토글 실패:", error.message);
       return false;
     }
-    return true;
+
+    // RPC 함수가 true를 반환하면 좋아요 추가됨, false면 좋아요 취소됨
+    return data === true;
   } catch (error) {
-    console.error("좋아요 추가 중 오류:", error);
-    return false;
-  }
-}
-
-// 좋아요 제거
-export async function removeLike(postId: string): Promise<boolean> {
-  const { data: auth } = await supabase.auth.getUser();
-  const userId = auth?.user?.id;
-  if (!userId) return false;
-
-  try {
-    const { error } = await supabase
-      .from("post_likes")
-      .delete()
-      .eq("post_id", postId)
-      .eq("user_id", userId);
-
-    if (error) {
-      console.error("좋아요 제거 실패:", error.message);
-      return false;
-    }
-    return true;
-  } catch (error) {
-    console.error("좋아요 제거 중 오류:", error);
-    return false;
-  }
-}
-
-// 특정 게시글의 좋아요 개수 조회
-export async function getLikeCount(postId: string): Promise<number> {
-  try {
-    const { count, error } = await supabase
-      .from("post_likes")
-      .select("*", { count: "exact", head: true })
-      .eq("post_id", postId);
-
-    if (error) {
-      console.error("좋아요 개수 조회 실패:", error.message);
-      return 0;
-    }
-    return count || 0;
-  } catch (error) {
-    console.error("좋아요 개수 조회 중 오류:", error);
-    return 0;
-  }
-}
-
-// 현재 사용자가 특정 게시글을 좋아요했는지 확인
-export async function isLikedByUser(postId: string): Promise<boolean> {
-  const { data: auth } = await supabase.auth.getUser();
-  const userId = auth?.user?.id;
-  if (!userId) return false;
-
-  try {
-    const { data, error } = await supabase
-      .from("post_likes")
-      .select("id")
-      .eq("post_id", postId)
-      .eq("user_id", userId)
-      .single();
-
-    if (error && error.code !== "PGRST116") {
-      // PGRST116은 "no rows returned" 에러
-      console.error("좋아요 상태 확인 실패:", error.message);
-      return false;
-    }
-    return !!data;
-  } catch (error) {
-    console.error("좋아요 상태 확인 중 오류:", error);
+    console.error("좋아요 토글 중 오류:", error);
     return false;
   }
 }

@@ -24,7 +24,7 @@ type LocalImage = {
 
 export type PostCardProps = {
   id: string;
-  author: { username: string; display_name?: string; avatar?: string; id: string };
+  author: { username: string; display_name?: string; avatar_url?: string | null; id: string };
   content: string;
   image_url?: string;
   createdAt: Date;
@@ -36,6 +36,7 @@ export type PostCardProps = {
   onDelete?: (id: string) => void;
   onEdit?: (id: string, content: string, imageFile?: File) => Promise<void>;
   currentUserId?: string;
+  isLiking?: boolean;
 };
 
 export default function PostCard({
@@ -52,6 +53,7 @@ export default function PostCard({
   onDelete,
   onEdit,
   currentUserId,
+  isLiking = false,
 }: PostCardProps) {
   const [showComments, setShowComments] = useState(false);
 
@@ -167,7 +169,7 @@ export default function PostCard({
       {/* 헤더 */}
       <div className="flex min-h-[40px] items-center justify-between">
         <div className="flex items-center gap-[12px]" aria-label="author information">
-          {author.avatar ? <Avatar src={author.avatar} /> : <Avatar />}
+          {author.avatar_url ? <Avatar src={author.avatar_url} /> : <Avatar />}
           <div className="flex flex-col justify-center">
             <span className="label-text-m-semibold text-wh">{author.display_name}</span>
             <span className="label-text-s text-wh/60 mt-1">
@@ -339,6 +341,7 @@ export default function PostCard({
               "text-wh/65 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]",
               "hover:bg-pink-500/10 hover:text-pink-500",
               liked && "text-pink-500",
+              isLiking && "text-pink-500",
             )}
           >
             <Heart
