@@ -15,7 +15,7 @@ export default function ChatHeader({ partnerId }: ChatHeaderType) {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfilesTable["Row"]>();
   const activeUsers = useActiveUsersStore((state) => state.activeUsers);
-
+  const type = activeUsers.some((user) => user.id === partnerId) ? "online" : "offline";
   useEffect(() => {
     const fetchPartner = async () => {
       const data = await getProfile(partnerId);
@@ -32,7 +32,7 @@ export default function ChatHeader({ partnerId }: ChatHeaderType) {
         <button onClick={() => void navigate(-1)} className="cursor-pointer">
           <ChevronLeft width={24} height={24} />
         </button>
-        <Avatar size="s" src={profile?.avatar_url ?? undefined} />
+        <Avatar size="s" src={profile?.avatar_url ?? undefined} status={type} />
         <div className="flex flex-col justify-center">
           <span className="label-text-medium-semibold">{profile?.display_name}</span>
           <span className="label-text-xs text-wh/75">

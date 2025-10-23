@@ -1,7 +1,9 @@
+import { getMessages, getUnreadMessages, markMessageAsRead } from "@features/dm/api/message";
 import type {
   DmConversationFunction,
   DmConversationTable,
 } from "@features/dm/types/conversation.type";
+import type { DmMessagesTable } from "@features/dm/types/messages.type";
 import supabase from "@utils/supabase";
 
 export const getChatRoomIdByUser = async (
@@ -41,6 +43,55 @@ export const getMyChatRoomIds = async (): Promise<GetMyChatRoomIdsReturn> => {
   return { isLogin: true, rooms: data };
 };
 
+export const setMyChatRooms = async (
+  setRooms: (
+    rooms: (DmConversationTable & {
+      message: string;
+      unreadCount: number;
+      lastMessageTime: string;
+    })[],
+  ) => void,
+) => {
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+  if (userError || !user) return;
+
+  const { data: rooms, error: dataError } = await supabase
+    .from("dm_conversations")
+    .select<"*", DmConversationTable>("*")
+    .or(`user_a.eq.${user.id},user_b.eq.${user.id}`);
+
+  if (dataError || !rooms) return;
+
+  const enrichedRooms = await Promise.all(
+    rooms.map(async (room) => {
+      const { data: lastMsg } = await supabase
+        .from("dm_messages")
+        .select<"*", DmMessagesTable["Row"]>("*")
+        .eq("conversation_id", room.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+      const unreadMessages = await getUnreadMessages(room.id);
+      const unreadCount = unreadMessages.length;
+
+      const lastUnreadMessage = unreadMessages[0] ?? null;
+      const lastMessageTime = lastUnreadMessage?.created_at ?? "";
+      console.log(unreadMessages);
+      return {
+        ...room,
+        message: lastMsg?.content ?? "",
+        unreadCount,
+        lastMessageTime,
+      };
+    }),
+  );
+
+  setRooms(enrichedRooms);
+};
+
 export const getRoomInfoById = async (id: string): Promise<DmConversationTable | null> => {
   const { data, error } = await supabase
     .from("dm_conversations")
@@ -54,4 +105,13 @@ export const getRoomInfoById = async (id: string): Promise<DmConversationTable |
   }
 
   return data;
+};
+
+export const enterRooms = async (conversationId: string) => {
+  const message = await getMessages(conversationId);
+  const lastMessage = message.at(-1);
+
+  if (lastMessage) {
+    await markMessageAsRead(conversationId, lastMessage.id);
+  }
 };

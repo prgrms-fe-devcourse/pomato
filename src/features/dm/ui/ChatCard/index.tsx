@@ -50,13 +50,15 @@ type ChatCardProps = {
   userId: string;
   message: string;
   unreadCount?: number;
+  lastMessageTime: string;
   className?: string;
 };
 
 export default function ChatCard({
-  message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-  unreadCount = 99,
+  message = "",
+  unreadCount = 0,
   className,
+  lastMessageTime,
   userId,
 }: ChatCardProps) {
   const [profile, setProfile] = useState<ProfilesTable["Row"]>();
@@ -114,7 +116,7 @@ export default function ChatCard({
           hasUnread ? "justify-center" : "justify-start pt-[20px]",
         )}
       >
-        <span className="label-text-xs text-wh/70 pb-1">오후 12:10</span>
+        <span className="label-text-xs text-wh/70 pb-1">{lastMessageTime}</span>
 
         {hasUnread && (
           <span

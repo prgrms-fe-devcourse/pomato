@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router";
 
 import { authLoader } from "@features/auth/model/authLoader";
-import { dmLoader, messageLoader } from "@features/dm/model/loader";
+import { messageLoader } from "@features/dm/model/loader";
 import { listPosts } from "@features/feed/api/post";
 import type { Post } from "@features/feed/types/feed.types";
 import { mateLoader } from "@features/user/model/loader";
@@ -50,7 +50,6 @@ export const router = createBrowserRouter([
       {
         path: "dm",
         Component: Dm,
-        loader: dmLoader,
       },
       {
         path: "dm/:id",
