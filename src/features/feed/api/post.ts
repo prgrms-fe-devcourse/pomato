@@ -1,5 +1,4 @@
 import { deletePostImage } from "@features/feed/api/image";
-import { getLikesForPosts } from "@features/feed/api/like";
 import {
   groupBy,
   isCommentRow,
@@ -11,19 +10,34 @@ import {
 import type { CommentRow, PostRow, ProfileRow, Post } from "@features/feed/types/feed.types";
 import supabase from "@utils/supabase";
 
-// /** 게시글 목록 + 댓글 + 각 작성자 프로필 조회까지 */
-export async function listPosts(): Promise<Post[]> {
+// 게시글 목록 조회
+export async function getPostList(
+  pageParam: number = 0,
+  pageSize: number = 5,
+): Promise<{
+  posts: Post[];
+  nextCursor: number | null;
+  hasNextPage: boolean;
+}> {
   const postsRes = await supabase
     .from("posts")
-    .select("id,user_id,content,image_url,created_at")
-    .order("created_at", { ascending: false });
+    .select("id,user_id,content,image_url,created_at,likes_count,comments_count")
+    .order("created_at", { ascending: false })
+    .range(pageParam * pageSize, (pageParam + 1) * pageSize - 1);
 
-  if (postsRes.error || !Array.isArray(postsRes.data)) return [];
+  if (postsRes.error || !Array.isArray(postsRes.data)) {
+    return { posts: [], nextCursor: null, hasNextPage: false };
+  }
+
   const postRows: PostRow[] = [];
   for (const row of postsRes.data) {
     if (isPostRow(row)) postRows.push(row);
   }
-  if (postRows.length === 0) return [];
+
+  // 데이터가 없는 경우
+  if (postRows.length === 0) {
+    return { posts: [], nextCursor: null, hasNextPage: false };
+  }
 
   // 2) 게시글 댓글 조회
   const postIds = postRows.map((p) => p.id);
@@ -62,22 +76,40 @@ export async function listPosts(): Promise<Post[]> {
   );
 
   // 6) 모든 게시글의 좋아요 개수와 현재 사용자의 좋아요 상태 조회
-  const likesData = await getLikesForPosts(postIds);
+  const { data: auth } = await supabase.auth.getUser();
+  const userId = auth?.user?.id;
 
-  // 7) 도메인 객체 생성 (좋아요 버튼을 눌렀는지에 대한 여부 확인을 위해 객체 속성 추가)
+  let userLikes: string[] = [];
+  if (userId) {
+    const { data: userLikeData } = await supabase
+      .from("post_likes")
+      .select("post_id")
+      .eq("user_id", userId)
+      .in("post_id", postIds);
+
+    if (userLikeData) {
+      userLikes = userLikeData.map((like) => like.post_id);
+    }
+  }
+
+  // 7) 도메인 객체 생성
   const posts: Post[] = postRows.map((row) => {
-    const likeInfo = likesData[row.id] || { count: 0, liked: false };
+    const liked = userLikes.includes(row.id);
     return rowToPost(
       row,
       commentsByPostId[row.id] ?? [],
       profileByUserId.get(row.user_id),
       profileByUserId,
-      likeInfo.count,
-      likeInfo.liked,
+      row.likes_count || 0,
+      liked,
     );
   });
 
-  return posts;
+  // 8) 다른 페이지 있는지 체크
+  const hasNextPage = posts.length === pageSize;
+  const nextCursor = hasNextPage ? pageParam + 1 : null;
+
+  return { posts, nextCursor, hasNextPage };
 }
 
 // 게시글 생성
@@ -106,7 +138,6 @@ export async function createPost(content: string, image_url?: string): Promise<P
     .eq("user_id", userId)
     .single();
 
-  // Database.types.ts 변화에 따른 임시 조치 (추후 수정 필요)
   return rowToPost(
     { ...data, comments_count: 0, likes_count: 0 },
     [],
@@ -176,7 +207,6 @@ export async function updatePost(
       .eq("user_id", userId)
       .single();
 
-    // Database.types.ts 변화에 따른 임시 조치 (추후 수정 필요)
     return rowToPost(
       { ...data, comments_count: 0, likes_count: 0 },
       [],

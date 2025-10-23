@@ -6,7 +6,7 @@ export default function ClassicBarSpinner() {
   const anim = `classic-bar-${id}`.replaceAll(/[^a-zA-Z0-9_-]/g, "_");
 
   // 고정 값(요구: props 없음)
-  const size = 64; // 전체 크기(px)
+  const size = 48; // 전체 크기(px)
   const color = "#a3a3a3"; // 막대 색상
   const bars = 12; // 막대 개수
   const duration = 1.2; // 회전 주기(s)
