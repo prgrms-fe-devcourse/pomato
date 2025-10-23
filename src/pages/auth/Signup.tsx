@@ -1,40 +1,106 @@
-import { UserPlus } from "lucide-react";
-import { Link } from "react-router";
+import { User, Mail, Lock, AtSign } from "lucide-react";
 
 import Button from "@components/Button";
+import Input from "@components/Input";
 
-export default function Signup() {
+export default function SignupStatic() {
   return (
-    <section className="flex min-h-dvh flex-1 flex-col items-center justify-center gap-6">
-      <header className="flex flex-col items-center justify-center gap-6">
-        <div className="bg-wh/15 dark:bg-bl/20 flex h-15 w-15 items-center justify-center rounded-full">
-          <UserPlus width={32} height={32} />
+    <section className="flex min-h-0 flex-1 flex-col items-center justify-center gap-5 overflow-y-auto px-4 py-8 sm:gap-6 sm:px-6 sm:py-10 md:gap-8 md:px-8 md:py-12">
+      <header className="flex flex-col items-center justify-center gap-4 sm:gap-5">
+        <div className="bg-wh/15 dark:bg-bl/20 flex h-14 w-14 items-center justify-center rounded-full sm:h-16 sm:w-16 md:h-18 md:w-18">
+          <User width={28} height={28} className="sm:h-8 sm:w-8" />
         </div>
-        <div className="flex flex-col items-center gap-2">
-          <h3 className="heading-text-s">새로운 메이트가 되어주세요</h3>
-          <p className="label-text-s">간단한 정보 입력만으로 바로 시작할 수 있어요</p>
+        <div className="flex flex-col items-center gap-1.5 sm:gap-2">
+          <h3 className="heading-text-xs sm:heading-text-s md:heading-text-m text-center">
+            환영합니다
+          </h3>
+          <p className="label-text-xs sm:label-text-s text-center opacity-90">
+            회원가입 후 함께 집중을 시작해요
+          </p>
         </div>
       </header>
-      <div className="flex justify-center">
-        <Button intent="primary" className="w-100">
-          이메일로 가입하기
+
+      <form
+        action="#"
+        method="post"
+        className="flex w-full max-w-[320px] flex-col justify-center gap-3.5 sm:max-w-md sm:gap-4"
+        noValidate
+      >
+        <div className="space-y-1.5">
+          <label htmlFor="displayName" className="label-text-xs">
+            닉네임
+          </label>
+          <Input
+            id="displayName"
+            name="displayName"
+            type="text"
+            placeholder="닉네임을 입력해주세요"
+            Icon={{ Component: User, align: "left" }}
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label htmlFor="username" className="label-text-xs">
+            아이디
+          </label>
+          <Input
+            id="username"
+            name="username"
+            type="text"
+            placeholder="아이디를 입력해주세요"
+            Icon={{ Component: AtSign, align: "left" }}
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label htmlFor="email" className="label-text-xs">
+            이메일
+          </label>
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="이메일을 입력해주세요"
+            Icon={{ Component: Mail, align: "left" }}
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label htmlFor="password" className="label-text-xs">
+            비밀번호
+          </label>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            Icon={{ Component: Lock, align: "left" }}
+          />
+        </div>
+
+        <div className="space-y-1.5">
+          <label htmlFor="confirmPassword" className="label-text-xs">
+            비밀번호 확인
+          </label>
+          <Input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            placeholder="비밀번호를 다시 입력해주세요"
+            Icon={{ Component: Lock, align: "left" }}
+          />
+        </div>
+
+        <Button type="submit" intent="primary" className="h-10 w-full sm:h-11">
+          회원가입
         </Button>
-      </div>
-      <div className="flex w-full items-center gap-2 px-4">
-        <hr className="border-wh/60 dark:border-wh/40 flex-1 border-t" />
-        <span className="label-text-xs">간편하게 시작하기</span>
-        <hr className="border-wh/60 dark:border-wh/40 flex-1 border-t" />
-      </div>
-      <div className="flex flex-col">
-        <Button>Google로 가입하기</Button>
-        <Button>GitHub로 가입하기</Button>
-        <Button>kakao로 가입하기</Button>
-      </div>
-      <p className="label-text-s flex gap-1 opacity-90">
+      </form>
+
+      <p className="label-text-xs sm:label-text-s flex gap-1 opacity-90">
         이미 계정이 있으신가요?
-        <Link to="/login">
-          <span className="font-bold hover:underline">로그인</span>
-        </Link>
+        <a href="/login" className="font-bold hover:underline">
+          로그인
+        </a>
       </p>
     </section>
   );

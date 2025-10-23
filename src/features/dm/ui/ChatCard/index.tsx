@@ -77,7 +77,7 @@ export default function ChatCard({
   return (
     <div
       className={twMerge(
-        "group relative flex min-h-[82px] w-full min-w-[400px] items-center rounded-[12px] transition select-none",
+        "group relative flex w-full items-center rounded-xl transition select-none",
         "mb-2 gap-[12px] px-[16px] py-[12px]",
         "bg-wh/8 border-wh/10 hover:bg-wh/20 active:bg-wh/20",
         "hover:border-wh/15 active:border-wh/15",

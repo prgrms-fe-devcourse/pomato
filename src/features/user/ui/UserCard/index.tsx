@@ -96,7 +96,7 @@ export default function UserCard({
   return (
     <div
       className={twMerge(
-        "group relative flex min-h-[78px] w-full min-w-[400px] flex-col items-center rounded-[12px] transition select-none",
+        "group relative flex w-full flex-col items-center rounded-xl transition select-none",
         "border-[1px]",
         "bg-wh/8 border-wh/10",
         "dark:bg-bl/25 dark:border-wh/10",

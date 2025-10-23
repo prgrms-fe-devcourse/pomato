@@ -252,4 +252,8 @@
         rgb(23 23 27 / 0.75) 100%
       );
   }
+  .bg-gradient::before,
+  .bg-gradient::after {
+    pointer-events: none;
+  }
 }
