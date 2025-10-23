@@ -21,6 +21,7 @@ import type {
 } from "@features/alarm/types/notification.type";
 import { getUserById } from "@features/user/api/user";
 import type { ProfilesTable } from "@features/user/types/user.type";
+import { toHHMM } from "@utils/formatTime";
 
 /**
  * NotificationCard
@@ -67,6 +68,7 @@ type NotificationItemProps = {
   notificationId: string;
   type: NotificationType;
   payload: NotificationJsonbType;
+  createdAt: string;
   className?: string;
 };
 
@@ -81,6 +83,7 @@ export default function NotificationCard({
   notificationId,
   type = "like",
   payload,
+  createdAt,
   className,
 }: NotificationItemProps) {
   const TypeIcon = typeIconMap[type];
@@ -169,7 +172,7 @@ export default function NotificationCard({
                   "opacity-100 group-hover:pointer-events-none group-hover:opacity-0",
                 )}
               >
-                2h
+                {toHHMM(createdAt)}
               </span>
 
               {/* 액션: hover 시 노출 */}

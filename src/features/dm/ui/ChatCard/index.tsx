@@ -117,7 +117,9 @@ export default function ChatCard({
           hasUnread ? "justify-center" : "justify-start pt-[20px]",
         )}
       >
-        <span className="label-text-xs text-wh/70 pb-1">{toHHMM(lastMessageTime)}</span>
+        <span className="label-text-xs text-wh/70 pb-1">
+          {lastMessageTime ? toHHMM(lastMessageTime) : ""}
+        </span>
 
         {hasUnread && (
           <span
