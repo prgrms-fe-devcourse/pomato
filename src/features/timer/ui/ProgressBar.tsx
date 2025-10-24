@@ -1,10 +1,13 @@
 import { toMMSS } from "@utils/formatTime";
 
-import { useTimerStore } from "../model/useTimerStore";
-
-export default function ProgressBar({ elapsedSec }: { elapsedSec: number }) {
-  const { focusMin } = useTimerStore();
-  const progressPercent = (elapsedSec / (focusMin * 60)) * 100;
+export default function ProgressBar({
+  elapsedSec,
+  totalSec,
+}: {
+  elapsedSec: number;
+  totalSec: number;
+}) {
+  const progressPercent = (elapsedSec / totalSec) * 100;
 
   return (
     <div className="flex items-center justify-center gap-2 text-xs">
@@ -15,7 +18,7 @@ export default function ProgressBar({ elapsedSec }: { elapsedSec: number }) {
           style={{ width: `${progressPercent}%` }}
         ></div>
       </div>
-      <span className="text-wh/70 cursor-default tabular-nums">{toMMSS(focusMin * 60)}</span>
+      <span className="text-wh/70 cursor-default tabular-nums">{toMMSS(totalSec)}</span>
     </div>
   );
 }

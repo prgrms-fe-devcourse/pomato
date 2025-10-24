@@ -34,10 +34,15 @@ type TimerStore = TimerStoreState & TimerStoreActions;
 export const useTimerStore = create<TimerStore>()(
   devtools(
     immer((set) => ({
-      focusMin: 25,
-      breakMin: 5,
-      longBreakMin: 15,
-      totalSession: 4,
+      // focusMin: 25,
+      // breakMin: 5,
+      // longBreakMin: 15,
+      // totalSession: 4,
+
+      focusMin: 1,
+      breakMin: 2,
+      longBreakMin: 1,
+      totalSession: 2,
 
       currentPhase: "FOCUS",
       currentTimerStatus: "IDLE",
@@ -122,21 +127,27 @@ export const useTimerStore = create<TimerStore>()(
   ),
 );
 
-export const useTotalSeconds = () => {
-  return useTimerStore((state) => {
-    switch (state.currentPhase) {
-      case "FOCUS": {
-        return state.focusMin * 60;
-      }
-      case "BREAK": {
-        return state.breakMin * 60;
-      }
-      case "LONG BREAK": {
-        return state.longBreakMin * 60;
-      }
-      default: {
-        return 0;
-      }
+export const getTotalSeconds = (
+  phase: Phase,
+  store: Pick<TimerStore, "focusMin" | "breakMin" | "longBreakMin">,
+): number => {
+  switch (phase) {
+    case "FOCUS": {
+      return store.focusMin * 60;
     }
-  });
+    case "BREAK": {
+      return store.breakMin * 60;
+    }
+    case "LONG BREAK": {
+      return store.longBreakMin * 60;
+    }
+    default: {
+      return 0;
+    }
+  }
+};
+
+export const useTotalSeconds = (): number => {
+  const { currentPhase, focusMin, breakMin, longBreakMin } = useTimerStore();
+  return getTotalSeconds(currentPhase, { focusMin, breakMin, longBreakMin });
 };

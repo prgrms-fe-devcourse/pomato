@@ -1,9 +1,10 @@
-import { User, AtSign } from "lucide-react";
+import { User, AtSign, Settings } from "lucide-react";
 import { useEffect, useState, useRef, type FormEventHandler } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
+import EmptyState from "@components/Empty";
 import Input from "@components/Input";
 import { Toast } from "@components/Toast";
 import type { ToastIntent } from "@components/Toast/intent";
@@ -32,6 +33,7 @@ export default function ProfileEdit() {
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const showToast = (intent: ToastType["intent"], message: string) => setToast({ message, intent });
+  const id = useUserId();
 
   // 현재 로그인한 사용자의 프로필 정보를 업데이트
   const updateProfile = async (
@@ -169,6 +171,18 @@ export default function ProfileEdit() {
       }
     })();
   };
+
+  if (!id)
+    return (
+      <section className="flex flex-1 overflow-hidden p-4">
+        <EmptyState
+          title="로그인이 필요합니다"
+          description="설정을 변경하려면 로그인하세요"
+          Icon={Settings}
+          className="border-wh/6 rounded-xl border"
+        />
+      </section>
+    );
 
   return (
     <section className="pc-scroll flex min-h-0 flex-1 flex-col items-center justify-center gap-6 overflow-y-auto px-4 py-8 sm:gap-8 sm:px-6 sm:py-10 md:gap-10 md:px-8 md:py-12">

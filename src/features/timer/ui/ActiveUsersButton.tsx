@@ -26,7 +26,7 @@ export default function ActiveUsersButton() {
       composition="iconText"
       className="px-4"
     >
-      <Users /> {activeUsers.length} 명이 함께 집중 중
+      <Users /> {activeUsers.length - 1} 명이 함께 집중 중
     </Button>
   );
 }
