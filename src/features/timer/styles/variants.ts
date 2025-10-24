@@ -1,7 +1,7 @@
 import { cva } from "class-variance-authority";
 
 export const dot = cva(
-  "focus-visible:ring-wh/12 h-2 w-2 rounded-full border outline-none focus-visible:ring-2",
+  "focus-visible:ring-wh/12 h-2 w-2 rounded-full border transition-all duration-500 ease-in-out outline-none focus-visible:ring-2",
   {
     variants: {
       status: {

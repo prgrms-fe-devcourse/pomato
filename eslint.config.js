@@ -54,6 +54,7 @@ export default defineConfig([
       import: importPlugin,
     },
     rules: {
+      // TODO: 이후 리팩토링 때 error 변경
       "@typescript-eslint/no-floating-promises": "off",
       "@typescript-eslint/no-unused-vars": [
         "warn",

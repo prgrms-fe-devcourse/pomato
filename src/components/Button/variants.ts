@@ -6,6 +6,7 @@ export const button = cva(
     "text-wh inline-flex cursor-pointer items-center justify-center",
     "focus-visible:ring-wh/12 outline-none focus-visible:ring-2",
     "disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-45",
+    "transition-all duration-300",
   ],
   {
     variants: {

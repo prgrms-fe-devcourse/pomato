@@ -14,7 +14,7 @@ export default function Panel() {
     <>
       {isOpen ? (
         <section
-          className="bg-wh/18 dark:bg-bl/18 border-wh/12 dark:border-wh/8 relative z-10 flex min-h-0 w-full min-w-0 flex-col self-stretch overflow-auto rounded-[8px] border-1 shadow backdrop-blur-[12px] min-[801px]:w-[40%] min-[801px]:max-w-[650px] min-[801px]:min-w-[576px] min-[801px]:shrink-0"
+          className="bg-wh/18 dark:bg-bl/18 border-wh/12 dark:border-wh/8 relative z-10 flex min-h-0 w-full min-w-0 flex-col self-stretch overflow-auto rounded-lg border shadow backdrop-blur-md min-[801px]:w-[40%] min-[801px]:max-w-[650px] min-[801px]:min-w-xl min-[801px]:shrink-0"
           aria-label="Panel"
         >
           <Header onClose={close} />
