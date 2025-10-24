@@ -6,13 +6,14 @@ import Avatar from "@components/Avatar";
 import Button from "@components/Button";
 import Input from "@components/Input";
 import { Toast } from "@components/Toast";
+import type { ToastIntent } from "@components/Toast/intent";
 import { getProfile } from "@features/auth/api/profile";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { useUserId } from "@stores/useAuthStore";
 import type { Profile } from "@type/auth.types";
 import supabase from "@utils/supabase";
 
-type ToastType = { message: string; intent: "info" | "success" | "warning" | "error" };
+type ToastType = { message: string; intent: ToastIntent };
 
 export default function ProfileEdit() {
   const isMobile = useIsMobile();
