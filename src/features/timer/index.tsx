@@ -2,23 +2,40 @@ import { useEffect, useRef, useState } from "react";
 
 import { AudioVisualizer } from "@features/timer/ui/AudioVisualizer";
 
-import { useTimerStore, useTotalSeconds } from "./model/useTimerStore";
+import { getTotalSeconds, useTimerStore } from "./model/useTimerStore";
 import ActiveUsersButton from "./ui/ActiveUsersButton";
 import ControlButton from "./ui/ControlButton";
 import ProgressBar from "./ui/ProgressBar";
 import SessionDot from "./ui/SessionDot";
 
 export default function Timer() {
-  const { currentTimerStatus, currentPhase, totalSession, currentSession, completePhase } =
-    useTimerStore();
-  const totalSeconds = useTotalSeconds();
+  const {
+    currentTimerStatus,
+    currentPhase,
+    totalSession,
+    currentSession,
+    completePhase,
+    focusMin,
+    breakMin,
+    longBreakMin,
+  } = useTimerStore();
+
   const [elapsedSec, setElapsedSec] = useState(0);
+  const [totalSec, setTotalSec] = useState(
+    getTotalSeconds(currentPhase, { focusMin, breakMin, longBreakMin }),
+  );
   const startAt = useRef<number>(0);
+  const elapsedSecRef = useRef<number>(0);
 
   useEffect(() => {
+    elapsedSecRef.current = elapsedSec;
+  }, [elapsedSec]);
+
+  useEffect(() => {
+    setTotalSec(getTotalSeconds(currentPhase, { focusMin, breakMin, longBreakMin }));
     setElapsedSec(0);
     startAt.current = 0;
-  }, [currentPhase]);
+  }, [currentPhase, focusMin, breakMin, longBreakMin]);
 
   useEffect(() => {
     if (currentTimerStatus === "IDLE") {
@@ -33,16 +50,16 @@ export default function Timer() {
     }
 
     if (startAt.current === 0) {
-      startAt.current = Date.now() - elapsedSec * 1000;
+      startAt.current = Date.now() - elapsedSecRef.current * 1000;
     }
 
     const timer = setInterval(() => {
       const nowTimer = Math.floor((Date.now() - startAt.current) / 1000);
 
-      if (nowTimer >= totalSeconds) {
+      if (nowTimer >= totalSec) {
         clearInterval(timer);
         startAt.current = 0;
-        setElapsedSec(totalSeconds);
+        setElapsedSec(totalSec);
         completePhase();
       } else {
         setElapsedSec(nowTimer);
@@ -50,8 +67,7 @@ export default function Timer() {
     }, 1000);
 
     return () => clearInterval(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentTimerStatus, currentPhase, completePhase, totalSeconds]);
+  }, [currentTimerStatus, totalSec, completePhase]);
 
   return (
     <section className="flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center gap-5 overflow-auto group-has-[section[aria-label='Panel']]:max-[800px]:hidden">
@@ -80,7 +96,7 @@ export default function Timer() {
           </ol>
         </div>
       </div>
-      <ProgressBar elapsedSec={elapsedSec} />
+      <ProgressBar elapsedSec={elapsedSec} totalSec={totalSec} />
       <ControlButton />
       <ActiveUsersButton />
     </section>

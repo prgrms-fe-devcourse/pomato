@@ -13,7 +13,7 @@ const createDrops = (): Raindrop[] =>
     id: i,
     left: `${Math.random() * 100}%`,
     delay: Math.random() * 4,
-    duration: 0.8 + Math.random() * 0.5 * 2,
+    duration: 0.8 + Math.random(),
     height: 10 + Math.random() * 20,
   }));
 
