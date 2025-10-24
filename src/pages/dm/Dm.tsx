@@ -9,7 +9,7 @@ export default function Dm() {
   const id = useUserId();
   if (!id)
     return (
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden p-[16px]">
         <EmptyState
           title="로그인이 필요합니다"
           description="메시지를 보내려면 로그인하세요"
