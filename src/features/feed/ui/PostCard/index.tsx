@@ -347,6 +347,8 @@ export default function PostCard({
               "hover:bg-pink-500/10 hover:text-pink-500",
               liked && "text-pink-500",
               isLiking && "text-pink-500",
+              // disabled 상태
+              isLoggedIn ? "" : "text-wh/40 cursor-not-allowed opacity-50",
             )}
           >
             <Heart
