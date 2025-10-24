@@ -14,7 +14,7 @@ export default function Dm() {
           title="로그인이 필요합니다"
           description="메시지를 보내려면 로그인하세요"
           Icon={MessageCircle}
-          className="border-wh/6 rounded-[12px] border-1"
+          className="border-wh/6 rounded-xl border"
         />
       </div>
     );

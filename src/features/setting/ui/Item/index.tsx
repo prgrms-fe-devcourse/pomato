@@ -100,11 +100,11 @@ export default function Item({
       {...(!disabled && { onClick })}
       disabled={disabled}
     >
-      <div className="flex items-center gap-[16px]">
+      <div className="flex items-center gap-4">
         <div className={twMerge(iconVariants({ intent }))}>
           <Icon />
         </div>
-        <div className="flex flex-col justify-center gap-[4px] text-left select-none">
+        <div className="flex flex-col justify-center gap-1 text-left select-none">
           <span className={twMerge(nameVariants({ intent }))}>{name}</span>
           <span className={twMerge(descriptionVariants({ intent }))}>{description}</span>
         </div>
