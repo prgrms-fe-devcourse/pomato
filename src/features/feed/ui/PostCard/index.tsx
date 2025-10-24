@@ -355,7 +355,9 @@ export default function PostCard({
               className={twMerge("block stroke-current", liked && "fill-current")}
               aria-hidden
             />
-            <span className="label-text-xs leading-none">{likes > 999 ? "999+" : likes}</span>
+            <span className="label-text-xs leading-none tabular-nums">
+              {likes > 999 ? "999+" : likes}
+            </span>
           </button>
 
           <button
@@ -367,7 +369,7 @@ export default function PostCard({
             onClick={() => setShowComments((v) => !v)}
           >
             <MessageCircle width={14} height={14} className="block stroke-current" />
-            <span className="label-text-xs leading-none">{comments.length}</span>
+            <span className="label-text-xs leading-none tabular-nums">{comments.length}</span>
           </button>
         </div>
       )}
