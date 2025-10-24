@@ -54,6 +54,7 @@ export default function Timer() {
   return (
     <section className="flex min-h-0 min-w-0 flex-1 flex-col items-center justify-center gap-5 overflow-auto group-has-[section[aria-label='Panel']]:max-[800px]:hidden">
       <div className="flex flex-col items-center justify-center gap-8">
+        <AudioVisualizer isPlaying={true} />
         <img src="https://placehold.co/180x180" className="border-wh/20 rounded-xl border-2" />
         <div className="flex flex-col items-center gap-3">
           <header>
@@ -67,7 +68,7 @@ export default function Timer() {
                   index < currentSession
                     ? "completed"
                     : currentPhase === "FOCUS" &&
-                        currentTimerStatus === "RUNNING" &&
+                        ["RUNNING", "PAUSED"].includes(currentTimerStatus) &&
                         index === currentSession
                       ? "active"
                       : "default"
