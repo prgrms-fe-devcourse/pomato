@@ -39,7 +39,7 @@ type RealtimeState<T extends SupabaseClient> = {
 };
 
 export const useRealtimeStore = create<RealtimeState<SupabaseClient>>((set, get) => ({
-  inactiveTabTimeoutSeconds: 10 * 60,
+  inactiveTabTimeoutSeconds: 10,
   supabaseClient: supabase,
   channels: new Map(),
   channelFactories: new Map(),
