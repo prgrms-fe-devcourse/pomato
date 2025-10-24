@@ -1,10 +1,11 @@
+import type { QueryClient } from "@tanstack/react-query";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 import { createComment } from "@features/feed/api/comment";
 import { uploadPostImage } from "@features/feed/api/image";
 import { toggleLike } from "@features/feed/api/like";
-import { createPost, deletePost, updatePost, listPosts } from "@features/feed/api/post";
+import { createPost, deletePost, updatePost } from "@features/feed/api/post";
 import type { PostWithComments } from "@features/feed/types/feed.types";
 import supabase from "@utils/supabase";
 
@@ -14,15 +15,16 @@ interface FeedState {
   isLoading: boolean;
   isUploading: boolean;
   likingPosts: Set<string>;
+  queryClient: QueryClient | null;
 
   // 액션들
-  fetchPosts: () => Promise<void>;
   addPost: (content: string, imageFile?: File) => Promise<void>;
   toggleLike: (postId: string) => Promise<void>;
   addComment: (postId: string, text: string) => Promise<void>;
   removePost: (postId: string) => Promise<void>;
   editPost: (postId: string, content: string, imageFile?: File) => Promise<boolean>;
   setPosts: (posts: PostWithComments[]) => void;
+  setQueryClient: (queryClient: QueryClient) => void;
 }
 
 export const useFeedStore = create<FeedState>()(
@@ -33,23 +35,11 @@ export const useFeedStore = create<FeedState>()(
       isLoading: false,
       isUploading: false,
       likingPosts: new Set(),
+      queryClient: null,
 
-      // 게시글 목록 가져오기
-      fetchPosts: async () => {
-        set({ isLoading: true });
-        try {
-          const result = await listPosts();
-          const posts: PostWithComments[] = result.map((post) => ({
-            ...post,
-            liked: post.liked ?? false,
-            comments: post.comments ?? [],
-          }));
-          set({ posts });
-        } catch (error) {
-          console.error("게시글 목록 조회 실패:", error);
-        } finally {
-          set({ isLoading: false });
-        }
+      // QueryClient 설정
+      setQueryClient: (queryClient: QueryClient) => {
+        set({ queryClient });
       },
 
       // 게시글 작성
@@ -110,6 +100,12 @@ export const useFeedStore = create<FeedState>()(
           set((state) => ({
             posts: [postWithComments, ...state.posts],
           }));
+
+          // TanStack Query 캐시 무효화
+          const { queryClient } = get();
+          if (queryClient) {
+            void queryClient.invalidateQueries({ queryKey: ["posts"] });
+          }
         } catch (error) {
           console.error("게시글 작성 실패:", error);
         } finally {
@@ -216,6 +212,12 @@ export const useFeedStore = create<FeedState>()(
             set((state) => ({
               posts: state.posts.filter((p) => p.id !== postId),
             }));
+
+            // TanStack Query 캐시 무효화
+            const { queryClient } = get();
+            if (queryClient) {
+              void queryClient.invalidateQueries({ queryKey: ["posts"] });
+            }
           }
         } catch (error) {
           console.error("게시글 삭제 중 오류:", error);
@@ -247,6 +249,12 @@ export const useFeedStore = create<FeedState>()(
                   : p,
               ),
             }));
+
+            // TanStack Query 캐시 무효화
+            const { queryClient } = get();
+            if (queryClient) {
+              void queryClient.invalidateQueries({ queryKey: ["posts"] });
+            }
             return true;
           }
           return false;
