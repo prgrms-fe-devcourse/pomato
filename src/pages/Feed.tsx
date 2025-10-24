@@ -1,6 +1,6 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { Search, SearchX, FileText, Heart } from "lucide-react";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 
 import EmptyState from "@components/Empty";
 import Input from "@components/Input";
@@ -21,13 +21,22 @@ export default function Feed() {
     addComment,
     removePost,
     editPost,
+    setQueryClient,
   } = useFeedStore();
   const [query, setQuery] = useState("");
   const userId = useUserId();
   const queryClient = useQueryClient();
 
+  // QueryClient를 스토어에 주입
+  useEffect(() => {
+    setQueryClient(queryClient);
+  }, [queryClient, setQueryClient]);
+
   // 로그인 상태 확인
   const isLoggedIn = useIsLoggedIn();
+
+  // 이전 데이터 상태를 추적하기 위한 ref
+  const prevDataRef = useRef<string[][] | null>(null);
 
   // useInfiniteQuery를 사용한 무한 스크롤
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useInfiniteQuery({
@@ -45,51 +54,60 @@ export default function Feed() {
     staleTime: 5 * 60 * 1000, // 5분간 캐시 유지
   });
 
-  // 모든 페이지의 게시글을 하나의 배열로 합치기
-  const queryPosts = useMemo(() => {
-    return (
-      data?.pages.flatMap((page) =>
+  // TanStack Query 데이터를 스토어와 동기화
+  useEffect(() => {
+    if (!data || data.pages.length === 0) return;
+
+    const currentDataString = JSON.stringify(data.pages.map((page) => page.posts.map((p) => p.id)));
+    const prevDataString = prevDataRef.current ? JSON.stringify(prevDataRef.current) : null;
+
+    // 데이터가 변경되었을 때만 동기화
+    if (currentDataString !== prevDataString) {
+      const queryPosts = data.pages.flatMap((page) =>
         page.posts.map((post) => ({
           ...post,
           liked: post.liked ?? false,
           comments: post.comments ?? [],
         })),
-      ) ?? []
-    );
+      );
+
+      const { setPosts, posts: currentStorePosts } = useFeedStore.getState();
+
+      // 초기 로드이거나 스토어가 비어있을 때
+      if (currentStorePosts.length === 0) {
+        setPosts(queryPosts);
+      } else {
+        // 기존 데이터와 새 데이터 병합 (중복 제거)
+        const existingIds = new Set(currentStorePosts.map((p) => p.id));
+        const newPosts = queryPosts.filter((p) => !existingIds.has(p.id));
+
+        if (newPosts.length > 0) {
+          setPosts([...currentStorePosts, ...newPosts]);
+        }
+      }
+
+      prevDataRef.current = data.pages.map((page) => page.posts.map((p) => p.id));
+    }
   }, [data]);
 
-  // Zustand 스토어와 TanStack Query 양방향 동기화
-  useEffect(() => {
-    if (queryPosts.length > 0) {
-      // TanStack Query에서 가져온 데이터를 Zustand 스토어에 동기화
-      const { setPosts } = useFeedStore.getState();
-      setPosts(queryPosts);
+  // 게시글 데이터 결정: 스토어에 데이터가 있으면 스토어 우선, 없으면 쿼리 데이터 사용
+  const posts = useMemo(() => {
+    if (storePosts.length > 0) {
+      return storePosts;
     }
-  }, [queryPosts]);
 
-  // Zustand 스토어의 변경사항을 TanStack Query 캐시에 동기화
-  useEffect(() => {
-    if (storePosts.length > 0 && data) {
-      // 변경된 게시글들을 찾아서 캐시 업데이트
-      // 업데이트 작업 안할 경우 로컬과 서버 데이터가 불일치하는 현상 있었음
-      const updatedPages = data.pages.map((page) => ({
-        ...page,
-        posts: page.posts.map((cachedPost) => {
-          const storePost = storePosts.find((sp) => sp.id === cachedPost.id);
-          return storePost ?? cachedPost;
-        }),
-      }));
-
-      // 캐시 업데이트
-      queryClient.setQueryData(["posts"], {
-        pageParams: data.pageParams,
-        pages: updatedPages,
-      });
+    if (data?.pages) {
+      return data.pages.flatMap((page) =>
+        page.posts.map((post) => ({
+          ...post,
+          liked: post.liked ?? false,
+          comments: post.comments ?? [],
+        })),
+      );
     }
-  }, [storePosts, data, queryClient]);
 
-  // Zustand 스토어의 posts를 우선 사용 (낙관적 업데이트 반영)
-  const posts = storePosts.length > 0 ? storePosts : queryPosts;
+    return [];
+  }, [storePosts, data]);
 
   const filteredPosts = useMemo(() => {
     const q = query.trim().toLowerCase();

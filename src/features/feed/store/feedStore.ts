@@ -1,3 +1,4 @@
+import type { QueryClient } from "@tanstack/react-query";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
@@ -14,6 +15,7 @@ interface FeedState {
   isLoading: boolean;
   isUploading: boolean;
   likingPosts: Set<string>;
+  queryClient: QueryClient | null;
 
   // 액션들
   addPost: (content: string, imageFile?: File) => Promise<void>;
@@ -22,6 +24,7 @@ interface FeedState {
   removePost: (postId: string) => Promise<void>;
   editPost: (postId: string, content: string, imageFile?: File) => Promise<boolean>;
   setPosts: (posts: PostWithComments[]) => void;
+  setQueryClient: (queryClient: QueryClient) => void;
 }
 
 export const useFeedStore = create<FeedState>()(
@@ -32,6 +35,12 @@ export const useFeedStore = create<FeedState>()(
       isLoading: false,
       isUploading: false,
       likingPosts: new Set(),
+      queryClient: null,
+
+      // QueryClient 설정
+      setQueryClient: (queryClient: QueryClient) => {
+        set({ queryClient });
+      },
 
       // 게시글 작성
       addPost: async (content: string, imageFile?: File) => {
@@ -91,6 +100,12 @@ export const useFeedStore = create<FeedState>()(
           set((state) => ({
             posts: [postWithComments, ...state.posts],
           }));
+
+          // TanStack Query 캐시 무효화
+          const { queryClient } = get();
+          if (queryClient) {
+            void queryClient.invalidateQueries({ queryKey: ["posts"] });
+          }
         } catch (error) {
           console.error("게시글 작성 실패:", error);
         } finally {
@@ -197,6 +212,12 @@ export const useFeedStore = create<FeedState>()(
             set((state) => ({
               posts: state.posts.filter((p) => p.id !== postId),
             }));
+
+            // TanStack Query 캐시 무효화
+            const { queryClient } = get();
+            if (queryClient) {
+              void queryClient.invalidateQueries({ queryKey: ["posts"] });
+            }
           }
         } catch (error) {
           console.error("게시글 삭제 중 오류:", error);
@@ -228,6 +249,12 @@ export const useFeedStore = create<FeedState>()(
                   : p,
               ),
             }));
+
+            // TanStack Query 캐시 무효화
+            const { queryClient } = get();
+            if (queryClient) {
+              void queryClient.invalidateQueries({ queryKey: ["posts"] });
+            }
             return true;
           }
           return false;
