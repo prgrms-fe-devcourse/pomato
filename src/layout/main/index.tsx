@@ -1,7 +1,11 @@
 import { Moon, Sun } from "lucide-react";
+import { motion } from "motion/react";
 import { useEffect, useState } from "react";
 
+import bg from "@assets/background/AdobeStock_327307020.jpeg";
 import Button from "@components/Button";
+
+import RainEffect from "./RainEffect";
 
 export default function Main({ children }: { children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false);
@@ -12,12 +16,26 @@ export default function Main({ children }: { children: React.ReactNode }) {
 
   return (
     <main className="group relative flex h-dvh min-h-svh w-full items-stretch gap-4 overflow-hidden p-4">
-      <div
-        className="absolute inset-0 -z-20 scale-110 bg-cover bg-center opacity-30 blur-md dark:opacity-20"
-        style={{ backgroundImage: "url('/images/background.jpg')" }}
-        aria-hidden="true"
+      <motion.div
+        className="absolute inset-0 -z-20 bg-cover bg-center opacity-70 dark:opacity-70"
+        style={{
+          backgroundImage: `url(${bg})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "brightness(0.8) saturate(0.9)",
+        }}
+        animate={{
+          scale: [1, 1.02, 1],
+          x: [0, -10, 10, 0],
+          y: [0, 5, -5, 0],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
       />
-
+      <RainEffect />
       <div className="bg-gradient absolute inset-0 -z-10" />
       <Button
         onClick={() => setIsDark((prev) => !prev)}
