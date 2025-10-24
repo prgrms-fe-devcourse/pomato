@@ -1,7 +1,7 @@
-import type { ProfileRow } from "@type/auth.types";
+import type { Profile } from "@type/auth.types";
 import supabase from "@utils/supabase";
 
-export const getProfile = async (id: string): Promise<ProfileRow | null> => {
+export const getProfile = async (id: string): Promise<Profile | null> => {
   const { data: profile, error } = await supabase
     .from("profiles")
     .select("*")

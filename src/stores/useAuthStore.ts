@@ -1,6 +1,6 @@
 import type { Session } from "@supabase/supabase-js";
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import type { Profile } from "../types/auth.types";
@@ -19,23 +19,27 @@ type AuthStore = AuthState & AuthAction;
 
 export const useAuthStore = create<AuthStore>()(
   devtools(
-    immer((set) => ({
-      session: null,
-      profile: null,
+    persist(
+      immer((set) => ({
+        session: null,
+        profile: null,
 
-      setAuth: (session, profile) =>
-        set((state) => {
-          state.session = session;
-          state.profile = profile;
-        }),
+        setAuth: (session, profile) =>
+          set((state) => {
+            state.session = session;
+            state.profile = profile;
+          }),
 
-      resetAuth: () =>
-        set((state) => {
-          state.session = null;
-          state.profile = null;
-        }),
-    })),
-    { name: "AuthStore" },
+        resetAuth: () =>
+          set((state) => {
+            state.session = null;
+            state.profile = null;
+          }),
+      })),
+      {
+        name: "auth-storage",
+      },
+    ),
   ),
 );
 
