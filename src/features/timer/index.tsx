@@ -87,7 +87,7 @@ export default function Timer() {
           <header>
             <h2 className="text-wh/70 text-lg tracking-widest">{currentPhase}</h2>
           </header>
-          <ol className="flex items-center gap-2" aria-label="세션 진행 단계">
+          <ol className="flex items-center gap-3" aria-label="세션 진행 단계">
             {Array.from({ length: totalSession }).map((_, index) => (
               <SessionDot
                 key={`${totalSession}-${index}`}
