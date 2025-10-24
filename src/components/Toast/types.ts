@@ -5,10 +5,11 @@ import type { toastVariants } from "./variants";
 
 export type ToastVariantProps = VariantProps<typeof toastVariants>;
 
-export type Intent = NonNullable<ToastProps["intent"]>;
+export type Intent = NonNullable<ToastVariantProps["intent"]>;
 
 export type ToastOwnProps = {
-  message?: string;
+  intent: Intent;
+  message: string;
   description?: string;
   dismissible?: boolean;
   onClose?: () => void;

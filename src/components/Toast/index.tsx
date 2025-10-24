@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { iconMap } from "./intent";
-import type { Intent, ToastProps } from "./types";
+import type { ToastProps } from "./types";
 import { useAutoDismiss } from "./useAutoDismiss";
 import { toastVariants } from "./variants";
 
@@ -24,8 +24,7 @@ export const Toast = forwardRef<HTMLDivElement, ToastProps>(function Toast(
 ) {
   useAutoDismiss(onClose, duration);
 
-  const safeIntent: Intent = (intent ?? "info") as Intent;
-  const { Icon, colorClass } = iconMap[safeIntent];
+  const { Icon, colorClass } = iconMap[intent];
 
   return (
     <div

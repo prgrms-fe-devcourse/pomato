@@ -36,7 +36,9 @@ export const useAuthStore = create<AuthStore>()(
             state.profile = null;
           }),
       })),
-      { name: "AuthStore" },
+      {
+        name: "auth-storage",
+      },
     ),
   ),
 );
