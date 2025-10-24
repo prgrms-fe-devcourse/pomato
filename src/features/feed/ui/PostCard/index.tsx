@@ -335,7 +335,7 @@ export default function PostCard({
       {/* 액션 (Liked, Comments) */}
       {/* 편집 중일 때는 비활성화 처리 */}
       {!isEditing && (
-        <div className="flex gap-[16px]">
+        <div className="flex items-center justify-items-center gap-[16px]">
           <button
             type="button"
             onClick={() => onToggleLike(id)}
@@ -343,31 +343,31 @@ export default function PostCard({
             aria-pressed={liked}
             aria-label="post like button"
             className={twMerge(
-              "text-wh/65 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]",
+              "text-wh/65 inline-flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]",
               "hover:bg-pink-500/10 hover:text-pink-500",
               liked && "text-pink-500",
               isLiking && "text-pink-500",
             )}
           >
             <Heart
-              width={15}
-              height={15}
-              className={twMerge("stroke-current", liked && "fill-current")}
+              width={14}
+              height={14}
+              className={twMerge("block stroke-current", liked && "fill-current")}
               aria-hidden
             />
-            <span className="label-text-xs">{likes > 999 ? "999+" : likes}</span>
+            <span className="label-text-xs leading-none">{likes > 999 ? "999+" : likes}</span>
           </button>
 
           <button
             className={twMerge(
-              "text-wh/65 hover:bg-wh/10 hover:text-wh/85 hover:dark:bg-bl/30 flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]",
+              "text-wh/65 hover:bg-wh/10 hover:text-wh/85 hover:dark:bg-bl/30 inline-flex h-[34px] cursor-pointer items-center justify-center gap-[8px] rounded-[20px] px-[12px]",
               showComments && "bg-wh/10 dark:bg-bl/30",
             )}
             aria-label="post comment button"
             onClick={() => setShowComments((v) => !v)}
           >
-            <MessageCircle width={15} height={15} className="stroke-current" />
-            <span className="label-text-xs">{comments.length}</span>
+            <MessageCircle width={14} height={14} className="block stroke-current" />
+            <span className="label-text-xs leading-none">{comments.length}</span>
           </button>
         </div>
       )}
