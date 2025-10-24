@@ -1,3 +1,4 @@
+import { motion } from "motion/react";
 import { NavLink } from "react-router";
 import { twMerge } from "tailwind-merge";
 
@@ -9,27 +10,32 @@ export default function Nav() {
   const setTitle = usePanelStore((state) => state.setTitle);
 
   return (
-    <nav className="border-wh/12 flex min-h-12 border-y md:h-15 md:min-h-15">
-      <ol className="flex w-full">
+    <nav className="border-wh/12 h-12 border-y md:h-15">
+      <ol className="flex h-full w-full items-stretch">
         {NAV_ITEMS.map(({ path, Icon, label }: NavItem) => (
-          <NavLink
-            onClick={() => setTitle(label)}
-            key={"panel:nav:" + path}
-            to={path}
-            className={({ isActive }) =>
-              twMerge(
-                "flex flex-1 items-center justify-center gap-1 select-none",
-                "label-text-s sm:label-text-m",
-                "border-b-2 transition-colors duration-150",
-                isActive ? "border-wh text-wh" : "text-wh/60 hover:text-wh/90 border-transparent",
-              )
-            }
-          >
-            <li className="flex items-center gap-1">
-              <Icon className="size-5" />
-              <span className="hidden md:inline">{label}</span>
-            </li>
-          </NavLink>
+          <li key={path} className="relative min-w-0 flex-1">
+            <NavLink
+              to={path}
+              onClick={() => setTitle(label)}
+              className={({ isActive }) =>
+                twMerge("block h-full w-full", isActive ? "text-wh" : "text-wh/60 hover:text-wh/90")
+              }
+              children={({ isActive }) => (
+                <div className="label-text-s sm:label-text-m relative flex h-full items-center justify-center gap-1 select-none">
+                  <Icon className="size-5 shrink-0" />
+                  <span className="hidden truncate md:inline">{label}</span>
+
+                  {isActive && (
+                    <motion.span
+                      layoutId="panel-underline"
+                      className="bg-wh/70 dark:bg-wh/60 absolute right-0 bottom-0 left-0 h-0.5"
+                      transition={{ type: "spring", stiffness: 500, damping: 40, mass: 0.2 }}
+                    />
+                  )}
+                </div>
+              )}
+            />
+          </li>
         ))}
       </ol>
     </nav>
