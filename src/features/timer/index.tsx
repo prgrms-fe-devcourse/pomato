@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
+import { AudioVisualizer } from "@features/timer/ui/AudioVisualizer";
+
 import { useTimerStore, useTotalSeconds } from "./model/useTimerStore";
 import ActiveUsersButton from "./ui/ActiveUsersButton";
 import ControlButton from "./ui/ControlButton";
