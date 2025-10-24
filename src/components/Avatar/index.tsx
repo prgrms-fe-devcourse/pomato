@@ -12,6 +12,7 @@ interface AvatarProps
   src?: string;
   status?: StatusType;
   containerStyle?: string;
+  onClick?: () => void;
 }
 
 type StatusType = "default" | "online" | "offline" | "edit";
@@ -55,6 +56,7 @@ export default function Avatar({
   size = DEFAULT_SIZE,
   containerStyle,
   className,
+  onClick,
   ...rest
 }: AvatarProps) {
   return (
@@ -77,13 +79,8 @@ export default function Avatar({
             "flex cursor-pointer items-center justify-center",
             editVariants({ size }),
           )}
+          onClick={onClick}
         >
-          <input
-            type="file"
-            accept="image/jpg,image/png,image/jpeg"
-            name="avatar_profile_img"
-            className="hidden h-full w-full"
-          />
           <Camera />
         </label>
       ) : (

@@ -1,5 +1,5 @@
 import { User, AtSign } from "lucide-react";
-import { useEffect, useState, type FormEventHandler } from "react";
+import { useEffect, useState, useRef, type FormEventHandler } from "react";
 import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
@@ -8,11 +8,18 @@ import Input from "@components/Input";
 import { Toast } from "@components/Toast";
 import { getProfile } from "@features/auth/api/profile";
 import { useIsMobile } from "@hooks/useIsMobile";
+import { uploadAvatarImage, revokeImagePreview } from "@pages/setting/api/image";
 import { useUserId } from "@stores/useAuthStore";
 import type { Profile } from "@type/auth.types";
 import supabase from "@utils/supabase";
 
 type ToastType = { message: string; intent: "info" | "success" | "warning" | "error" };
+
+type LocalImage = {
+  id: string;
+  image_url: string;
+  file: File;
+};
 
 export default function ProfileEdit() {
   const isMobile = useIsMobile();
@@ -20,20 +27,26 @@ export default function ProfileEdit() {
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [toast, setToast] = useState<ToastType | null>(null);
+  const [avatarImage, setAvatarImage] = useState<LocalImage | null>(null);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const showToast = (intent: ToastType["intent"], message: string) => setToast({ message, intent });
 
+  // 현재 로그인한 사용자의 프로필 정보를 업데이트
   const updateProfile = async (
     uid: string,
     updateData: Partial<Profile>,
   ): Promise<Profile | null> => {
+    // profiles 테이블에서 현재 사용자의 user_id에 해당하는 레코드를 찾아서 업데이트
     const { data, error } = await supabase
       .from("profiles")
       .update({
-        display_name: updateData.display_name,
-        username: updateData.username,
-        bio: updateData.bio,
+        display_name: updateData.display_name || "",
+        username: updateData.username || "",
+        bio: String(updateData.bio || ""),
+        avatar_url: updateData.avatar_url ?? null, // 아바타 URL 업데이트
       })
-      .eq("user_id", uid)
+      .eq("user_id", uid) // 현재 로그인한 사용자의 user_id와 일치하는 레코드만 업데이트
       .select()
       .single();
 
@@ -46,6 +59,37 @@ export default function ProfileEdit() {
     return data;
   };
 
+  // 아바타 이미지 업로드 핸들러
+  const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+
+    const file = files[0];
+    if (!file || !file.type.startsWith("image/")) {
+      showToast("error", "이미지 파일만 업로드할 수 있습니다.");
+      return;
+    }
+
+    // 기존 이미지 정리
+    if (avatarImage) {
+      revokeImagePreview(avatarImage.image_url);
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    setAvatarImage({
+      id: crypto.randomUUID(),
+      image_url: previewUrl,
+      file,
+    });
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  // 아바타 클릭 핸들러
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
   useEffect(() => {
     const fetchProfile = async () => {
       if (!userId) return;
@@ -55,9 +99,18 @@ export default function ProfileEdit() {
     void fetchProfile();
   }, [userId]);
 
+  // 컴포넌트 언마운트 시 이미지 정리
+  useEffect(() => {
+    return () => {
+      if (avatarImage) {
+        revokeImagePreview(avatarImage.image_url);
+      }
+    };
+  }, [avatarImage]);
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    if (isLoading) return;
+    if (isLoading || isUploadingAvatar) return;
 
     setIsLoading(true);
 
@@ -68,23 +121,50 @@ export default function ProfileEdit() {
         const username = formData.get("username");
         const bio = formData.get("bio");
 
-        const updateData: Partial<Profile> = {
-          display_name: typeof display_name === "string" ? display_name : "",
-          username: typeof username === "string" ? username : "",
-          bio: typeof bio === "string" ? bio : "",
-        };
-
         if (!userId) {
           showToast("error", "메이트 님의 정보를 찾지 못했어요");
           return;
         }
 
+        let avatarUrl = profile?.avatar_url;
+
+        // 아바타 이미지가 선택된 경우 Supabase Storage에 업로드
+        if (avatarImage) {
+          setIsUploadingAvatar(true);
+          // 현재 사용자의 user_id를 사용하여 아바타 이미지 업로드
+          const uploadedUrl = await uploadAvatarImage(avatarImage.file, userId);
+          if (uploadedUrl) {
+            avatarUrl = uploadedUrl;
+          } else {
+            showToast("error", "아바타 업로드에 실패했습니다.");
+            return;
+          }
+          setIsUploadingAvatar(false);
+        }
+
+        // 업데이트할 프로필 데이터 준비
+        const updateData: Partial<Profile> = {
+          display_name: typeof display_name === "string" ? display_name : "",
+          username: typeof username === "string" ? username : "",
+          bio: typeof bio === "string" ? bio : "",
+          avatar_url: avatarUrl, // 새로운 아바타 URL (또는 기존 URL 유지)
+        };
+
+        // profiles 테이블에서 현재 사용자의 user_id에 해당하는 레코드 업데이트
         const newProfile = await updateProfile(userId, updateData);
-        if (newProfile) setProfile(newProfile);
+        if (newProfile) {
+          setProfile(newProfile);
+          // 성공 시 로컬 이미지 정리
+          if (avatarImage) {
+            revokeImagePreview(avatarImage.image_url);
+            setAvatarImage(null);
+          }
+        }
       } catch {
         showToast("error", "저장 중 오류가 발생했습니다.");
       } finally {
         setIsLoading(false);
+        setIsUploadingAvatar(false);
       }
     })();
   };
@@ -92,11 +172,22 @@ export default function ProfileEdit() {
   return (
     <section className="pc-scroll flex min-h-0 flex-1 flex-col items-center justify-center gap-6 overflow-y-auto px-4 py-8 sm:gap-8 sm:px-6 sm:py-10 md:gap-10 md:px-8 md:py-12">
       <header className="flex flex-col items-center justify-center gap-4 sm:gap-5">
-        <div className="relative">
+        <div className="relative select-none">
           <Avatar
-            src={profile?.avatar_url ?? undefined}
+            src={avatarImage?.image_url ?? profile?.avatar_url ?? undefined}
             status="edit"
             size={isMobile ? "l" : "xl"}
+            onClick={handleAvatarClick}
+          />
+
+          {/* 숨겨진 파일 입력 */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleAvatarUpload}
+            className="hidden"
+            disabled={isLoading || isUploadingAvatar}
           />
         </div>
 
@@ -166,22 +257,26 @@ export default function ProfileEdit() {
                 "disabled:bg-wh/10 disabled:border-wh/10 disabled:dark:bg-bl/20 disabled:dark:border-wh/8 disabled:text-wh/50 disabled:placeholder:text-wh/50 disabled:cursor-not-allowed disabled:opacity-60",
                 "pc-scroll outline-none [-webkit-tap-highlight-color:transparent] focus-visible:ring-0",
               )}
-              defaultValue={profile?.bio ?? ""}
+              defaultValue={String(profile?.bio || "")}
             />
           </div>
         </div>
 
         <div className="mt-2 flex gap-3 sm:gap-4">
-          <Button intent="ghost" className="h-10 flex-1 sm:h-11" disabled={isLoading}>
+          {/* <Button
+            intent="ghost"
+            className="h-10 flex-1 sm:h-11"
+            disabled={isLoading || isUploadingAvatar}
+          >
             취소
-          </Button>
+          </Button> */}
           <Button
             type="submit"
             intent="primary"
             className="h-10 flex-1 sm:h-11"
-            disabled={isLoading}
+            disabled={isLoading || isUploadingAvatar}
           >
-            {isLoading ? "저장 중..." : "저장"}
+            {isLoading || isUploadingAvatar ? "저장 중..." : "저장"}
           </Button>
         </div>
       </form>
