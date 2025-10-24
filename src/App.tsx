@@ -10,7 +10,8 @@ import supabase from "@utils/supabase";
 export default function App() {
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === "INITIAL_SESSION" || event === "PASSWORD_RECOVERY") return;
+      if (event === "INITIAL_SESSION" || event === "PASSWORD_RECOVERY" || event === "SIGNED_IN")
+        return;
 
       const authStore = useAuthStore.getState();
       const uid = session?.user?.id ?? null;
@@ -24,7 +25,7 @@ export default function App() {
         authStore.setAuth(session, authStore.profile);
       }
 
-      if (event === "SIGNED_IN" || event === "USER_UPDATED") {
+      if (event === "USER_UPDATED") {
         const profile = await getProfile(uid);
         authStore.setAuth(session, profile);
       }
