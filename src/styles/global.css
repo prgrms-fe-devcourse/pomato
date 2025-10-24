@@ -231,6 +231,8 @@
 @layer base {
   html {
     @apply text-wh;
+    @apply pc-scroll;
+    @apply scroll-smooth;
   }
 
   a:focus-visible {
@@ -256,10 +258,17 @@
   .bg-gradient::after {
     pointer-events: none;
   }
-}
+  .hover-smooth * {
+    @apply transition-[color,background-color,border-color,outline-color,fill,stroke,opacity,box-shadow,transform] duration-200 ease-out;
+  }
 
-html,
-body {
-  @apply pc-scroll;
-  scroll-behavior: smooth;
+  .hover-smooth *:focus-visible {
+    @apply duration-150;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hover-smooth * {
+      transition: none;
+    }
+  }
 }
