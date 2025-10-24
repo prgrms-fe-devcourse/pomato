@@ -2,34 +2,29 @@ import { useEffect, useRef } from "react";
 
 import bgMusic from "@assets/audio/lofi-lofi-music-405237.mp3";
 
-export default function BgMusic() {
+type BgMusicProps = {
+  isPlaying: boolean;
+};
+
+export default function BgMusic({ isPlaying }: BgMusicProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    audio.volume = 0.35;
+    audio.volume = 0.25;
 
-    const handleFocus = () => {
+    if (isPlaying) {
       audio.play().catch(() => {});
-    };
-
-    const handleBlur = () => {
+    } else {
       audio.pause();
-    };
-
-    handleFocus();
-
-    window.addEventListener("focus", handleFocus);
-    window.addEventListener("blur", handleBlur);
+    }
 
     return () => {
-      window.removeEventListener("focus", handleFocus);
-      window.removeEventListener("blur", handleBlur);
       audio.pause();
     };
-  }, []);
+  }, [isPlaying]);
 
   return <audio ref={audioRef} src={bgMusic} loop preload="auto" className="hidden" />;
 }

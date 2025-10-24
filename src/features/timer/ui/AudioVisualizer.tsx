@@ -13,7 +13,7 @@ interface AudioVisualizerProperties {
   className?: string;
 }
 
-export function AudioVisualizer({
+export default function AudioVisualizer({
   isPlaying,
   barCount = 5,
   barWidth = 6,
