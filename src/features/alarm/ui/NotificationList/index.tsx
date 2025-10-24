@@ -1,12 +1,19 @@
 import { Bell } from "lucide-react";
+import { useState } from "react";
 
 import EmptyState from "@components/Empty";
+import { Toast } from "@components/Toast";
+import type { ToastIntent } from "@components/Toast/intent";
 import { useNotificationStore } from "@features/alarm/stores/useNotificationStore";
 import type { NotificationJsonbType } from "@features/alarm/types/notification.type";
 import NotificationCard from "@features/alarm/ui/NotificationCard";
 
+type ToastType = { message: string; intent: ToastIntent };
+
 export default function NotificationList() {
   const notifications = useNotificationStore((state) => state.notifications);
+  const [toast, setToast] = useState<ToastType | null>(null);
+  const showToast = (intent: ToastType["intent"], message: string) => setToast({ message, intent });
 
   if (notifications.length === 0)
     return (
@@ -28,9 +35,13 @@ export default function NotificationList() {
             payload={notification.payload as NotificationJsonbType}
             notificationId={notification.id}
             createdAt={notification.created_at}
+            setToast={showToast}
           />
         );
       })}
+      {toast && (
+        <Toast message={toast.message} intent={toast.intent} onClose={() => setToast(null)} />
+      )}
     </div>
   );
 }

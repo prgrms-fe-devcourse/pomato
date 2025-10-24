@@ -11,6 +11,7 @@ import { twMerge } from "tailwind-merge";
 
 import Avatar from "@components/Avatar";
 import Button from "@components/Button";
+import type { ToastIntent } from "@components/Toast/intent";
 import { removeNotification } from "@features/alarm/api/notification";
 import { useNotificationStore } from "@features/alarm/stores/useNotificationStore";
 import type {
@@ -64,12 +65,15 @@ const typeIconMap: Record<NotificationType, LucideIcon> = {
   system: Settings,
 } as const;
 
+type ToastType = { message: string; intent: ToastIntent };
+
 type NotificationItemProps = {
   notificationId: string;
   type: NotificationType;
   payload: NotificationJsonbType;
   createdAt: string;
   className?: string;
+  setToast: (intent: ToastType["intent"], message: string) => void;
 };
 
 const TITLE_SUFFIX: Record<NotificationType, string> = {
@@ -85,6 +89,7 @@ export default function NotificationCard({
   payload,
   createdAt,
   className,
+  setToast,
 }: NotificationItemProps) {
   const TypeIcon = typeIconMap[type];
   const [senderProfile, setSenderProfile] = useState<ProfilesTable["Row"] | null>(null);
@@ -94,6 +99,8 @@ export default function NotificationCard({
   const handleClose = () => {
     removeNotificationStore(notificationId);
     // 낙관적 업데이트
+
+    setToast("success", "알람을 확인했어요!");
     void removeNotification(notificationId);
   };
 
