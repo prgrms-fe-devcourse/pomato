@@ -133,7 +133,7 @@ export default function Input({
           />
         </button>
       )}
-      <div className="flex flex-1 items-center gap-[4px]">
+      <div className="flex flex-1 items-center gap-1">
         <input
           ref={inputRef}
           type={isPassword ? (showPassword ? "text" : "password") : type}

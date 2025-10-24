@@ -12,7 +12,7 @@ import NotFound from "@pages/error/NotFound";
 import Feed from "@pages/Feed";
 import Mate from "@pages/Mate";
 import Notification from "@pages/Notification";
-import Setting from "@pages/Setting";
+import ProfileEdit from "@pages/setting/ProfileEdit";
 
 import App from "../App";
 
@@ -54,7 +54,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "setting",
-        Component: Setting,
+        Component: ProfileEdit,
       },
       {
         path: "login",

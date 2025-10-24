@@ -257,3 +257,9 @@
     pointer-events: none;
   }
 }
+
+html,
+body {
+  @apply pc-scroll;
+  scroll-behavior: smooth;
+}

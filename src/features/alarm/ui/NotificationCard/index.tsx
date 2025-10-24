@@ -136,47 +136,56 @@ export default function NotificationCard({
   return (
     <div
       className={twMerge(
-        "group relative min-h-[77px] w-[405px] rounded-[10px] transition select-none",
-        "flex min-h-[77px] w-full min-w-[405px]",
-        "mb-2 px-[16px] py-[12px]",
-        "bg-wh/8 border-wh/10",
-        "dark:bg-bl/25 dark:border-wh/10",
+        "group/card relative mb-2 min-h-16 w-full rounded-[10px] border transition select-none",
+        "px-3 py-2.5 sm:px-4 sm:py-3",
+        "bg-wh/8 border-wh/10 hover:bg-wh/12",
+        "dark:bg-bl/25 dark:border-wh/10 dark:hover:bg-bl/35",
+        "sm:mx-auto sm:w-full md:max-w-[540px] lg:max-w-[640px]",
         className,
       )}
       draggable={false}
     >
-      <div className="flex w-full items-start gap-[16px]">
+      <div className="flex w-full items-start gap-3 sm:gap-4">
         {/* 아바타 영역 */}
-        <Avatar src={senderProfile?.avatar_url ?? undefined} size={"s"} />
+        <div className="shrink-0">
+          <Avatar src={senderProfile?.avatar_url ?? undefined} size={"s"} />
+        </div>
         {/* Content */}
-        <div className="relative flex-1">
-          <div className="relative flex min-h-[28px] w-full items-center">
+        <div className="relative min-w-0 flex-1">
+          <div className="flex items-start sm:items-center">
             {/* 좌측: 이름 + 메세지 타입 아이콘 */}
-            <span className="inline-flex min-w-0 flex-1 items-center">
-              <TypeIcon
-                className="text-wh/60 mr-1 h-[14px] w-[14px] flex-shrink-0"
-                aria-hidden="true"
-              />
-              <span className="label-text-s-semibold text-wh mr-[2px] truncate">
+            <span className="flex min-w-0 flex-1 items-center">
+              <TypeIcon className="text-wh/60 mr-1 h-3.5 w-3.5 shrink-0" aria-hidden />
+              <span className="label-text-s-semibold text-wh mr-1 shrink-0">
                 {senderProfile?.display_name}
               </span>
-              <span className="label-text-s text-wh/65 flex-shrink-0">{TITLE_SUFFIX[type]}</span>
+              <span className="label-text-s text-wh/65 min-w-0 flex-1 truncate">
+                {TITLE_SUFFIX[type]}
+              </span>
+              {/* 모바일: 같은 줄에 시간 붙이기 */}
+              <span className="label-text-xs text-wh/60 ml-1 shrink-0 whitespace-nowrap sm:hidden">
+                {toHHMM(createdAt)}
+              </span>
             </span>
 
             {/* 우측: 시간 , hover일 경우 확인/삭제 버튼 표시 */}
-            <div className="absolute top-0 right-0 flex items-center">
+            <div className="relative ml-2 hidden h-6 w-[68px] items-center justify-end sm:flex">
               <span
                 className={twMerge(
-                  "label-text-xs text-wh/60",
-                  "inline-flex h-6 items-center leading-none transition-none",
-                  "opacity-100 group-hover:pointer-events-none group-hover:opacity-0",
+                  "label-text-xs text-wh/60 absolute inset-0 flex items-center justify-end whitespace-nowrap transition-opacity",
+                  "pointer-events-auto opacity-100 group-hover/card:pointer-events-none group-hover/card:opacity-0",
                 )}
               >
                 {toHHMM(createdAt)}
               </span>
 
               {/* 액션: hover 시 노출 */}
-              <div className={twMerge("hidden items-center gap-[6px]", "group-hover:flex")}>
+              <div
+                className={twMerge(
+                  "absolute inset-0 hidden items-center justify-end gap-1.5",
+                  "group-hover/card:flex",
+                )}
+              >
                 {/* 확인 */}
 
                 {/*<Button
@@ -203,8 +212,8 @@ export default function NotificationCard({
                     // 닫기 버튼 클릭 시 실행할 함수 선언
                   }}
                   className={twMerge(
-                    "inline-flex h-7 w-7 items-center justify-center rounded-[6px] transition-none",
-                    "hover:bg-wh/15 dark:hover:bg-bl/50 transition-colors",
+                    "inline-flex h-6 w-6 items-center justify-center rounded-md transition-colors",
+                    "hover:bg-wh/15 dark:hover:bg-bl/50",
                   )}
                   intent={"reveal"}
                   aria-label="확인"

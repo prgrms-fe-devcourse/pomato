@@ -97,7 +97,7 @@ export default function UserCard({
     <div
       className={twMerge(
         "group relative flex w-full flex-col items-center rounded-xl transition select-none",
-        "border-[1px]",
+        "border",
         "bg-wh/8 border-wh/10",
         "dark:bg-bl/25 dark:border-wh/10",
         "hover:bg-wh/12 dark:hover:bg-bl/35",
@@ -106,8 +106,8 @@ export default function UserCard({
       onClick={() => setOpen((prev) => !prev)}
       draggable={false}
     >
-      <div className="w-full px-[16px] py-[12px]">
-        <div className="flex items-center gap-[16px]">
+      <div className="w-full px-4 py-3">
+        <div className="flex items-center gap-4">
           {/* 아바타 영역 */}
           {hasImage ? (
             <Avatar src={avatar} status={type || "default"} />

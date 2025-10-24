@@ -158,7 +158,7 @@ export default function PostComposer({
           placeholder={placeholder}
           disabled={disabled || isUploading} // 이미지 업로드 중 disabled 처리
           className={twMerge(
-            "block w-full rounded-[8px] border px-4 py-3 outline-none",
+            "block w-full rounded-lg border px-4 py-3 outline-none",
             "h-[100px] resize-none overflow-y-auto",
             "text-wh/50 placeholder:text-wh/50 paragraph-text-s",
 
@@ -171,7 +171,7 @@ export default function PostComposer({
 
             // 입력 중 상태
             hasContent &&
-              !disabled && ["bg-wh/30 border-wh/35", "dark:bg-bl/50", "dark:border-wh/30"],
+              !disabled && ["text-wh bg-wh/30 border-wh/35", "dark:bg-bl/50", "dark:border-wh/30"],
 
             // 비활성화 상태
             disabled && [
@@ -189,7 +189,7 @@ export default function PostComposer({
       {/* 이미지 미리보기 영역 */}
       {image && (
         <div className="mt-4 select-none">
-          <div className="border-wh/20 dark:border-wh/15 relative mx-auto flex max-h-[300px] w-full items-center justify-center overflow-hidden rounded-[8px] border">
+          <div className="border-wh/20 dark:border-wh/15 relative mx-auto flex max-h-[300px] w-full items-center justify-center overflow-hidden rounded-lg border">
             <img
               src={image.image_url}
               alt="미리보기"
@@ -203,7 +203,7 @@ export default function PostComposer({
                 setImage(null);
               }}
               className={twMerge(
-                "absolute top-2 right-2 inline-flex h-7 w-7 items-center justify-center rounded-[8px] border select-none",
+                "absolute top-2 right-2 inline-flex h-7 w-7 items-center justify-center rounded-lg border select-none",
                 "border-white/15 bg-white/15 hover:bg-white/25 active:bg-white/35",
                 "dark:border-white/12 dark:bg-black/30 dark:hover:bg-black/40 dark:active:bg-black/50",
               )}
