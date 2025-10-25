@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import Avatar from "@components/Avatar";
 import { getProfile } from "@features/auth/api/profile";
 import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
-import type { ProfilesTable } from "@features/user/types/user.type";
+import type { Profile } from "@type/auth.types";
 import supabase from "@utils/supabase";
 
 type ChatHeaderType = {
@@ -15,7 +15,7 @@ type ChatHeaderType = {
 
 export default function ChatHeader({ conversationId, userId }: ChatHeaderType) {
   const navigate = useNavigate();
-  const [profile, setProfile] = useState<ProfilesTable["Row"] | null>();
+  const [profile, setProfile] = useState<Profile | null>();
   const [partnerId, setPartnerId] = useState<string | null>(null);
   const activeUsers = useActiveUsersStore((state) => state.activeUsers);
 
@@ -47,8 +47,8 @@ export default function ChatHeader({ conversationId, userId }: ChatHeaderType) {
   }, [conversationId, userId]);
 
   return (
-    <div className="border-wh/15 flex h-[64px] items-center justify-between border-b-1 px-[16px]">
-      <div className="flex gap-[12px]">
+    <div className="border-wh/15 flex h-16 items-center justify-between border-b px-4">
+      <div className="flex gap-3">
         <button onClick={() => void navigate(-1)} className="cursor-pointer">
           <ChevronLeft width={24} height={24} />
         </button>

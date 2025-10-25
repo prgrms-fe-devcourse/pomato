@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 import Avatar from "@components/Avatar";
 import { getProfile } from "@features/auth/api/profile";
 import { useActiveUsersStore } from "@features/user/store/useActiveUserStore";
-import type { ProfilesTable } from "@features/user/types/user.type";
+import type { Profile } from "@type/auth.types";
 import { toHHMM } from "@utils/formatTime";
 
 /**
@@ -62,7 +62,7 @@ export default function ChatCard({
   lastMessageTime,
   userId,
 }: ChatCardProps) {
-  const [profile, setProfile] = useState<ProfilesTable["Row"]>();
+  const [profile, setProfile] = useState<Profile>();
   const activeUsers = useActiveUsersStore((state) => state.activeUsers);
   const hasUnread = typeof unreadCount === "number" && unreadCount > 0;
 
@@ -79,7 +79,7 @@ export default function ChatCard({
     <div
       className={twMerge(
         "group relative flex w-full items-center rounded-xl transition select-none",
-        "mb-2 gap-[12px] px-[16px] py-[12px]",
+        "mb-2 gap-3 px-4 py-3",
         "bg-wh/8 border-wh/10 hover:bg-wh/20 active:bg-wh/20",
         "hover:border-wh/15 active:border-wh/15",
         "dark:bg-bl/25 dark:border-wh/10 dark:hover:bg-bl/45 dark:active:bg-bl/45",
@@ -89,7 +89,7 @@ export default function ChatCard({
       draggable={false}
     >
       {/* 왼쪽: 아바타 + 상태 */}
-      <div className="relative mt-1 mr-[16px] h-[52px] w-[52px]">
+      <div className="relative mt-1 mr-4 h-[52px] w-[52px]">
         {/* 아바타 영역 */}
 
         <Avatar
@@ -113,8 +113,8 @@ export default function ChatCard({
       {/* 우측: 마지막 메시지 시간 + 안읽은 횟수 */}
       <div
         className={twMerge(
-          "absolute inset-y-0 right-[16px] flex min-w-[60px] flex-col items-end gap-2",
-          hasUnread ? "justify-center" : "justify-start pt-[20px]",
+          "absolute inset-y-0 right-4 flex min-w-[60px] flex-col items-end gap-2",
+          hasUnread ? "justify-center" : "justify-start pt-5",
         )}
       >
         <span className="label-text-xs text-wh/70 pb-1">
@@ -124,7 +124,7 @@ export default function ChatCard({
         {hasUnread && (
           <span
             className={twMerge(
-              "inline-flex h-[20px] min-w-[20px] items-center justify-center rounded-full px-[6px]",
+              "inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5",
               "label-text-xs text-wh",
               "bg-red-500",
             )}

@@ -117,7 +117,7 @@ export default function ProfileEdit() {
 
     setIsLoading(true);
 
-    (async () => {
+    void (async () => {
       try {
         const formData = new FormData(event.currentTarget);
         const display_name = formData.get("display_name");
