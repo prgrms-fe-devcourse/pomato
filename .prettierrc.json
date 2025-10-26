@@ -8,5 +8,7 @@
   "bracketSpacing": true,
   "arrowParens": "always",
   "quoteProps": "as-needed",
-  "endOfLine": "auto"
+  "endOfLine": "auto",
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindFunctions": ["cva", "twMerge"]
 }

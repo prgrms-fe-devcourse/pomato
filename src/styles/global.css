@@ -1,0 +1,290 @@
+@import "tailwindcss";
+
+:root {
+  font-family: "Inter", system-ui, sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+
+  @theme {
+    --color-bl: rgb(23, 23, 27);
+    --color-wh: rgb(250, 250, 250);
+    --color-gr-50: rgb(244, 244, 244);
+    --color-gr-100: rgb(233, 233, 234);
+    --color-gr-200: rgb(211, 212, 212);
+    --color-gr-300: rgb(188, 190, 191);
+    --color-gr-400: rgb(166, 169, 170);
+    --color-gr-500: rgb(144, 147, 148);
+    --color-gr-600: rgb(122, 125, 127);
+    --color-gr-700: rgb(100, 104, 106);
+    --color-gr-800: rgb(77, 82, 85);
+    --color-gr-900: rgb(55, 61, 63);
+    --color-gr-950: rgb(33, 37, 38);
+  }
+}
+
+/* 기본 타이포그래피 유틸리티 */
+@utility paragraph-text {
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+@utility label-text {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+@utility heading-text {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Paragraph 유틸리티 - 반응형 */
+@utility paragraph-text-l {
+  @apply paragraph-text text-base sm:text-lg;
+  /* 16px → sm:18px */
+  line-height: 1.5rem;
+
+  @media (min-width: 640px) {
+    line-height: 1.75rem; /* sm:28px */
+  }
+}
+
+@utility paragraph-text-m {
+  @apply paragraph-text text-[0.9375rem] sm:text-base;
+  /* 15px → sm:16px */
+  line-height: 1.375rem;
+
+  @media (min-width: 640px) {
+    line-height: 1.5rem; /* sm:24px */
+  }
+}
+
+@utility paragraph-text-s {
+  @apply paragraph-text text-[0.8125rem] sm:text-sm;
+  /* 13px → sm:14px */
+  line-height: 1.125rem;
+
+  @media (min-width: 640px) {
+    line-height: 1.25rem; /* sm:20px */
+  }
+}
+
+/* Label 유틸리티 - 반응형 기본 (Medium) */
+@utility label-text-l {
+  @apply label-text text-base sm:text-lg;
+  /* 16px → sm:18px */
+  line-height: 1.25rem;
+
+  @media (min-width: 640px) {
+    line-height: 1.5rem; /* sm:24px */
+  }
+}
+
+@utility label-text-m {
+  @apply label-text text-[0.9375rem] sm:text-base;
+  /* 15px → sm:16px */
+  line-height: 1.125rem;
+
+  @media (min-width: 640px) {
+    line-height: 1.25rem; /* sm:20px */
+  }
+}
+
+@utility label-text-s {
+  @apply label-text text-[0.8125rem] sm:text-sm;
+  /* 13px → sm:14px */
+  line-height: 1rem;
+}
+
+@utility label-text-xs {
+  @apply label-text text-[0.6875rem] sm:text-xs;
+  /* 11px → sm:12px */
+  line-height: 1rem;
+}
+
+/* Label 유틸리티 - SemiBold */
+@utility label-text-l-semibold {
+  @apply label-text-l font-semibold;
+}
+
+@utility label-text-m-semibold {
+  @apply label-text-m font-semibold;
+}
+
+@utility label-text-s-semibold {
+  @apply label-text-s font-semibold;
+}
+
+@utility label-text-xs-semibold {
+  @apply label-text-xs font-semibold;
+}
+
+/* Label 유틸리티 - Bold */
+@utility label-text-l-bold {
+  @apply label-text-l font-bold;
+}
+
+@utility label-text-m-bold {
+  @apply label-text-m font-bold;
+}
+
+@utility label-text-s-bold {
+  @apply label-text-s font-bold;
+}
+
+@utility label-text-xs-bold {
+  @apply label-text-xs font-bold;
+}
+
+/* Heading 유틸리티 - 반응형 */
+@utility heading-text-l {
+  @apply heading-text text-[1.75rem] sm:text-[2rem];
+  /* 28px → sm:32px */
+  line-height: 2.25rem;
+
+  @media (min-width: 640px) {
+    line-height: 2.5rem; /* sm:40px */
+  }
+}
+
+@utility heading-text-m {
+  @apply heading-text text-2xl sm:text-[1.75rem];
+  /* 24px → sm:28px */
+  line-height: 2rem;
+
+  @media (min-width: 640px) {
+    line-height: 2.25rem; /* sm:36px */
+  }
+}
+
+@utility heading-text-s {
+  @apply heading-text text-xl sm:text-2xl;
+  /* 20px → sm:24px */
+  line-height: 1.75rem;
+
+  @media (min-width: 640px) {
+    line-height: 2rem; /* sm:32px */
+  }
+}
+
+@utility heading-text-xs {
+  @apply heading-text text-lg sm:text-xl;
+  /* 18px → sm:20px */
+  line-height: 1.625rem;
+
+  @media (min-width: 640px) {
+    line-height: 1.75rem; /* sm:28px */
+  }
+}
+
+/* 스크롤바 유틸리티 */
+@utility pc-scroll {
+  overflow: auto;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.3) transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 4px;
+    margin: 4px 0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgb(255 255 255 / 0.3);
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: rgb(255 255 255 / 0.4);
+  }
+
+  &::-webkit-scrollbar-thumb:active {
+    background-color: rgb(255 255 255 / 0.5);
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    &::-webkit-scrollbar-thumb {
+      background-color: rgb(255 255 255 / 0.2);
+    }
+
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: rgb(255 255 255 / 0.3);
+    }
+
+    &::-webkit-scrollbar-thumb:active {
+      background-color: rgb(255 255 255 / 0.4);
+    }
+  }
+}
+
+@layer base {
+  html {
+    @apply text-wh;
+    @apply pc-scroll;
+    @apply scroll-smooth;
+  }
+
+  a:focus-visible {
+    @apply ring-wh/12 ring-2 outline-none;
+  }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer utilities {
+  .bg-gradient {
+    background-image:
+      radial-gradient(106.3% 106.3% at 20% 30%, rgb(168 85 247 / 0.25) 0%, rgb(0 0 0 / 0) 40%),
+      radial-gradient(113.14% 113.14% at 80% 20%, rgb(236 72 153 / 0.2) 0%, rgb(0 0 0 / 0) 40%),
+      radial-gradient(
+        100% 100% at 40% 80%,
+        rgb(59 130 246 / 0.2) 0%,
+        rgb(23 23 27 / 0.5) 0%,
+        rgb(23 23 27 / 0.75) 100%
+      );
+  }
+  .bg-gradient::before,
+  .bg-gradient::after {
+    pointer-events: none;
+  }
+  .hover-smooth * {
+    @apply transition-[color,background-color,border-color,outline-color,fill,stroke,opacity,box-shadow,transform] duration-200 ease-out;
+  }
+
+  .hover-smooth *:focus-visible {
+    @apply duration-150;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hover-smooth * {
+      transition: none;
+    }
+  }
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}

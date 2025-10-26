@@ -1,31 +1,45 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
+import { useEffect } from "react";
 
-function App() {
-  const [count, setCount] = useState(0);
+import { getProfile } from "@features/auth/api/profile";
+import Timer from "@features/timer";
+import Main from "@layout/main";
+import Panel from "@layout/panel";
+import { useAuthStore } from "@stores/useAuthStore";
+import supabase from "@utils/supabase";
+
+export default function App() {
+  useEffect(() => {
+    const { data: sub } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "INITIAL_SESSION" || event === "PASSWORD_RECOVERY" || event === "SIGNED_IN")
+        return;
+
+      const authStore = useAuthStore.getState();
+      const uid = session?.user?.id ?? null;
+
+      if (event === "SIGNED_OUT" || !uid) {
+        authStore.resetAuth();
+        return;
+      }
+
+      if (event === "TOKEN_REFRESHED") {
+        authStore.setAuth(session, authStore.profile);
+      }
+
+      if (event === "USER_UPDATED") {
+        const profile = await getProfile(uid);
+        authStore.setAuth(session, profile);
+      }
+    });
+
+    return () => {
+      sub.subscription.unsubscribe();
+    };
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    <Main>
+      <Timer />
+      <Panel />
+    </Main>
   );
 }
-
-export default App;
